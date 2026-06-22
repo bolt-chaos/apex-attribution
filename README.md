@@ -26,7 +26,7 @@ MVP, built incrementally:
 - [x] **(b)** clean per-result dataframe with the teammate-connected-component filter
 - [x] **(c)** DAG definition (`networkx.DiGraph`) → [`scripts/dag.py`](scripts/dag.py), [`figures/dag.png`](figures/dag.png)
 - [x] **(d)** mechanism fitting (`gcm.auto.assign_causal_mechanisms`, `gcm.fit`) → [`scripts/fit_model.py`](scripts/fit_model.py)
-- [ ] **(e)** validation (`gcm.evaluate_causal_model`, `falsify_graph`)
+- [x] **(e)** validation (`gcm.evaluate_causal_model`, `falsify_graph`) → [`scripts/validate_model.py`](scripts/validate_model.py), [`outputs/validation_report.txt`](outputs/validation_report.txt)
 - [ ] **(f)** attribution (`intrinsic_causal_influence`) + counterfactual driver-swap demo
 
 **v1 scope:** 2022–2025 (single-ish regulation era), the 25-driver largest teammate-connected
