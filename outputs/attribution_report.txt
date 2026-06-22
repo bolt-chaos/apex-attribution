@@ -1,0 +1,62 @@
+========================================================================
+PHASE (f): ATTRIBUTION + COUNTERFACTUALS + UNIFIED METRIC
+========================================================================
+
+[1] intrinsic_causal_influence on finish_pos (variance shares)
+    driver_id           9.607    44.6%
+    finish_pos          8.965    41.6%
+    grid                2.670    12.4%
+    constructor_id      0.285     1.3%
+    circuit_type        0.037     0.2%
+    SANITY CHECK (car should dominate): constructor 1.3% vs driver 44.6%  -> FAIL
+
+[2] interventional car-effect vs driver-effect (the diagnostic)
+    avg CAR effect    (fix driver, swap car):     2.27 positions
+    avg DRIVER effect (fix car, swap driver):     8.36 positions
+    Reality: the CAR should dominate. Here driver effect >> car effect — the
+    model attributes the car's pace to driver identity (non-identification).
+
+[3] counterfactual 'put driver in another car' (machinery demo)
+    NOTE: inherits the bias in [2]; swaps look muted. Shown to demo the query.
+    Alonso    : actually P3 in aston-martin -> P2 if in red-bull (same driver, same luck)
+    Albon     : actually P13 in williams -> P12 if in red-bull (same driver, same luck)
+    Tsunoda   : actually P14 in rb -> P13 if in ferrari (same driver, same luck)
+
+[4] unified metric: expected finish INCLUDING mechanical-breakdown risk
+    E_all = (1 - p_dnf) * E[finish | finished] + p_dnf * 20  (DNF=back of field)
+    (combination at reporting only; no imputed DNF feeds the finish model — Option A)
+    Verstappen in red-bull     : E[finish|fin]= 2.67, p_mech_dnf=0.022 -> E_all= 3.05
+    Verstappen in haas         : E[finish|fin]= 3.63, p_mech_dnf=0.080 -> E_all= 4.94
+    Alonso     in aston-martin : E[finish|fin]= 8.35, p_mech_dnf=0.056 -> E_all= 9.00
+    Alonso     in alpine       : E[finish|fin]= 9.19, p_mech_dnf=0.066 -> E_all= 9.90
+
+[5] teammate-contrast anchor (the signal IS in the data; the SCM just misses it)
+    Within each constructor-season, median finish gap vs teammate(s), avg per driver.
+    top 5 (beat teammates most):
+      max-verstappen       +5.00
+      fernando-alonso      +3.38
+      lando-norris         +2.50
+      alexander-albon      +2.06
+      charles-leclerc      +1.88
+    bottom 3:
+      lance-stroll         -3.38
+      nicholas-latifi      -5.00
+      logan-sargeant       -5.12
+    This associational teammate delta is the identifying lever a future hierarchical
+    latent skill/pace model would feed into the SCM (deferred per project scope).
+
+========================================================================
+VERDICT
+========================================================================
+v1 FAILS the literature bar (car should dominate the modern era). Both ICC and the
+interventional spreads put almost all explanatory weight on the DRIVER, because each
+driver is nested in one constructor (selection confounding, pitfall #1) and the raw
+categorical SCM cannot separate latent skill from latent car pace (pitfall #2). The
+teammate structure was used only to pick a connected cohort, NOT to identify relative
+skill — so the identifying lever is unused in the SCM itself.
+
+DELIVERED: the required gcm machinery runs end-to-end (ICC, interventional/counterfactual
+swaps, and the reliability-combined unified metric). DO NOT trust the v1 attribution
+numbers. FIX (deferred, out of v1 scope): a hierarchical latent skill/pace model that
+estimates constructor-level car pace and driver-level skill as separate parameters
+(identified via the teammate contrasts in [5]) and feeds those into the SCM.
