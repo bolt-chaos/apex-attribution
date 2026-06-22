@@ -27,11 +27,31 @@ MVP, built incrementally:
 - [x] **(c)** DAG definition (`networkx.DiGraph`) → [`scripts/dag.py`](scripts/dag.py), [`figures/dag.png`](figures/dag.png)
 - [x] **(d)** mechanism fitting (`gcm.auto.assign_causal_mechanisms`, `gcm.fit`) → [`scripts/fit_model.py`](scripts/fit_model.py)
 - [x] **(e)** validation (`gcm.evaluate_causal_model`, `falsify_graph`) → [`scripts/validate_model.py`](scripts/validate_model.py), [`outputs/validation_report.txt`](outputs/validation_report.txt)
-- [ ] **(f)** attribution (`intrinsic_causal_influence`) + counterfactual driver-swap demo
+- [x] **(f)** attribution (`intrinsic_causal_influence`) + counterfactual driver-swap demo + unified metric → [`scripts/attribution.py`](scripts/attribution.py), [`outputs/attribution_report.txt`](outputs/attribution_report.txt), [`figures/attribution_diagnostic.png`](figures/attribution_diagnostic.png)
 
 **v1 scope:** 2022–2025 (single-ish regulation era), the 25-driver largest teammate-connected
 component. Known limitations (selection confounding, latent skill/pace, DNF censoring, era
 effects) are documented in `SCHEMA_NOTES.md` and handled explicitly, not papered over.
+
+## Headline finding (v1): the machinery works, but the attribution is not identified
+
+The full gcm pipeline runs end-to-end — ICC, interventional/counterfactual car-swaps, and the
+reliability-combined "expected finish including breakdown risk" metric. **But v1 fails the
+project's own sanity check** (under modern regs the *car* should dominate): both ICC and the
+interventional spreads put almost all weight on the **driver** (ICC: driver 45% vs constructor
+1.3%; swapping Verstappen's car moves him ~2 positions, swapping the driver in a Red Bull moves
+it ~8 — see `figures/attribution_diagnostic.png`).
+
+**Why:** each driver is nested in ~one constructor (Cramér's V 0.84), so the raw categorical SCM
+cannot separate latent skill from latent car pace and dumps the car's pace onto driver identity.
+The teammate structure was used only to pick a connected cohort, **not** to identify relative
+skill. The signal *is* in the data — a simple teammate-contrast anchor recovers a believable
+ranking (Verstappen, Alonso, Norris on top; Sargeant/Latifi/Stroll at the bottom) — the SCM as
+specified just can't extract it.
+
+**Fix (deferred, out of v1 scope):** a hierarchical latent skill/pace model that estimates
+constructor-level car pace and driver-level skill as separate parameters (identified via those
+teammate contrasts) and feeds them into the SCM. **Do not trust the v1 attribution numbers.**
 
 ## Setup
 
