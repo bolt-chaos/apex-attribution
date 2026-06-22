@@ -14,3 +14,7 @@ data/*.zip
 data/*.parquet
 data/*.csv
 # (data/f1db.version IS tracked — it records the pinned f1db release.)
+
+# Fitted model binaries are regenerable via scripts/fit_model.py.
+# (models/reliability_rates.json IS tracked — small, human-readable.)
+models/*.pkl
