@@ -24,7 +24,7 @@ MVP, built incrementally:
 
 - [x] **(a)** env + data download + schema introspection → [`SCHEMA_NOTES.md`](SCHEMA_NOTES.md)
 - [x] **(b)** clean per-result dataframe with the teammate-connected-component filter
-- [ ] **(c)** DAG definition (`networkx.DiGraph`)
+- [x] **(c)** DAG definition (`networkx.DiGraph`) → [`scripts/dag.py`](scripts/dag.py), [`figures/dag.png`](figures/dag.png)
 - [ ] **(d)** mechanism fitting (`gcm.auto.assign_causal_mechanisms`, `gcm.fit`)
 - [ ] **(e)** validation (`gcm.evaluate_causal_model`, `falsify_graph`)
 - [ ] **(f)** attribution (`intrinsic_causal_influence`) + counterfactual driver-swap demo
