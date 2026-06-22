@@ -1,0 +1,90 @@
+======================================================================
+PHASE (e) VALIDATION REPORT
+======================================================================
+classified rows: 1343
+
+[1] gcm.evaluate_causal_model (mechanisms reproduce the data?)
+Evaluated the performance of the causal mechanisms and the invertibility assumption of the causal mechanisms and the overall average KL divergence between generated and observed distribution. The results are as follows:
+
+==== Evaluation of Causal Mechanisms ====
+The used evaluation metrics are:
+- KL divergence (only for root-nodes): Evaluates the divergence between the generated and the observed distribution.
+- Mean Squared Error (MSE): Evaluates the average squared differences between the observed values and the conditional expectation of the causal mechanisms.
+- Normalized MSE (NMSE): The MSE normalized by the standard deviation for better comparison.
+- R2 coefficient: Indicates how much variance is explained by the conditional expectations of the mechanisms. Note, however, that this can be misleading for nonlinear relationships.
+- F1 score (only for categorical non-root nodes): The harmonic mean of the precision and recall indicating the goodness of the underlying classifier model.
+- (normalized) Continuous Ranked Probability Score (CRPS): The CRPS generalizes the Mean Absolute Percentage Error to probabilistic predictions. This gives insights into the accuracy and calibration of the causal mechanisms.
+NOTE: Every metric focuses on different aspects and they might not consistently indicate a good or bad performance.
+We will mostly utilize the CRPS for comparing and interpreting the performance of the mechanisms, since this captures the most important properties for the causal model.
+
+--- Node circuit_type
+- The KL divergence between generated and observed distribution is 0.001388063763523225.
+The estimated KL divergence indicates an overall very good representation of the data distribution.
+
+--- Node constructor_id
+- The KL divergence between generated and observed distribution is 0.029952706989432126.
+The estimated KL divergence indicates an overall very good representation of the data distribution.
+
+--- Node driver_id
+- The KL divergence between generated and observed distribution is 0.12788104941893502.
+The estimated KL divergence indicates an overall very good representation of the data distribution.
+
+--- Node grid
+- The MSE is 19.73266659268712.
+- The NMSE is 0.7528542969228236.
+- The R2 coefficient is 0.4311101388956365.
+- The normalized CRPS is 0.41769165812302844.
+The estimated CRPS indicates only a fair model performance. Note, however, that a high CRPS could also result from a small signal to noise ratio.
+
+--- Node finish_pos
+- The MSE is 10.16473949952838.
+- The NMSE is 0.6244759489950484.
+- The R2 coefficient is 0.6087591755909305.
+- The normalized CRPS is 0.3367041474490924.
+The estimated CRPS indicates a good model performance.
+
+==== Evaluation of Invertible Functional Causal Model Assumption ====
+
+--- The model assumption for node grid is not rejected with a p-value of 1.0 (after potential adjustment) and a significance level of 0.05.
+This implies that the model assumption might be valid.
+
+--- The model assumption for node finish_pos is not rejected with a p-value of 0.7637790453243334 (after potential adjustment) and a significance level of 0.05.
+This implies that the model assumption might be valid.
+
+Note that these results are based on statistical independence tests, and the fact that the assumption was not rejected does not necessarily imply that it is correct. There is just no evidence against it.
+
+==== Evaluation of Generated Distribution ====
+The overall average KL divergence between the generated and observed distribution is 2.327606929030278
+The estimated KL divergence indicates some significant mismatches between the distributions.
+
+==== NOTE ====
+Always double check the made model assumptions with respect to the graph structure and choice of causal mechanisms.
+All these evaluations give some insight into the goodness of the causal model, but should not be overinterpreted, since some causal relationships can be intrinsically hard to model. Furthermore, many algorithms are fairly robust against misspecifications or poor performances of causal mechanisms.
+
+[2] falsify_graph (is the DAG consistent with the data?)
+    kernel-based, n=500 subsample, n_permutations=20
++-------------------------------------------------------------------------------------------------------+
+|                                         Falsification Summary                                         |
++-------------------------------------------------------------------------------------------------------+
+| The given DAG is not informative because 2 / 20 of the permutations lie in the Markov                 |
+| equivalence class of the given DAG (p-value: 0.10).                                                   |
+| The given DAG violates 2/6 LMCs and is better than 40.0% of the permuted DAGs (p-value: 0.60).        |
+| Based on the provided significance level (0.05) and because the DAG is not informative,               |
+| we do not reject the DAG.                                                                             |
++-------------------------------------------------------------------------------------------------------+
+
+[3] ROOT-INDEPENDENCE CHI-SQUARE TESTS
+    (the DAG assumes all three roots are mutually independent)
+    driver_id ⊥ constructor_id: p=0.00e+00  Cramér's V=0.84  -> VIOLATED (dependent)
+    driver_id ⊥ circuit_type: p=1.00e+00  Cramér's V=0.06  -> ok (independent)
+    constructor_id ⊥ circuit_type: p=9.99e-01  Cramér's V=0.03  -> ok (independent)
+    Expected: driver⊥constructor fails -> selection confounding (pitfall #1).
+
+======================================================================
+VERDICT
+======================================================================
+Mechanism fits: see [1]. Structural assumption: the independent-roots
+assumption is VIOLATED (see [3]) — as anticipated, driver and constructor are
+not independent. Consequence: intrinsic_causal_influence (phase f) is biased by
+fantasy driver×car pairings and must be reported with this caveat; lean on the
+observation-anchored counterfactual swaps, which are unaffected.
