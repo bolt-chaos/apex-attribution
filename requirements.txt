@@ -1,0 +1,13 @@
+# Causal driver-vs-car attribution for F1 — pinned to the verified, working env.
+# Python 3.12.13 (Homebrew). Created with: python3.12 -m venv .venv
+# gcm API surface verified against dowhy 0.14 — see SCHEMA_NOTES.md "gcm API notes".
+dowhy==0.14
+pandas==3.0.3
+numpy==2.4.6
+scikit-learn==1.9.0
+networkx==3.6.1
+matplotlib==3.11.0
+scipy==1.15.3
+statsmodels==0.14.6
+pyarrow==24.0.0  # parquet engine for the prepped dataframe
+requests==2.34.2  # not yet used (download_data.py uses stdlib urllib); kept per project deps

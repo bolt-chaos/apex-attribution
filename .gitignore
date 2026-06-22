@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Data: large source DB and reproducible derived outputs are not tracked.
+# Regenerate with scripts/download_data.py and scripts/build_dataset.py.
+data/*.sqlite
+data/*.db
+data/*.zip
+data/*.parquet
+data/*.csv
+# (data/f1db.version IS tracked — it records the pinned f1db release.)
