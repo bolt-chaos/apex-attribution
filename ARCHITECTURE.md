@@ -75,6 +75,7 @@ apex-attribution/
 ├── v2/                   hierarchical latent skill/pace line
 │   ├── build_quali.py      -> data/f1_quali.parquet (pct gap to pole)
 │   ├── fit_skill.py        PyMC crossed random-effects -> models/v2_idata.pkl
+│   ├── fit_skill_rw.py     time-varying skill (per-season Gaussian random walk)
 │   ├── build_scm_data.py   merge posterior latents -> data/f1_scm_v2.parquet
 │   ├── attribution_v2.py   race-outcome SCM with continuous skill/pace
 │   └── uncertainty_propagation.py  ICC over posterior draws (credible intervals)
@@ -185,6 +186,16 @@ Ferrari **P12→P4**. Confirms the step-3 diagnosis: the driver-heaviness was th
 artifact, fixed by full connectivity. (`figures/v2_attribution_diagnostic_2018_2025.png`,
 `figures/v2_driver_skill_2018_2025.png`)
 
+**Step 5 — time-varying skill** (`v2/fit_skill_rw.py`). Replaces constant career skill with a
+per-driver Gaussian random walk across seasons: `skill[d,s] = skill_base[d] + drift[d,s]`,
+`drift[d,s] = drift[d,s-1] + σ_rw·z`. The data supports σ_rw ≈ 0.11%/season (HDI excludes 0) and
+recovers believable arcs (Verstappen improving; Vettel/Ricciardo declining; rookies maturing).
+`build_scm_data.py` detects the `season` dim and maps skill by `(driver, year)`. Car-dominance is
+robust: race ICC car 26.6% vs driver 23.0% → PASS (moves toward parity from 36.5/14.4 because
+season-specific skill captures more real driver signal). Anchoring caveat: the RW is anchored at
+2018, so a late-debut driver's pre-debut (no-data) cells accumulate prior drift — minor at small
+σ_rw. (`figures/v2_skill_trajectories_2018_2025_rw.png`)
+
 ## 7. Key design decisions
 
 | decision | choice | why |
@@ -259,7 +270,7 @@ Python 3.12. `dowhy==0.14` (`gcm`), `pandas==3.0.3`, `numpy==2.4.6`, `scikit-lea
 
 ## 12. Roadmap
 
-Widening the era (step 4) reproduced car-dominance and is the current best line. Next: propagate
-uncertainty on the wide era; a **slowly-varying (per-season) skill** term now that the span is 8
-years; session-matched quali normalization; model **race pace** directly as a second signal; add a
-driver-error-DNF risk term; extend further back with explicit regulation-era handling.
+Steps 4–5 (widen era + time-varying skill) reproduced a robust car-dominant split with believable
+driver arcs. Next: propagate uncertainty on the wide+time-varying model; session-matched quali
+normalization; model **race pace** directly as a second signal; add a driver-error-DNF risk term;
+extend further back with explicit regulation-era handling.
