@@ -1,0 +1,43 @@
+====================================================================
+v2 RACE-OUTCOME ATTRIBUTION (continuous skill/pace nodes)
+====================================================================
+classified rows: 1343
+
+[1] intrinsic_causal_influence on finish_pos (variance shares)
+    finish_pos       11.724    51.4%
+    driver_skill      7.219    31.6%
+    grid              2.334    10.2%
+    car_pace          1.476     6.5%
+    circuit_type      0.071     0.3%
+    SANITY CHECK (car should dominate): car 6.5% vs driver 31.6%  -> FAIL
+
+[2] interventional car-effect vs driver-effect (each swept over full range)
+    CAR effect    (median driver, sweep car 0.66..2.50%):   4.28 positions
+    DRIVER effect (median car, sweep skill -0.95..+0.76%): 12.78 positions
+    v1 was car 2.3 << driver 8.4. v2: car 4.3 vs driver 12.8 (driver still ahead).
+
+[3] counterfactual 'put driver in another car' (now identified)
+    Alonso    : P3 in aston-martin -> P4 if in red-bull (same driver+luck)
+    Albon     : P13 in williams -> P10 if in red-bull (same driver+luck)
+    Sargeant  : P12 in williams -> P9 if in ferrari (same driver+luck)
+
+[4] OLS standardized betas (ground truth; gcm-independent)
+    finish ~ skill+pace      : {'driver_skill': 0.56, 'car_pace': 0.2}
+    finish ~ skill+pace+grid : {'driver_skill': 0.31, 'car_pace': 0.08, 'grid': 0.49}
+    grid   ~ skill+pace      : {'driver_skill': 0.51, 'car_pace': 0.25}
+====================================================================
+VERDICT (honest)
+====================================================================
+v2 IMPROVES on v1 but does NOT fully reproduce car-dominance.
+  - v1: ICC car 1.3% vs driver 45%; interventional car 2.3 << driver 8.4.
+  - v2: ICC car 6% vs driver 32%; interventional car 4.3 vs driver 12.8. Counterfactual swaps now move sensibly
+    (Albon Williams->Red Bull P13->P10; Sargeant->Ferrari P12->P9).
+  - BUT driver still leads the car ~5:1 in ICC, vs the literature's car-dominant
+    split. The OLS betas show this is in the LATENTS, not a gcm artifact.
+WHY: the race attribution inherits the quali-stage split, where driver-skill
+spread already ~= car-pace spread (sigma_skill 0.48 ~ sigma_pace 0.43). Residual
+skill/pace entanglement (corr 0.49) and thin-connectivity backmarkers (Latifi/
+Sargeant absorbing Williams) likely OVERSTATE driver skill, starving car_pace.
+NEXT: (a) more seasons -> more team-switching to chain/separate scales; (b) propagate
+posterior skill uncertainty into the SCM so noisy backmarker skills don't count as
+precise; (c) session-matched quali normalization; (d) model race pace directly.
