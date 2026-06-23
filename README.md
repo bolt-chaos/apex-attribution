@@ -65,9 +65,20 @@ Building the deferred fix in [`v2/`](v2). Phase 1 — **identification works**:
   recovers a **believable skill ranking** (Verstappen clear #1, then Leclerc/Norris/Russell/Sainz;
   Stroll/Sargeant/Latifi last — see [`figures/v2_driver_skill.png`](figures/v2_driver_skill.png))
   with car pace cleanly separated. This is exactly what v1's raw-categorical SCM could not do.
-- [ ] **feed latents into the SCM** — replace categorical `driver_id`/`constructor_id` with the
-  posterior `skill`/`car_pace`, then re-run the race-outcome ICC + counterfactuals (where the
-  "car should dominate" bar properly applies).
+- [x] **feed latents into the SCM** ([`v2/build_scm_data.py`](v2/build_scm_data.py),
+  [`v2/attribution_v2.py`](v2/attribution_v2.py)) — categorical nodes replaced by continuous
+  `driver_skill`/`car_pace` (now only corr 0.49, so separable). Re-ran the race-outcome ICC +
+  counterfactuals → [`figures/v2_attribution_diagnostic.png`](figures/v2_attribution_diagnostic.png).
+
+**v2 phase 2 result — big improvement, not yet a full fix.** The car effect is restored from v1's
+flat line (ICC car 1.3%→6.5%; sweeping Verstappen across cars now spans ~4.5 positions, not ~1;
+counterfactual swaps move sensibly — Albon Williams→Red Bull P13→P10). **But car-dominance still
+isn't reproduced**: driver skill still leads car pace ~5:1 in ICC. OLS standardized betas confirm
+this lives in the *latents*, not gcm (`finish ~ skill 0.56, pace 0.20`). The race attribution
+inherits the quali-stage split, where residual skill/pace entanglement (corr 0.49) and
+thinly-connected backmarkers (Latifi/Sargeant absorbing Williams) overstate driver skill.
+**Next:** more seasons (more team-switching to separate scales), propagate posterior skill
+uncertainty into the SCM, session-matched quali normalization, and/or model race pace directly.
 
 ## Setup
 
