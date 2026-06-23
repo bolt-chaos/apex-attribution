@@ -196,6 +196,14 @@ season-specific skill captures more real driver signal). Anchoring caveat: the R
 2018, so a late-debut driver's pre-debut (no-data) cells accumulate prior drift — minor at small
 σ_rw. (`figures/v2_skill_trajectories_2018_2025_rw.png`)
 
+**Step 6 — uncertainty on the current best model** (`v2/uncertainty_propagation.py`, generalized to
+the time-varying model: it detects the `season` dim and maps each draw's skill by `(driver, year)`;
+the point-estimate baseline is computed in-script via ICC on the posterior mean). 30 joint draws on
+the wide+RW model give **car median 31.9%** (90% CrI [23.3, 42.3]) vs **driver 21.4%** [12.9, 29.3],
+**P(car > driver) = 73%**. So "car leads" is the modal-but-not-decisive outcome — the CrIs overlap;
+the honest statement is a range, not a verdict. This tempers the Step-5 point headline and is the
+prerequisite for any cross-era claim. (`figures/v2_uncertainty_2018_2025_rw.png`)
+
 ## 7. Key design decisions
 
 | decision | choice | why |
@@ -270,7 +278,22 @@ Python 3.12. `dowhy==0.14` (`gcm`), `pandas==3.0.3`, `numpy==2.4.6`, `scikit-lea
 
 ## 12. Roadmap
 
-Steps 4–5 (widen era + time-varying skill) reproduced a robust car-dominant split with believable
-driver arcs. Next: propagate uncertainty on the wide+time-varying model; session-matched quali
-normalization; model **race pace** directly as a second signal; add a driver-error-DNF risk term;
-extend further back with explicit regulation-era handling.
+Steps 4–6 reproduced a car-leaning split (P(car>driver)=73%, CrIs overlap) with believable driver
+arcs and honest intervals. Next: session-matched quali normalization; model **race pace** directly
+as a second signal; add a driver-error-DNF risk term.
+
+### Cross-era comparison ("Senna in a modern Red Bull")
+
+The query is already expressible as `do(car_pace = 2024-Red-Bull, driver_skill = Senna)` → predict
+finish; the architecture supports its *shape*. The blockers are not plumbing:
+1. **Teammate chain must connect the eras** — fit the time-varying model on the full f1db span
+   (`--start 1984`) so the largest connected component links Senna→(Berger→Alesi→…→Bottas/Stroll)→today.
+2. **Cross-era scale comparability** — a 0.3% teammate gap may not mean the same thing in 1990 vs
+   2024 (field spreads, tire wars, refueling). Needs an era-varying skill spread; only partly identified.
+3. **Thin historical connectivity → wide uncertainty** — Step 6's interval machinery is the
+   prerequisite; the counterfactual is an off-support extrapolation, reported with a wide CrI and a
+   "what the model implies, not an identified effect" caveat.
+
+Staged path: (A) uncertainty machinery [done, Step 6] → (B) extend era backward incrementally,
+tracking connectivity/convergence/uncertainty growth → (C) era-varying skill spread → (D) a thin
+cross-era counterfactual wrapper.
