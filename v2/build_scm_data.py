@@ -16,6 +16,7 @@ from __future__ import annotations
 import pickle
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -29,12 +30,17 @@ def main() -> int:
     RESULTS, IDATA, OUT = Path(args.results).resolve(), Path(args.idata).resolve(), Path(args.out).resolve()
 
     idata = pickle.load(open(IDATA, "rb"))
-    skill = idata.posterior["skill"].mean(("chain", "draw")).to_series()      # index: driver
+    skill_da = idata.posterior["skill"].mean(("chain", "draw"))
     pace = idata.posterior["pace"].mean(("chain", "draw")).to_series()        # index: team_year
 
     df = pd.read_parquet(RESULTS)  # started rows (classified flag inside)
     df["team_year"] = df.constructor_id + "@" + df.year.astype(str)
-    df["driver_skill"] = df.driver_id.map(skill)
+    if "season" in skill_da.dims:                     # time-varying skill -> map by (driver, year)
+        skill = skill_da.to_pandas()                  # rows=driver, cols=season(year)
+        df["driver_skill"] = [skill.loc[d, y] if (d in skill.index and y in skill.columns)
+                              else np.nan for d, y in zip(df.driver_id, df.year)]
+    else:                                             # constant skill -> map by driver
+        df["driver_skill"] = df.driver_id.map(skill_da.to_series())
     df["car_pace"] = df.team_year.map(pace)
 
     before = len(df)

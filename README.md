@@ -108,8 +108,19 @@ and full teammate-graph connectivity fixes it. The era is a CLI parameter (`--st
 See [`figures/v2_attribution_diagnostic_2018_2025.png`](figures/v2_attribution_diagnostic_2018_2025.png),
 [`figures/v2_driver_skill_2018_2025.png`](figures/v2_driver_skill_2018_2025.png).
 
-**Next:** propagate uncertainty on the wide era; session-matched quali normalization; a slowly-varying
-(per-season) skill term now that the span is 8 years; extend further back with explicit era handling.
+**Phase 5 — time-varying (per-season) skill** ([`v2/fit_skill_rw.py`](v2/fit_skill_rw.py)). Replaces
+the constant career skill with a per-driver **Gaussian random walk across seasons** (temporally
+smooth = slowly varying). The data supports a small, real drift (**σ_rw ≈ 0.11%/season**, HDI
+excludes 0), and the recovered career arcs are believable — **Verstappen** steadily improving
+(−0.55→−1.01), **Vettel/Ricciardo declining**, **Norris/Piastri** maturing, **Hamilton** flat at his
+plateau (see [`figures/v2_skill_trajectories_2018_2025_rw.png`](figures/v2_skill_trajectories_2018_2025_rw.png)).
+**Car-dominance is robust** to the refinement: race ICC **car 26.6% vs driver 23.0% → PASS**
+(interventional car 10.3 vs driver 7.5; counterfactual Albon Williams→Red Bull P13→P7). The split
+moves toward parity vs constant-skill (was 36.5/14.4) because season-specific skill legitimately
+captures form the career average flattened — a more accurate, more nuanced picture, car still ahead.
+
+**Next:** propagate uncertainty on the wide+time-varying model; session-matched quali normalization;
+extend further back with explicit regulation-era handling.
 
 ## Setup
 
