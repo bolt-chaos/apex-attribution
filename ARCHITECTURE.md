@@ -75,8 +75,9 @@ apex-attribution/
 ├── v2/                   hierarchical latent skill/pace line
 │   ├── build_quali.py      -> data/f1_quali.parquet (pct gap to pole)
 │   ├── fit_skill.py        PyMC crossed random-effects -> models/v2_idata.pkl
-│   ├── build_scm_data.py   merge posterior latents -> data/f1_scm_v2.parquet   (PR #7)
-│   └── attribution_v2.py   race-outcome SCM with continuous skill/pace          (PR #7)
+│   ├── build_scm_data.py   merge posterior latents -> data/f1_scm_v2.parquet
+│   ├── attribution_v2.py   race-outcome SCM with continuous skill/pace
+│   └── uncertainty_propagation.py  ICC over posterior draws (credible intervals)
 ├── data/                 (gitignored except f1db.version) source DB + derived frames
 ├── models/               (gitignored *.pkl) fitted SCMs + idata; reliability_rates.json tracked
 ├── outputs/              text reports + intervention grids (tracked)
@@ -166,6 +167,14 @@ betas (`finish ~ skill 0.56, pace 0.20`) show this lives in the **latents**, not
 skill/pace entanglement and thinly-connected backmarkers (Latifi/Sargeant absorbing Williams)
 overstate driver skill, which the race attribution inherits.
 
+**Step 3 — propagate posterior uncertainty** (`v2/uncertainty_propagation.py`). Re-runs ICC over
+30 *joint* posterior draws (not point means). Car share 6.5%→median **9.7%** (90% CrI [5.3, 17.0]),
+driver 31.6%→**34.7%** [25.2, 42.1], ratio 4.9x→**3.8x** [1.8, 7.8]. Shifts modestly toward the
+car and shows the split is poorly identified, but does **not** rescue car-dominance — driver leads
+in every draw. Conclusion: the driver-heaviness is robust to SCM-stage uncertainty, so the bias is
+**upstream** in the quali-stage skill identification, not in point estimates.
+(`figures/v2_uncertainty.png`)
+
 ## 7. Key design decisions
 
 | decision | choice | why |
@@ -224,8 +233,10 @@ python v2/attribution_v2.py             # race-outcome attribution w/ latents   
 4. **Era restriction.** Cross-regulation comparison is explicitly out of scope.
 5. **Quali session mixing (v2).** `best` lap mixes Q1/Q2/Q3; session-matched normalization is a
    refinement.
-6. **Point estimates (v2 SCM).** Posterior skill/pace uncertainty is not yet propagated into the
-   SCM — the most promising next lever for the backmarker-inflation problem.
+6. **Point estimates (v2 SCM).** Addressed in step 3 (`uncertainty_propagation.py`): propagating
+   posterior uncertainty widens the attribution and shifts it modestly toward the car, but does not
+   rescue car-dominance — confirming the bias is **upstream** in the latent identification, not in
+   SCM-stage point estimates.
 
 ## 11. Tech stack
 
@@ -236,6 +247,7 @@ Python 3.12. `dowhy==0.14` (`gcm`), `pandas==3.0.3`, `numpy==2.4.6`, `scikit-lea
 
 ## 12. Roadmap
 
-Next candidates (see §10): propagate v2 posterior **uncertainty** into the SCM; **widen the era**
-for more team-switching (better scale chaining); session-matched quali normalization; model
-**race pace** directly as a second signal; add a driver-error-DNF risk term.
+Uncertainty propagation is done (step 3) and localized the remaining bias upstream. Next
+candidates (see §10) target the **latent identification** itself: **widen the era** for more
+team-switching (better scale chaining); session-matched quali normalization; model **race pace**
+directly as a second signal; add a driver-error-DNF risk term.

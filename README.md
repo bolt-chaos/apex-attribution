@@ -80,8 +80,18 @@ isn't reproduced**: driver skill still leads car pace ~5:1 in ICC. OLS standardi
 this lives in the *latents*, not gcm (`finish ~ skill 0.56, pace 0.20`). The race attribution
 inherits the quali-stage split, where residual skill/pace entanglement (corr 0.49) and
 thinly-connected backmarkers (Latifi/Sargeant absorbing Williams) overstate driver skill.
-**Next:** more seasons (more team-switching to separate scales), propagate posterior skill
-uncertainty into the SCM, session-matched quali normalization, and/or model race pace directly.
+**Phase 3 — propagate posterior uncertainty** ([`v2/uncertainty_propagation.py`](v2/uncertainty_propagation.py)).
+Re-ran the ICC over 30 *joint* posterior draws (skill+pace from the same draw, respecting their
+anti-correlation) instead of using point means → [`figures/v2_uncertainty.png`](figures/v2_uncertainty.png).
+Result: car share 6.5%→median **9.7%** (90% CrI [5.3, 17.0]); driver 31.6%→**34.7%** [25.2, 42.1];
+driver:car ratio 4.9x→**3.8x** [1.8, 7.8]. So propagating uncertainty shifts *modestly* toward the
+car and shows the split is **not sharply identified** — but it does **not rescue car-dominance**:
+the driver leads in every draw. That's informative — it localizes the remaining bias **upstream**
+in the quali-stage skill identification (which SCM-stage uncertainty can't undo), not in
+overconfident point estimates.
+
+**Next:** better latent identification is the lever — more seasons (more team-switching to chain
+scales), session-matched quali normalization, and/or modelling race pace directly as a second signal.
 
 ## Setup
 
