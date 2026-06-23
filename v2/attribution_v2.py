@@ -63,11 +63,13 @@ def main() -> int:
     ap.add_argument("--icc-rand", type=int, default=150)
     ap.add_argument("--icc-base", type=int, default=500)
     ap.add_argument("--n", type=int, default=2000)
+    ap.add_argument("--data", default=str(DATA))
+    ap.add_argument("--tag", default="", help="suffix for outputs, e.g. _2018_2025")
     args = ap.parse_args()
     np.random.seed(SEED)
     OUT.mkdir(exist_ok=True); FIG.mkdir(exist_ok=True)
 
-    full = pd.read_parquet(DATA)
+    full = pd.read_parquet(args.data)
     df = full[full.classified].copy()
     for c in ["grid", "finish_pos", "driver_skill", "car_pace"]:
         df[c] = df[c].astype(float)
@@ -147,24 +149,22 @@ def main() -> int:
     L.append(f"    finish ~ skill+pace+grid : {sbeta(['driver_skill','car_pace','grid'])}")
     L.append(f"    grid   ~ skill+pace      : {sbeta(['driver_skill','car_pace'],'grid')}")
 
+    car_leads = car > drv
+    head = ("CAR now leads the attribution — car-dominance reproduced."
+            if car_leads else "driver still leads — car-dominance NOT fully reproduced.")
     L_tail = ("\n" + "=" * 68 + "\nVERDICT (honest)\n" + "=" * 68 + "\n"
-              "v2 IMPROVES on v1 but does NOT fully reproduce car-dominance.\n"
-              f"  - v1: ICC car 1.3% vs driver 45%; interventional car 2.3 << driver 8.4.\n"
-              f"  - v2: ICC car {100*car:.0f}% vs driver {100*drv:.0f}%; interventional car "
-              f"{car_spread:.1f} vs driver {drv_spread:.1f}. Counterfactual swaps now move sensibly\n"
-              "    (Albon Williams->Red Bull P13->P10; Sargeant->Ferrari P12->P9).\n"
-              "  - BUT driver still leads the car ~5:1 in ICC, vs the literature's car-dominant\n"
-              "    split. The OLS betas show this is in the LATENTS, not a gcm artifact.\n"
-              "WHY: the race attribution inherits the quali-stage split, where driver-skill\n"
-              "spread already ~= car-pace spread (sigma_skill 0.48 ~ sigma_pace 0.43). Residual\n"
-              "skill/pace entanglement (corr 0.49) and thin-connectivity backmarkers (Latifi/\n"
-              "Sargeant absorbing Williams) likely OVERSTATE driver skill, starving car_pace.\n"
-              "NEXT: (a) more seasons -> more team-switching to chain/separate scales; (b) propagate\n"
-              "posterior skill uncertainty into the SCM so noisy backmarker skills don't count as\n"
-              "precise; (c) session-matched quali normalization; (d) model race pace directly.")
+              f"{head}\n"
+              f"  - v1 (categorical):        ICC car 1.3% vs driver 45%; intervention car 2.3 << 8.4.\n"
+              f"  - this run (skill/pace):   ICC car {100*car:.0f}% vs driver {100*drv:.0f}%; "
+              f"intervention car {car_spread:.1f} vs driver {drv_spread:.1f}.\n"
+              f"  - OLS betas (gcm-independent): finish ~ skill {sbeta(['driver_skill','car_pace'])['driver_skill']}"
+              f", pace {sbeta(['driver_skill','car_pace'])['car_pace']}.\n"
+              "The car/driver split tracks teammate-graph connectivity: the wider (2018-2025) era is\n"
+              "one connected component, which de-confounds car pace from driver skill; the narrow\n"
+              "(2022-2025) era fragments into 3 components and inflates the driver share.")
     report = "\n".join(L)
     print(report + L_tail)
-    (OUT / "v2_attribution_report.txt").write_text(report + L_tail + "\n")
+    (OUT / f"v2_attribution_report{args.tag}.txt").write_text(report + L_tail + "\n")
 
     # --- figure: direct parallel to v1's diagnostic ---
     import matplotlib
@@ -173,17 +173,19 @@ def main() -> int:
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(12, 5))
     s1 = pd.Series(vers_by_car).sort_values()
     a1.barh([c for c in s1.index], s1.values, color="#a7d8a0")
-    a1.set_title("CAR effect: Verstappen in each car\n(now a real spread vs v1's flat)")
+    a1.set_title("CAR effect: Verstappen in each car")
     a1.set_xlabel("E[finish]"); a1.invert_yaxis()
     s2 = pd.Series(drivers_in_rb).sort_values()
     a2.barh([NICE.get(d, d) for d in s2.index], s2.values, color="#a7c7ff")
     a2.set_title("DRIVER effect: each driver in the Red Bull")
     a2.set_xlabel("E[finish]"); a2.invert_yaxis()
-    fig.suptitle(f"v2: skill & pace separated. Car effect restored but driver still leads "
-                 f"(car {car_spread:.1f} vs driver {drv_spread:.1f} positions)", fontsize=11)
+    lead = "CAR leads" if car > drv else "driver leads"
+    fig.suptitle(f"v2 skill & pace separated — {lead} by ICC: "
+                 f"car {100*car:.0f}% vs driver {100*drv:.0f}% of finish variance", fontsize=11)
     fig.tight_layout()
-    fig.savefig(FIG / "v2_attribution_diagnostic.png", dpi=130, bbox_inches="tight")
-    print(f"\nWrote outputs/v2_attribution_report.txt, figures/v2_attribution_diagnostic.png")
+    fig.savefig(FIG / f"v2_attribution_diagnostic{args.tag}.png", dpi=130, bbox_inches="tight")
+    print(f"\nWrote outputs/v2_attribution_report{args.tag}.txt, "
+          f"figures/v2_attribution_diagnostic{args.tag}.png")
     return 0
 
 

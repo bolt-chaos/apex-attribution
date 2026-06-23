@@ -90,8 +90,26 @@ the driver leads in every draw. That's informative — it localizes the remainin
 in the quali-stage skill identification (which SCM-stage uncertainty can't undo), not in
 overconfident point estimates.
 
-**Next:** better latent identification is the lever — more seasons (more team-switching to chain
-scales), session-matched quali normalization, and/or modelling race pace directly as a second signal.
+**Phase 4 — widen the era to 2018–2025 → car-dominance reproduced.** ✅ The narrow era fragments
+into 3 teammate components; **2018–2025 is a single 41-driver component**, so car pace and driver
+skill are properly de-confounded (e.g. Albon now spans Red Bull/Toro Rosso/Williams). Re-running the
+*whole* pipeline on the wider era flips every metric to car-dominant:
+
+| metric | v1 (categorical) | v2 narrow 2022–25 | **v2 wide 2018–25** |
+|---|---|---|---|
+| quali variance (systematic) | — | car 46% / driver 54% | **car 89% / driver 11%** |
+| ICC car vs driver (race) | 1.3% vs 45% | 6.5% vs 31.6% | **36.5% vs 14.4%** ✅ PASS |
+| OLS `finish ~ skill, pace` | — | 0.56, 0.20 | **0.38, 0.43** (car larger) |
+| counterfactual (Sargeant→Ferrari) | flat | — | **P12→P4** |
+
+This confirms the phase-3 diagnosis: the driver-heaviness was the **thin-connectivity artifact**,
+and full teammate-graph connectivity fixes it. The era is a CLI parameter (`--start/--end/--out-tag`);
+2018–2025 artifacts are tagged `_2018_2025`, the 2022–2025 baseline is preserved.
+See [`figures/v2_attribution_diagnostic_2018_2025.png`](figures/v2_attribution_diagnostic_2018_2025.png),
+[`figures/v2_driver_skill_2018_2025.png`](figures/v2_driver_skill_2018_2025.png).
+
+**Next:** propagate uncertainty on the wide era; session-matched quali normalization; a slowly-varying
+(per-season) skill term now that the span is 8 years; extend further back with explicit era handling.
 
 ## Setup
 
