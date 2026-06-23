@@ -1,0 +1,79 @@
+================================================================
+v2 HIERARCHICAL SKILL / CAR-PACE MODEL — RESULTS
+================================================================
+convergence: max R-hat = 1.010 (want < 1.01)
+sigma_skill=0.327  sigma_pace=0.828  nu=2.4
+
+[VARIANCE DECOMPOSITION of qualifying pct_gap]
+    CAR pace:     37.9%
+    DRIVER skill:  4.7%
+    residual:     57.4%   (weekend-to-weekend one-lap noise)
+    of the SYSTEMATIC part: car 89% vs driver 11%
+    latent spreads: sigma_pace=0.83%  sigma_skill=0.33%
+    NOTE: for single-lap QUALI pace a roughly even car/driver split is expected;
+    the 'car should dominate' bar belongs to RACE outcomes (next v2 phase feeds
+    these latents into the race-result SCM). Identification is validated by the
+    believable skill ranking + car order below, the thing v1 could not produce.
+
+[DRIVER SKILL] relative pace vs grid-average, % (negative = faster), best first
+    max-verstappen       -0.72%   [90% HDI -0.86, -0.60]
+    charles-leclerc      -0.50%   [90% HDI -0.63, -0.38]
+    lando-norris         -0.45%   [90% HDI -0.62, -0.30]
+    carlos-sainz-jr      -0.37%   [90% HDI -0.49, -0.24]
+    fernando-alonso      -0.36%   [90% HDI -0.51, -0.21]
+    oscar-piastri        -0.28%   [90% HDI -0.49, -0.09]
+    george-russell       -0.27%   [90% HDI -0.43, -0.13]
+    lewis-hamilton       -0.27%   [90% HDI -0.41, -0.13]
+    pierre-gasly         -0.25%   [90% HDI -0.37, -0.12]
+    oliver-bearman       -0.20%   [90% HDI -0.46, +0.10]
+    alexander-albon      -0.16%   [90% HDI -0.29, -0.02]
+    sebastian-vettel     -0.15%   [90% HDI -0.31, -0.00]
+    gabriel-bortoleto    -0.13%   [90% HDI -0.41, +0.15]
+    nico-hulkenberg      -0.12%   [90% HDI -0.28, +0.03]
+    valtteri-bottas      -0.11%   [90% HDI -0.27, +0.05]
+    sergio-perez         -0.09%   [90% HDI -0.23, +0.03]
+    daniel-ricciardo     -0.09%   [90% HDI -0.22, +0.04]
+    esteban-ocon         -0.06%   [90% HDI -0.20, +0.07]
+    isack-hadjar         -0.03%   [90% HDI -0.30, +0.25]
+    jack-doohan          -0.02%   [90% HDI -0.30, +0.24]
+    daniil-kvyat         +0.01%   [90% HDI -0.22, +0.24]
+    kimi-antonelli       +0.02%   [90% HDI -0.23, +0.25]
+    antonio-giovinazzi   +0.03%   [90% HDI -0.23, +0.29]
+    yuki-tsunoda         +0.04%   [90% HDI -0.10, +0.19]
+    brendon-hartley      +0.07%   [90% HDI -0.23, +0.35]
+    kimi-raikkonen       +0.11%   [90% HDI -0.10, +0.32]
+    stoffel-vandoorne    +0.12%   [90% HDI -0.17, +0.39]
+    mick-schumacher      +0.12%   [90% HDI -0.13, +0.41]
+    sergey-sirotkin      +0.16%   [90% HDI -0.15, +0.43]
+    romain-grosjean      +0.18%   [90% HDI -0.06, +0.42]
+    lance-stroll         +0.20%   [90% HDI +0.07, +0.34]
+    liam-lawson          +0.21%   [90% HDI -0.02, +0.44]
+    kevin-magnussen      +0.22%   [90% HDI +0.03, +0.41]
+    franco-colapinto     +0.24%   [90% HDI +0.02, +0.45]
+    guanyu-zhou          +0.26%   [90% HDI +0.04, +0.47]
+    nyck-de-vries        +0.32%   [90% HDI +0.03, +0.60]
+    marcus-ericsson      +0.35%   [90% HDI +0.05, +0.64]
+    robert-kubica        +0.37%   [90% HDI +0.07, +0.68]
+    logan-sargeant       +0.50%   [90% HDI +0.25, +0.73]
+    nicholas-latifi      +0.50%   [90% HDI +0.29, +0.70]
+    nikita-mazepin       +0.63%   [90% HDI +0.28, +0.96]
+
+[CAR PACE] by constructor (avg of its team-years, % off pole), fastest first
+    mercedes         0.72%
+    racing-bulls     1.06%
+    ferrari          1.06%
+    red-bull         1.12%
+    rb               1.45%
+    mclaren          1.68%
+    alpine           1.70%
+    aston-martin     1.74%
+    alphatauri       1.77%
+    racing-point     1.98%
+    kick-sauber      1.98%
+    renault          2.07%
+    haas             2.11%
+    alfa-romeo       2.29%
+    force-india      2.35%
+    williams         2.62%
+    toro-rosso       2.75%
+    sauber           3.00%

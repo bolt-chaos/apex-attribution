@@ -30,10 +30,8 @@ import pymc as pm
 import arviz as az
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / "data" / "f1_quali.parquet"
 OUT = ROOT / "outputs"
 FIG = ROOT / "figures"
-IDATA = ROOT / "models" / "v2_idata.pkl"
 SEED = 20260623
 
 
@@ -41,10 +39,13 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--draws", type=int, default=1000)
     ap.add_argument("--tune", type=int, default=1000)
+    ap.add_argument("--data", default=str(ROOT / "data" / "f1_quali.parquet"))
+    ap.add_argument("--tag", default="", help="suffix for outputs, e.g. _2018_2025")
     args = ap.parse_args()
     OUT.mkdir(exist_ok=True); FIG.mkdir(exist_ok=True); (ROOT / "models").mkdir(exist_ok=True)
+    IDATA = ROOT / "models" / f"v2_idata{args.tag}.pkl"
 
-    df = pd.read_parquet(DATA)
+    df = pd.read_parquet(args.data)
     drv = df.driver_id.astype("category")
     ty = df.team_year.astype("category")
     di, ti = drv.cat.codes.values, ty.cat.codes.values
@@ -97,10 +98,11 @@ def main() -> int:
              f"driver {100*drv_share/sys_share:.0f}%")
     L.append(f"    latent spreads: sigma_pace={float(post['sigma_pace'].mean()):.2f}%  "
              f"sigma_skill={float(post['sigma_skill'].mean()):.2f}%")
-    L.append("    NOTE: for single-lap QUALI pace a roughly even car/driver split is expected;")
-    L.append("    the 'car should dominate' bar belongs to RACE outcomes (next v2 phase feeds")
-    L.append("    these latents into the race-result SCM). Identification is validated by the")
-    L.append("    believable skill ranking + car order below, the thing v1 could not produce.")
+    L.append("    NOTE: the car/driver split is SENSITIVE to teammate-graph connectivity. With")
+    L.append("    thin connectivity (2022-2025: 3 components) driver skill is inflated and the")
+    L.append("    split looks even; with full connectivity (2018-2025: one component) the car")
+    L.append("    dominates ~89/11 as expected. Identification is validated by the believable")
+    L.append("    skill ranking + car order below, the thing v1 could not produce.")
 
     L.append("\n[DRIVER SKILL] relative pace vs grid-average, % (negative = faster), best first")
     order = skill_m.sort_values().index
@@ -117,7 +119,7 @@ def main() -> int:
 
     report = "\n".join(L)
     print(report)
-    (OUT / "v2_skill_report.txt").write_text(report + "\n")
+    (OUT / f"v2_skill_report{args.tag}.txt").write_text(report + "\n")
 
     # --- figure: driver skill forest (manual; robust to arviz plotting API churn) ---
     import matplotlib
@@ -137,9 +139,10 @@ def main() -> int:
     ax.set_xlabel("relative qualifying pace vs grid average (%)  —  left = faster")
     ax.set_title("v2 driver skill, car pace removed (90% HDI)")
     fig.tight_layout()
-    fig.savefig(FIG / "v2_driver_skill.png", dpi=130, bbox_inches="tight")
+    fig.savefig(FIG / f"v2_driver_skill{args.tag}.png", dpi=130, bbox_inches="tight")
 
-    print(f"\nWrote outputs/v2_skill_report.txt, figures/v2_driver_skill.png, {IDATA.name}")
+    print(f"\nWrote outputs/v2_skill_report{args.tag}.txt, "
+          f"figures/v2_driver_skill{args.tag}.png, {IDATA.name}")
     return 0
 
 

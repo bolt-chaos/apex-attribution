@@ -121,7 +121,10 @@ def main() -> int:
     ap.add_argument("--end", type=int, default=2025)
     ap.add_argument("--min-shared", type=int, default=3,
                     help="min shared race entries to count a teammate edge")
+    ap.add_argument("--out-tag", default="", help="suffix for output files, e.g. _2018_2025")
     args = ap.parse_args()
+    out_parquet = ROOT / "data" / f"f1_results{args.out_tag}.parquet"
+    out_csv = ROOT / "data" / f"f1_results{args.out_tag}.csv"
 
     con = sqlite3.connect(DB_PATH)
     raw = load_race_results(con, args.start, args.end)
@@ -154,8 +157,8 @@ def main() -> int:
     df = df[cols].sort_values(["year", "round", "finish_pos"]).reset_index(drop=True)
 
     # --- persist ---
-    df.to_parquet(OUT_PARQUET, index=False)
-    df.to_csv(OUT_CSV, index=False)
+    df.to_parquet(out_parquet, index=False)
+    df.to_csv(out_csv, index=False)
 
     # --- summary ---
     print("\n" + "=" * 64)
@@ -173,7 +176,7 @@ def main() -> int:
     print(df.dnf_cause.value_counts().to_string())
     print("\nrace entries per driver (cohort):")
     print(df.driver_id.value_counts().to_string())
-    print(f"\nWrote {OUT_PARQUET.relative_to(ROOT)} and {OUT_CSV.relative_to(ROOT)}")
+    print(f"\nWrote {out_parquet.relative_to(ROOT)} and {out_csv.relative_to(ROOT)}")
     return 0
 
 

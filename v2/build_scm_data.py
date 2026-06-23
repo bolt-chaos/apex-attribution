@@ -19,12 +19,15 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
-RESULTS = ROOT / "data" / "f1_results.parquet"
-IDATA = ROOT / "models" / "v2_idata.pkl"
-OUT = ROOT / "data" / "f1_scm_v2.parquet"
-
-
 def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--results", default=str(ROOT / "data" / "f1_results.parquet"))
+    ap.add_argument("--idata", default=str(ROOT / "models" / "v2_idata.pkl"))
+    ap.add_argument("--out", default=str(ROOT / "data" / "f1_scm_v2.parquet"))
+    args = ap.parse_args()
+    RESULTS, IDATA, OUT = Path(args.results).resolve(), Path(args.idata).resolve(), Path(args.out).resolve()
+
     idata = pickle.load(open(IDATA, "rb"))
     skill = idata.posterior["skill"].mean(("chain", "draw")).to_series()      # index: driver
     pace = idata.posterior["pace"].mean(("chain", "draw")).to_series()        # index: team_year

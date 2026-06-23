@@ -175,6 +175,16 @@ in every draw. Conclusion: the driver-heaviness is robust to SCM-stage uncertain
 **upstream** in the quali-stage skill identification, not in point estimates.
 (`figures/v2_uncertainty.png`)
 
+**Step 4 — widen the era to 2018–2025 → car-dominance reproduced.** The narrow era fragments into
+3 teammate components; 2018–2025 is **one 41-driver component**, de-confounding car pace from driver
+skill. Re-running the whole pipeline (era is a CLI param: `--start/--end/--out-tag`/`--tag`, artifacts
+tagged `_2018_2025`, baseline preserved) flips every metric to car-dominant: quali systematic split
+car **89%**/driver 11% (was 46/54); race ICC car **36.5%** vs driver **14.4%** → **PASS** (was
+6.5 vs 31.6); OLS `finish ~ skill 0.38, pace 0.43` (car larger); counterfactual Sargeant Williams→
+Ferrari **P12→P4**. Confirms the step-3 diagnosis: the driver-heaviness was the thin-connectivity
+artifact, fixed by full connectivity. (`figures/v2_attribution_diagnostic_2018_2025.png`,
+`figures/v2_driver_skill_2018_2025.png`)
+
 ## 7. Key design decisions
 
 | decision | choice | why |
@@ -225,9 +235,11 @@ python v2/attribution_v2.py             # race-outcome attribution w/ latents   
 ## 10. Known limitations & open problems
 
 1. **Selection confounding (pitfall #1).** driver⊥constructor is false (V 0.84). v1 cannot
-   identify; v2 reduces but does not eliminate it (latent corr 0.49).
-2. **Residual skill/pace entanglement (v2).** Thinly-connected backmarkers absorb car-badness
-   into "skill," overstating the driver share. The race attribution inherits this.
+   identify; v2 latents reduce it (corr 0.49→0.41 on the wide era) and the 2018–2025 single-component
+   model resolves it enough to reproduce car-dominance.
+2. **Residual skill/pace entanglement.** A thin-connectivity problem (narrow era): backmarkers absorb
+   car-badness into "skill." **Largely resolved by widening the era (step 4)** — one connected
+   component de-confounds the latents. Still present for any driver who never switches teams.
 3. **DNF censoring.** Handled via Option A; driver-error DNFs are not yet a modelled driver-risk
    term (only mechanical reliability is).
 4. **Era restriction.** Cross-regulation comparison is explicitly out of scope.
@@ -247,7 +259,7 @@ Python 3.12. `dowhy==0.14` (`gcm`), `pandas==3.0.3`, `numpy==2.4.6`, `scikit-lea
 
 ## 12. Roadmap
 
-Uncertainty propagation is done (step 3) and localized the remaining bias upstream. Next
-candidates (see §10) target the **latent identification** itself: **widen the era** for more
-team-switching (better scale chaining); session-matched quali normalization; model **race pace**
-directly as a second signal; add a driver-error-DNF risk term.
+Widening the era (step 4) reproduced car-dominance and is the current best line. Next: propagate
+uncertainty on the wide era; a **slowly-varying (per-season) skill** term now that the span is 8
+years; session-matched quali normalization; model **race pace** directly as a second signal; add a
+driver-error-DNF risk term; extend further back with explicit regulation-era handling.

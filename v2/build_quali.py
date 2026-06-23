@@ -28,13 +28,20 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from build_dataset import largest_connected_cohort  # reuse v1 connectivity logic
 
 DB = ROOT / "data" / "f1db.sqlite"
-OUT_PARQUET = ROOT / "data" / "f1_quali.parquet"
-OUT_CSV = ROOT / "data" / "f1_quali.csv"
-START, END = 2022, 2025
 GAP_CAP = 10.0  # %; dry-quali gaps above this are aborted/wet/incident artifacts -> drop
 
 
 def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--start", type=int, default=2022)
+    ap.add_argument("--end", type=int, default=2025)
+    ap.add_argument("--out-tag", default="", help="suffix for output files, e.g. _2018_2025")
+    args = ap.parse_args()
+    START, END = args.start, args.end
+    out_parquet = ROOT / "data" / f"f1_quali{args.out_tag}.parquet"
+    out_csv = ROOT / "data" / f"f1_quali{args.out_tag}.csv"
+
     con = sqlite3.connect(DB)
     q = """
     SELECT rd.race_id, r.year, r.round, r.circuit_id, r.circuit_type,
@@ -68,11 +75,11 @@ def main() -> int:
             "driver_id", "constructor_id", "team_year", "best", "pole", "pct_gap", "qpos"]
     df = df[cols].sort_values(["year", "round", "pct_gap"]).reset_index(drop=True)
 
-    df.to_parquet(OUT_PARQUET, index=False)
-    df.to_csv(OUT_CSV, index=False)
+    df.to_parquet(out_parquet, index=False)
+    df.to_csv(out_csv, index=False)
 
     print("=" * 60)
-    print("v2 QUALI-PACE BUILD SUMMARY")
+    print(f"v2 QUALI-PACE BUILD SUMMARY  ({START}-{END})")
     print("=" * 60)
     print(f"rows: {len(df)}  | dropped: no-lap {n_nolap}, >{GAP_CAP}% gap {n_capped}")
     print(f"drivers: {df.driver_id.nunique()}  team-years: {df.team_year.nunique()}  "
@@ -84,7 +91,7 @@ def main() -> int:
     print(df.groupby('constructor_id').team_year.nunique().to_string())
     print("\nentries per driver (head):")
     print(df.driver_id.value_counts().head(8).to_string())
-    print(f"\nWrote {OUT_PARQUET.relative_to(ROOT)} (+ .csv)")
+    print(f"\nWrote {out_parquet.relative_to(ROOT)} (+ .csv)")
     return 0
 
 
