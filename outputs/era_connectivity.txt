@@ -1,0 +1,16 @@
+==============================================================================
+WALK THE ERA BACK — teammate-graph connectivity (quali-with-lap data)
+==============================================================================
+        era  drivers  tm-yrs  comps  main  in_main%  legends in main component
+2018-2025       43      80      1    41       95%  alonso, raikkonen, hamilton, verstappen
+2014-2025       62     122      3    53       85%  alonso, raikkonen, hamilton, verstappen
+2010-2025       83     169      5    68       82%  schumacher, barrichello, alonso, raikkonen, hamilton, verstappen
+2006-2025      102     212      3    92       90%  schumacher, barrichello, alonso, raikkonen, hamilton, verstappen
+2000-2025      129     275      5   114       88%  alesi, schumacher, hakkinen, barrichello, alonso, raikkonen, hamilton, verstappen
+1994-2025      177     347      6   152       86%  senna, mansell, berger, alesi, schumacher, hakkinen, hill, barrichello, alonso, raikkonen, hamilton, verstappen
+1988-2025      219     449      6   194       89%  senna, prost, mansell, berger, alesi, schumacher, hakkinen, hill, barrichello, alonso, raikkonen, hamilton, verstappen
+1984-2025      242     510      5   217       90%  senna, prost, mansell, berger, alesi, schumacher, hakkinen, hill, barrichello, alonso, raikkonen, hamilton, verstappen
+1980-2025      281     575      6   247       88%  senna, prost, mansell, berger, alesi, schumacher, hakkinen, hill, barrichello, alonso, raikkonen, hamilton, verstappen
+
+>> Senna IS in the main connected component once the era starts at 1994 (his career was 1984-1994).
+>> 1984-2025: 217/242 drivers in main component (5 components total) — the full Senna->today span.

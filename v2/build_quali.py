@@ -47,7 +47,8 @@ def main() -> int:
     SELECT rd.race_id, r.year, r.round, r.circuit_id, r.circuit_type,
            rd.driver_id, rd.constructor_id,
            rd.qualifying_q1_millis AS q1, rd.qualifying_q2_millis AS q2,
-           rd.qualifying_q3_millis AS q3, rd.position_number AS qpos
+           rd.qualifying_q3_millis AS q3,
+           rd.qualifying_time_millis AS qt, rd.position_number AS qpos
     FROM race_data rd JOIN race r ON r.id = rd.race_id
     WHERE rd.type = 'QUALIFYING_RESULT' AND r.year BETWEEN ? AND ?
     """
@@ -55,7 +56,10 @@ def main() -> int:
     con.close()
     n0 = len(df)
 
-    df["best"] = df[["q1", "q2", "q3"]].min(axis=1)
+    # best lap = fastest available across sessions. 2006+ uses the q1/q2/q3 knockout split;
+    # pre-2006 uses the single-session qualifying_time_millis (qt). min() spans both eras
+    # (qt is NaN in the modern era, q1/q2/q3 NaN in the old era), enabling a back-to-1980 reach.
+    df["best"] = df[["q1", "q2", "q3", "qt"]].min(axis=1)
     df = df[df.best.notna()].copy()
     n_nolap = n0 - len(df)
 
