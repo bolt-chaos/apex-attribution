@@ -10,4 +10,9 @@ matplotlib==3.11.0
 scipy==1.15.3
 statsmodels==0.14.6
 pyarrow==24.0.0  # parquet engine for the prepped dataframe
+
+# v2 hierarchical latent skill/pace model
+pymc==6.0.1
+arviz==1.2.0
+pytensor==3.0.7
 requests==2.34.2  # not yet used (download_data.py uses stdlib urllib); kept per project deps

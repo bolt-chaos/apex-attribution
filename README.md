@@ -53,6 +53,22 @@ specified just can't extract it.
 constructor-level car pace and driver-level skill as separate parameters (identified via those
 teammate contrasts) and feeds them into the SCM. **Do not trust the v1 attribution numbers.**
 
+## v2 (in progress): the hierarchical latent skill/pace model
+
+Building the deferred fix in [`v2/`](v2). Phase 1 — **identification works**:
+
+- [x] **quali-pace data** ([`v2/build_quali.py`](v2/build_quali.py)) — per-entry % gap to pole, the
+  cleanest car-equalized skill signal; same connected cohort as v1.
+- [x] **hierarchical PyMC fit** ([`v2/fit_skill.py`](v2/fit_skill.py)) — robust crossed random
+  effects `pct_gap = skill[driver] + pace[constructor-season] + noise`. Teammates share `pace`,
+  drivers switching teams chain the scales, sum-to-zero anchors skill. Converges (R-hat 1.00) and
+  recovers a **believable skill ranking** (Verstappen clear #1, then Leclerc/Norris/Russell/Sainz;
+  Stroll/Sargeant/Latifi last — see [`figures/v2_driver_skill.png`](figures/v2_driver_skill.png))
+  with car pace cleanly separated. This is exactly what v1's raw-categorical SCM could not do.
+- [ ] **feed latents into the SCM** — replace categorical `driver_id`/`constructor_id` with the
+  posterior `skill`/`car_pace`, then re-run the race-outcome ICC + counterfactuals (where the
+  "car should dominate" bar properly applies).
+
 ## Setup
 
 ```bash
