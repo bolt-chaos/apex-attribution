@@ -119,8 +119,20 @@ plateau (see [`figures/v2_skill_trajectories_2018_2025_rw.png`](figures/v2_skill
 moves toward parity vs constant-skill (was 36.5/14.4) because season-specific skill legitimately
 captures form the career average flattened — a more accurate, more nuanced picture, car still ahead.
 
-**Next:** propagate uncertainty on the wide+time-varying model; session-matched quali normalization;
-extend further back with explicit regulation-era handling.
+**Phase 6 — uncertainty on the current best model** ([`v2/uncertainty_propagation.py`](v2/uncertainty_propagation.py),
+now generalized to the time-varying model). The wide+RW point estimate (car 26.6 / driver 23.0) is a
+~3-point lead — too close to take on faith. Re-running ICC over 30 *joint* posterior draws gives the
+honest picture: **car median 31.9% (90% CrI [23.3, 42.3]) vs driver 21.4% [12.9, 29.3]**, and
+**P(car > driver) = 73%** (see [`figures/v2_uncertainty_2018_2025_rw.png`](figures/v2_uncertainty_2018_2025_rw.png)).
+So *"the car leads"* is the **modal outcome (≈3 of 4 draws) but not decisive** — the credible
+intervals overlap, so the right statement is a **range, not a verdict**: the car is *probably* the
+bigger factor, but the data don't pin a confident "car dominates." This appropriately tempers the
+point-estimate headline, and is the prerequisite for any future cross-era claim (which would carry
+even wider intervals).
+
+**Next:** session-matched quali normalization; model race pace directly as a second signal; extend
+further back (toward cross-era comparison) with explicit regulation-era handling and era-varying
+skill spread — see [`ARCHITECTURE.md`](ARCHITECTURE.md) for the staged cross-era path.
 
 ## Setup
 
