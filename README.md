@@ -9,6 +9,9 @@ the machinery?* — formally, as a `do(constructor = X)` intervention holding th
 Built on [DoWhy's `gcm` module](https://github.com/py-why/dowhy) over the
 [f1db](https://github.com/f1db/f1db) open dataset (CC-BY-4.0).
 
+For the full system map (data flow, both modelling lines, artifacts, reproduction) see
+[`ARCHITECTURE.md`](ARCHITECTURE.md).
+
 ## Why this can work
 
 Two drivers in the same constructor in a season **share the car**, so their head-to-head
