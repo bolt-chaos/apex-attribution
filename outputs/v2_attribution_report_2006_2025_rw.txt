@@ -1,0 +1,37 @@
+====================================================================
+v2 RACE-OUTCOME ATTRIBUTION (continuous skill/pace nodes)
+====================================================================
+classified rows: 6852
+
+[1] intrinsic_causal_influence on finish_pos (variance shares)
+    car_pace          8.097    42.7%
+    finish_pos        6.213    32.8%
+    driver_skill      2.936    15.5%
+    grid              1.607     8.5%
+    circuit_type      0.087     0.5%
+    SANITY CHECK (car should dominate): car 42.7% vs driver 15.5%  -> PASS
+
+[2] interventional car-effect vs driver-effect (each swept over full range)
+    CAR effect    (median driver, sweep car 0.49..7.31%):  14.33 positions
+    DRIVER effect (median car, sweep skill -0.57..+0.62%):  8.13 positions
+    v1 was car 2.3 << driver 8.4. v2: car 14.3 vs driver 8.1 (car ahead).
+
+[3] counterfactual 'put driver in another car' (now identified)
+    Alonso    : P3 in aston-martin -> P3 if in red-bull (same driver+luck)
+    Albon     : P13 in williams -> P6 if in red-bull (same driver+luck)
+    Sargeant  : P12 in williams -> P8 if in ferrari (same driver+luck)
+
+[4] OLS standardized betas (ground truth; gcm-independent)
+    finish ~ skill+pace      : {'driver_skill': 0.34, 'car_pace': 0.47}
+    finish ~ skill+pace+grid : {'driver_skill': 0.17, 'car_pace': 0.23, 'grid': 0.5}
+    grid   ~ skill+pace      : {'driver_skill': 0.34, 'car_pace': 0.5}
+====================================================================
+VERDICT (honest)
+====================================================================
+CAR now leads the attribution — car-dominance reproduced.
+  - v1 (categorical):        ICC car 1.3% vs driver 45%; intervention car 2.3 << 8.4.
+  - this run (skill/pace):   ICC car 43% vs driver 16%; intervention car 14.3 vs driver 8.1.
+  - OLS betas (gcm-independent): finish ~ skill 0.34, pace 0.47.
+The car/driver split tracks teammate-graph connectivity: the wider (2018-2025) era is
+one connected component, which de-confounds car pace from driver skill; the narrow
+(2022-2025) era fragments into 3 components and inflates the driver share.

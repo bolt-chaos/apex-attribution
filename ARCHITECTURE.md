@@ -78,7 +78,8 @@ apex-attribution/
 │   ├── fit_skill_rw.py     time-varying skill (per-season Gaussian random walk)
 │   ├── build_scm_data.py   merge posterior latents -> data/f1_scm_v2.parquet
 │   ├── attribution_v2.py   race-outcome SCM with continuous skill/pace
-│   └── uncertainty_propagation.py  ICC over posterior draws (credible intervals)
+│   ├── uncertainty_propagation.py  ICC over posterior draws (credible intervals)
+│   └── era_connectivity.py  teammate-graph connectivity sweep vs start year
 ├── data/                 (gitignored except f1db.version) source DB + derived frames
 ├── models/               (gitignored *.pkl) fitted SCMs + idata; reliability_rates.json tracked
 ├── outputs/              text reports + intervention grids (tracked)
@@ -204,6 +205,17 @@ the wide+RW model give **car median 31.9%** (90% CrI [23.3, 42.3]) vs **driver 2
 the honest statement is a range, not a verdict. This tempers the Step-5 point headline and is the
 prerequisite for any cross-era claim. (`figures/v2_uncertainty_2018_2025_rw.png`)
 
+**Step 7 — walk the era back** (`v2/era_connectivity.py` + the parameterized pipeline; `build_quali.py`
+now reads `qualifying_time_millis` so the signal reaches 1980). (1) A teammate-graph connectivity
+sweep: the main component stays 82–95% of drivers back to 1980, and **Senna joins the modern grid's
+component once the era starts ≤1994** — connectivity is not the cross-era blocker. (2) The split is
+**era-dependent**: 2006–2025 (20 yr) gives car 43.6% [35,48] vs driver 12.4% [6,15], P(car>driver)=
+**100%**, vs 2018–2025's 32/21 at 73% — a wider window contains more car variation, so car-dominance
+strengthens and sharpens. No single "X%/Y%"; it depends on the window. (3) Believable 20-yr arcs
+(Hamilton peak+decline; Alonso dip+resurgence; Vettel decline). Remaining blockers: 2006 quali-format
+change (single-session `qt` vs knockout best-of-q123), era-varying skill spread, off-support
+counterfactual. (`figures/era_connectivity.png`, `figures/v2_skill_trajectories_2006_2025_rw.png`)
+
 ## 7. Key design decisions
 
 | decision | choice | why |
@@ -286,14 +298,17 @@ as a second signal; add a driver-error-DNF risk term.
 
 The query is already expressible as `do(car_pace = 2024-Red-Bull, driver_skill = Senna)` → predict
 finish; the architecture supports its *shape*. The blockers are not plumbing:
-1. **Teammate chain must connect the eras** — fit the time-varying model on the full f1db span
-   (`--start 1984`) so the largest connected component links Senna→(Berger→Alesi→…→Bottas/Stroll)→today.
-2. **Cross-era scale comparability** — a 0.3% teammate gap may not mean the same thing in 1990 vs
+1. **Teammate chain must connect the eras** — **CONFIRMED (Step 7):** the connectivity sweep shows
+   Senna joins the modern grid's component at era-start ≤1994; 1984–2025 keeps 90% in one component.
+2. **Quali-format change at 2006** — pre-2006 is single-session `qualifying_time_millis`; 2006+ is
+   knockout best-of-q1/q2/q3. The `qt` fallback unifies the column, but a single-lap-in-one-session
+   time is not exactly a best-of-three-sessions lap; reaching Senna needs a format-aware normalization.
+3. **Cross-era scale comparability** — a 0.3% teammate gap may not mean the same thing in 1990 vs
    2024 (field spreads, tire wars, refueling). Needs an era-varying skill spread; only partly identified.
-3. **Thin historical connectivity → wide uncertainty** — Step 6's interval machinery is the
-   prerequisite; the counterfactual is an off-support extrapolation, reported with a wide CrI and a
-   "what the model implies, not an identified effect" caveat.
+4. **Off-support counterfactual** — Step 6's interval machinery is the prerequisite; the cross-era
+   query is an extrapolation reported with a wide CrI and a "what the model implies, not an identified
+   effect" caveat.
 
-Staged path: (A) uncertainty machinery [done, Step 6] → (B) extend era backward incrementally,
-tracking connectivity/convergence/uncertainty growth → (C) era-varying skill spread → (D) a thin
+Staged path: (A) uncertainty machinery [done, Step 6] → (B) walk era back / connectivity [done,
+Step 7] → (C) format-aware pre-2006 quali normalization + era-varying skill spread → (D) a thin
 cross-era counterfactual wrapper.

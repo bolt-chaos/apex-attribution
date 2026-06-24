@@ -130,9 +130,34 @@ bigger factor, but the data don't pin a confident "car dominates." This appropri
 point-estimate headline, and is the prerequisite for any future cross-era claim (which would carry
 even wider intervals).
 
-**Next:** session-matched quali normalization; model race pace directly as a second signal; extend
-further back (toward cross-era comparison) with explicit regulation-era handling and era-varying
-skill spread — see [`ARCHITECTURE.md`](ARCHITECTURE.md) for the staged cross-era path.
+**Phase 7 — walk the era back (toward cross-era)** ([`v2/era_connectivity.py`](v2/era_connectivity.py)).
+`build_quali.py` now also reads `qualifying_time_millis`, so the skill signal reaches back to **1980**
+(pre-2006 single-session quali; 2006+ knockout). Three findings:
+
+- **Connectivity reaches Senna.** A teammate-graph sweep shows the main connected component stays at
+  **82–95% of drivers** all the way back to 1980. Extending to ≤1994 places **Senna in the same
+  component as Verstappen/Hamilton**; the full 1984–2025 span keeps 217/242 (90%) connected. So
+  connectivity is **not** the cross-era blocker. ([`figures/era_connectivity.png`](figures/era_connectivity.png))
+- **The split is era-dependent — car-dominance sharpens as the window widens.** Re-running the whole
+  pipeline at 2006–2025 (92 drivers, all-knockout era):
+
+  | era | car (median, 90% CrI) | driver | P(car>driver) |
+  |---|---|---|---|
+  | 2018–2025 (4 yr) | 31.9% [23, 42] | 21.4% [13, 29] | 73% (overlapping) |
+  | 2006–2025 (20 yr) | 43.6% [35, 48] | 12.4% [6, 15] | **100%** (separated) |
+
+  A 20-year window spans huge car variation (multiple reg eras, dominant vs terrible cars), so the
+  car explains more of the finishing-position variance; the converged cost-cap 2018–2025 cars give
+  near-parity. **There is no single "X% driver / Y% car" — it depends on the window.**
+- **Believable 20-year career arcs** ([`figures/v2_skill_trajectories_2006_2025_rw.png`](figures/v2_skill_trajectories_2006_2025_rw.png)):
+  Hamilton peaks ~2016 then declines; Alonso's McLaren-Honda dip and Aston resurgence; Vettel's decline.
+
+Remaining cross-era blockers (connectivity solved): the 2006 quali-format change (single-session vs
+knockout best-lap — the `qt` fallback unifies the column but mixing the two needs care), era-varying
+skill spread, and the off-support counterfactual. See [`ARCHITECTURE.md`](ARCHITECTURE.md) §12.
+
+**Next:** a careful pre-2006 quali normalization + era-varying skill spread, then the cross-era
+counterfactual wrapper.
 
 ## Setup
 
