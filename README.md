@@ -157,8 +157,25 @@ Remaining cross-era blockers (connectivity solved): the 2006 quali-format change
 knockout best-lap — the `qt` fallback unifies the column but mixing the two needs care), era-varying
 skill spread, and the off-support counterfactual. See [`ARCHITECTURE.md`](ARCHITECTURE.md) §12.
 
-**Next:** a careful pre-2006 quali normalization + era-varying skill spread, then the cross-era
-counterfactual wrapper.
+**Phase 8a — session-consistent quali normalization** ([`v2/build_quali.py`](v2/build_quali.py)
+`--gap-method session`). The first cross-era blocker, and a real fix to current results. Instead of
+each driver's gap to the race's overall (Q3) pole, measure their gap to the fastest lap **in the same
+session** (min over the sessions they reached). This:
+- **Removes a measured bias.** Q1-eliminated backmarkers were over-penalized **~0.8%** purely by
+  track evolution (their Q1 lap vs the much-faster Q3 pole). Verified: backmarkers shrink ~1.26% vs
+  frontrunners ~0.49%. Skill magnitudes become realistic (spread compresses ~1.7%→~1.0%; Latifi
+  +0.76→+0.51) with the **ranking order preserved**.
+- **Unifies the 2006 format boundary** (pre-2006 single-session reduces to one session) — the
+  foundation cross-era needs.
+- **Leaves the headline robust:** 2018–2025 attribution is car 26.8% / driver 24.6%, ≈ the pole
+  method's 26.6/23.0.
+
+Default stays `pole` (all prior baselines reproduce exactly). (Fit R-hat 1.02, marginally above
+target — the session-normalized 4-yr window supports ~zero skill drift, a mild sampling funnel; the
+longer-span fits in 8b have more drift to estimate.)
+
+**Next:** fit back to Senna's era (1988–2025) with an era-varying noise term (8b), then the cross-era
+counterfactual wrapper (8c). See [`ARCHITECTURE.md`](ARCHITECTURE.md) §12.
 
 ## Setup
 
