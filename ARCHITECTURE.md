@@ -216,6 +216,15 @@ strengthens and sharpens. No single "X%/Y%"; it depends on the window. (3) Belie
 change (single-session `qt` vs knockout best-of-q123), era-varying skill spread, off-support
 counterfactual. (`figures/era_connectivity.png`, `figures/v2_skill_trajectories_2006_2025_rw.png`)
 
+**Step 8a — session-consistent quali normalization** (`v2/build_quali.py --gap-method session`;
+default stays `pole`). Measures each driver's gap to the fastest lap **in the same session** (min
+over sessions reached), not to the overall Q3 pole — removing the knockout track-evolution bias that
+over-penalized Q1-eliminated backmarkers by **~0.8%** (verified: backmarkers shrink ~1.26% vs
+frontrunners ~0.49%), and unifying the pre-2006 single-session / 2006+ knockout formats. Skill
+magnitudes become realistic (spread ~1.7%→~1.0%, order preserved); the 2018–2025 attribution is
+**robust** (car 26.8% / driver 24.6% ≈ pole's 26.6/23.0). The first cross-era blocker, and the
+foundation for 8b/8c.
+
 ## 7. Key design decisions
 
 | decision | choice | why |
@@ -301,8 +310,10 @@ finish; the architecture supports its *shape*. The blockers are not plumbing:
 1. **Teammate chain must connect the eras** — **CONFIRMED (Step 7):** the connectivity sweep shows
    Senna joins the modern grid's component at era-start ≤1994; 1984–2025 keeps 90% in one component.
 2. **Quali-format change at 2006** — pre-2006 is single-session `qualifying_time_millis`; 2006+ is
-   knockout best-of-q1/q2/q3. The `qt` fallback unifies the column, but a single-lap-in-one-session
-   time is not exactly a best-of-three-sessions lap; reaching Senna needs a format-aware normalization.
+   knockout best-of-q1/q2/q3. **Largely addressed by Step 8a** (`--gap-method session`): a
+   session-relative gap removes the within-knockout track bias and treats pre-2006 as one session, so
+   the two formats are computed consistently. Residual: knockout = best-of-N sessions vs one single
+   lap (8b's era-varying noise absorbs the scale).
 3. **Cross-era scale comparability** — a 0.3% teammate gap may not mean the same thing in 1990 vs
    2024 (field spreads, tire wars, refueling). Needs an era-varying skill spread; only partly identified.
 4. **Off-support counterfactual** — Step 6's interval machinery is the prerequisite; the cross-era
@@ -310,5 +321,5 @@ finish; the architecture supports its *shape*. The blockers are not plumbing:
    effect" caveat.
 
 Staged path: (A) uncertainty machinery [done, Step 6] → (B) walk era back / connectivity [done,
-Step 7] → (C) format-aware pre-2006 quali normalization + era-varying skill spread → (D) a thin
-cross-era counterfactual wrapper.
+Step 7] → (C) session-consistent quali normalization [done, Step 8a] + era-varying skill spread
+[8b] → (D) a thin cross-era counterfactual wrapper [8c].

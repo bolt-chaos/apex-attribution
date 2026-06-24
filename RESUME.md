@@ -39,13 +39,16 @@ python v2/era_connectivity.py                                          # teammat
 `.pkl`/`data/*.parquet` are gitignored (regenerable); reports/figures are tracked.
 
 ## Next action — toward cross-era ("Senna in a modern Red Bull")
-Connectivity to Senna is **confirmed** (the teammate chain links 1984→today; `v2/era_connectivity.py`).
-Remaining blockers, in order (ARCHITECTURE §12):
-1. **Format-aware pre-2006 quali normalization** — pre-2006 is single-session `qualifying_time_millis`,
-   2006+ is knockout best-of-q1/q2/q3; `build_quali.py` unifies the column but the two aren't exactly
-   comparable. **This is the immediate next step.**
-2. **Era-varying skill spread** — a 0.3% teammate gap may not mean the same in 1990 vs 2024.
-3. **Cross-era counterfactual wrapper** — off-support extrapolation; report with a wide CrI + caveat.
+Connectivity to Senna is **confirmed** (`v2/era_connectivity.py`). Plan: 3 PRs (cross-era plan file).
+1. ✅ **Step 8a — session-consistent quali normalization** done (`build_quali.py --gap-method session`):
+   gap to same-session pole; fixes a ~0.8% backmarker bias, unifies the 2006 format boundary,
+   attribution robust. Default stays `pole`.
+2. **NEXT — Step 8b:** fit back to Senna's era (1988–2025) with `--gap-method session` + an era-varying
+   likelihood noise term in `v2/fit_skill_rw.py` (`sigma` per era bucket). Check convergence + that
+   Senna/Prost/Schumacher rank believably; then SCM attribution on the full span.
+3. **Step 8c:** new `v2/cross_era_query.py` — `do(car_pace=2024-RedBull, skill=Senna@peak)` → finish
+   distribution + WIDE credible interval (reuse uncertainty_propagation's joint-draw pattern) + an
+   explicit off-support-extrapolation caveat.
 
 Other open threads: session-matched quali normalization; model race pace as a 2nd signal; a
 driver-error-DNF (incident-proneness) term.

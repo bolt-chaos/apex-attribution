@@ -37,6 +37,11 @@ def main() -> int:
     ap.add_argument("--start", type=int, default=2022)
     ap.add_argument("--end", type=int, default=2025)
     ap.add_argument("--out-tag", default="", help="suffix for output files, e.g. _2018_2025")
+    ap.add_argument("--gap-method", choices=["pole", "session"], default="pole",
+                    help="pole: gap to the race's overall pole (legacy). "
+                         "session: gap to the fastest lap IN THE SAME SESSION (removes the "
+                         "knockout Q1-vs-Q3 track-evolution bias; comparable across the 2006 "
+                         "single-session/knockout format boundary).")
     args = ap.parse_args()
     START, END = args.start, args.end
     out_parquet = ROOT / "data" / f"f1_quali{args.out_tag}.parquet"
@@ -63,8 +68,16 @@ def main() -> int:
     df = df[df.best.notna()].copy()
     n_nolap = n0 - len(df)
 
-    df["pole"] = df.groupby("race_id").best.transform("min")
-    df["pct_gap"] = (df.best / df.pole - 1.0) * 100.0
+    if args.gap_method == "pole":
+        df["pole"] = df.groupby("race_id").best.transform("min")
+        df["pct_gap"] = (df.best / df.pole - 1.0) * 100.0
+    else:  # session-relative: each lap vs its own session's fastest; per driver take the best gap
+        long = df.melt(id_vars=["race_id", "driver_id"], value_vars=["q1", "q2", "q3", "qt"],
+                       var_name="session", value_name="millis").dropna(subset=["millis"])
+        long["sess_pole"] = long.groupby(["race_id", "session"]).millis.transform("min")
+        long["gap"] = long.millis / long.sess_pole - 1.0
+        best_gap = long.groupby(["race_id", "driver_id"]).gap.min().mul(100.0).rename("pct_gap")
+        df = df.merge(best_gap, on=["race_id", "driver_id"], how="left")
 
     n_pre_cap = len(df)
     df = df[df.pct_gap <= GAP_CAP].copy()
@@ -76,14 +89,14 @@ def main() -> int:
 
     df["team_year"] = df.constructor_id + "@" + df.year.astype(str)
     cols = ["year", "round", "race_id", "circuit_id", "circuit_type",
-            "driver_id", "constructor_id", "team_year", "best", "pole", "pct_gap", "qpos"]
+            "driver_id", "constructor_id", "team_year", "best", "pct_gap", "qpos"]
     df = df[cols].sort_values(["year", "round", "pct_gap"]).reset_index(drop=True)
 
     df.to_parquet(out_parquet, index=False)
     df.to_csv(out_csv, index=False)
 
     print("=" * 60)
-    print(f"v2 QUALI-PACE BUILD SUMMARY  ({START}-{END})")
+    print(f"v2 QUALI-PACE BUILD SUMMARY  ({START}-{END}, gap-method={args.gap_method})")
     print("=" * 60)
     print(f"rows: {len(df)}  | dropped: no-lap {n_nolap}, >{GAP_CAP}% gap {n_capped}")
     print(f"drivers: {df.driver_id.nunique()}  team-years: {df.team_year.nunique()}  "
