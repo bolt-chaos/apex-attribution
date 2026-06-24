@@ -174,8 +174,26 @@ Default stays `pole` (all prior baselines reproduce exactly). (Fit R-hat 1.02, m
 target — the session-normalized 4-yr window supports ~zero skill drift, a mild sampling funnel; the
 longer-span fits in 8b have more drift to estimate.)
 
-**Next:** fit back to Senna's era (1988–2025) with an era-varying noise term (8b), then the cross-era
-counterfactual wrapper (8c). See [`ARCHITECTURE.md`](ARCHITECTURE.md) §12.
+## Does it actually predict? (out-of-sample validation)
+
+A model is only trustworthy if it predicts data it never saw. [`v2/backtest.py`](v2/backtest.py)
+fits driver skills on **2018–2023** and predicts every **teammate qualifying head-to-head in the
+held-out 2024–2025** — who out-qualifies their teammate, and by how much. Teammates share the car, so
+car pace cancels and the gap is a pure skill difference (no future car data needed). Results:
+
+- **Head-to-head accuracy: 67%** race-level, **80%** season-long (vs a 50% coin-flip). The confident
+  calls (Verstappen > Tsunoda, Alonso > Stroll, Norris > Piastri) are right; the genuinely close
+  pairs are coin-flips — exactly as honest uncertainty should behave.
+- **Correlation 0.40** between predicted and actual gaps; beats a predict-nothing baseline on error.
+- **Calibration:** the model's credible intervals cover reality at **50%→74%, 80%→92%, 90%→97%** —
+  well-behaved but slightly *conservative* (intervals a touch too wide, i.e. the model modestly
+  over-states its own uncertainty). See [`figures/backtest.png`](figures/backtest.png).
+
+This is the validation that turns "a model that fits the past" into "a model that predicts the
+future" — and it does, for the part it claims to measure (relative driver pace).
+
+**Next (cross-era, illustrative):** re-fit Senna's era to convergence, then a clearly-caveated
+"Senna in a modern Red Bull" demo. See [`ARCHITECTURE.md`](ARCHITECTURE.md) §12.
 
 ## Setup
 

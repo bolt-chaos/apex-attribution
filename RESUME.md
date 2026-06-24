@@ -38,17 +38,21 @@ python v2/era_connectivity.py                                          # teammat
 ```
 `.pkl`/`data/*.parquet` are gitignored (regenerable); reports/figures are tracked.
 
-## Next action — toward cross-era ("Senna in a modern Red Bull")
-Connectivity to Senna is **confirmed** (`v2/era_connectivity.py`). Plan: 3 PRs (cross-era plan file).
-1. ✅ **Step 8a — session-consistent quali normalization** done (`build_quali.py --gap-method session`):
-   gap to same-session pole; fixes a ~0.8% backmarker bias, unifies the 2006 format boundary,
-   attribution robust. Default stays `pole`.
-2. **NEXT — Step 8b:** fit back to Senna's era (1988–2025) with `--gap-method session` + an era-varying
-   likelihood noise term in `v2/fit_skill_rw.py` (`sigma` per era bucket). Check convergence + that
-   Senna/Prost/Schumacher rank believably; then SCM attribution on the full span.
-3. **Step 8c:** new `v2/cross_era_query.py` — `do(car_pace=2024-RedBull, skill=Senna@peak)` → finish
-   distribution + WIDE credible interval (reuse uncertainty_propagation's joint-draw pattern) + an
-   explicit off-support-extrapolation caveat.
+## Current focus — a "validate → play → write up" week (plan file)
+The core model is done & validated; cross-era hit a fundamental identification wall (8b: old-era
+legends shrunk, R-hat 1.04 — NOT committed). So the week's spine is VALIDATION (highest learning +
+admissions value), then fun demos, then a write-up.
+- ✅ **Phase A — out-of-sample backtest** (`v2/backtest.py`): fit skills on 2018–2023, predict held-out
+  2024–2025 teammate H2H (car cancels). **67% race / 80% season-long accuracy** (vs 50%), correlation
+  0.40, intervals slightly conservative (50%→74% coverage). The model predicts the future.
+- **NEXT — Phase B (fun):** `v2/predict.py` (forecast 2026 / a race); fun queries (over/under-rated
+  driver); the **illustrative** cross-era demo (re-fit 1988–2025 to convergence first; report a WIDE
+  CrI + "off-support / biased-low / illustrative-only" caveat). Era-sigma code is on branch
+  `v2-senna-era-fit` (cherry-pick for the re-fit).
+- **Phase C (write-up):** `WRITEUP.md` — the narrative (question → naive failure → fix → validation →
+  honest limits → fun demos). Lead with validation.
+
+Cross-era detail / staged blockers: ARCHITECTURE §12. Earlier cross-era step 8a (session norm) is done.
 
 Other open threads: session-matched quali normalization; model race pace as a 2nd signal; a
 driver-error-DNF (incident-proneness) term.
