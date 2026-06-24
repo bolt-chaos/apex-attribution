@@ -11,7 +11,8 @@ Built on [DoWhy's `gcm` module](https://github.com/py-why/dowhy) over the
 
 For the full system map (data flow, both modelling lines, artifacts, reproduction) see
 [`ARCHITECTURE.md`](ARCHITECTURE.md). To pick the project back up quickly (current state + next
-action + reproduce commands) see [`RESUME.md`](RESUME.md).
+action + reproduce commands) see [`RESUME.md`](RESUME.md). Running notes for the eventual write-up
+(story, results, decisions, bugs, limitations) are in [`WRITEUP_NOTES.md`](WRITEUP_NOTES.md).
 
 ## Why this can work
 
