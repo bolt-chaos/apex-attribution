@@ -45,6 +45,10 @@ def main() -> int:
     ap.add_argument("--tag", default="_2018_2025_rw")
     ap.add_argument("--draws", type=int, default=1000)
     ap.add_argument("--tune", type=int, default=1500)
+    ap.add_argument("--target-accept", type=float, default=0.95)
+    ap.add_argument("--era-sigma", action="store_true",
+                    help="per-decade likelihood noise scale (older/single-session quali is noisier; "
+                         "needed for multi-format spans). Default: single global sigma.")
     args = ap.parse_args()
     OUT.mkdir(exist_ok=True); FIG.mkdir(exist_ok=True); (ROOT / "models").mkdir(exist_ok=True)
     IDATA = ROOT / "models" / f"v2_idata{args.tag}.pkl"
@@ -58,8 +62,11 @@ def main() -> int:
     si = df.year.map(s_index).values
     ti = ty.cat.codes.values
     D, S = len(drv.cat.categories), len(seasons)
+    eras = sorted((df.year // 10 * 10).unique())          # per-decade era buckets
+    e_index = {e: i for i, e in enumerate(eras)}
+    ei = (df.year // 10 * 10).map(e_index).values
     coords = {"driver": list(drv.cat.categories), "season": seasons,
-              "team_year": list(ty.cat.categories)}
+              "team_year": list(ty.cat.categories), "era": [f"{e}s" for e in eras]}
     y = df.pct_gap.values.astype(float)
 
     with pm.Model(coords=coords) as model:
@@ -76,11 +83,15 @@ def main() -> int:
         pace = pm.Normal("pace", mu_pace, sigma_pace, dims="team_year")
 
         nu = pm.Gamma("nu", 2.0, 0.1)
-        sigma = pm.HalfNormal("sigma", 1.0)
+        if args.era_sigma:
+            sigma_era = pm.HalfNormal("sigma", 1.0, dims="era")   # per-decade noise scale
+            sigma = sigma_era[ei]
+        else:
+            sigma = pm.HalfNormal("sigma", 1.0)
         mu = skill[di, si] + pace[ti]
         pm.StudentT("y_obs", nu=nu, mu=mu, sigma=sigma, observed=y)
         idata = pm.sample(draws=args.draws, tune=args.tune, chains=4,
-                          target_accept=0.95, random_seed=SEED, progressbar=False)
+                          target_accept=args.target_accept, random_seed=SEED, progressbar=False)
 
     with open(IDATA, "wb") as f:
         pickle.dump(idata, f)
