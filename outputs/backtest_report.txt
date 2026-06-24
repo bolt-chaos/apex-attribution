@@ -1,0 +1,29 @@
+================================================================
+PHASE A — OUT-OF-SAMPLE BACKTEST (teammate H2H)
+================================================================
+train: 2018-2023 skills -> predict held-out 2024-2025
+teammate H2H comparisons: 339 (race-level), 15 season-long pairs
+
+  HEAD-TO-HEAD ACCURACY (race-level): 67.0%   (coin-flip baseline 50%)
+  HEAD-TO-HEAD ACCURACY (season-long): 80.0%
+  correlation (predicted vs actual gap): 0.40
+  mean abs error: 0.38%   vs predict-zero baseline 0.45%
+
+  CALIBRATION (does a X% interval contain reality X% of the time?):
+    50% interval -> empirical coverage 74%
+    80% interval -> empirical coverage 92%
+    90% interval -> empirical coverage 97%
+
+  season-long teammate H2H (predicted vs actual mean gap, fastest-first):
+    [OK ] max-verstappen vs yuki-tsunoda     pred -0.50%  actual -0.61%  (n=21)
+    [OK ] alexander-albon vs logan-sargeant  pred -0.46%  actual -0.53%  (n=12)
+    [OK ] max-verstappen vs sergio-perez     pred -0.36%  actual -0.92%  (n=24)
+    [OK ] fernando-alonso vs lance-stroll    pred -0.21%  actual -0.32%  (n=47)
+    [OK ] lando-norris vs oscar-piastri      pred -0.20%  actual -0.11%  (n=48)
+    [MISS] liam-lawson vs yuki-tsunoda        pred -0.17%  actual +0.08%  (n=6)
+    [OK ] charles-leclerc vs lewis-hamilton  pred -0.11%  actual -0.24%  (n=24)
+    [MISS] daniel-ricciardo vs yuki-tsunoda   pred -0.10%  actual +0.11%  (n=18)
+    [OK ] esteban-ocon vs pierre-gasly       pred +0.01%  actual +0.16%  (n=21)
+    [OK ] carlos-sainz-jr vs charles-leclerc pred +0.08%  actual +0.04%  (n=23)
+    [OK ] alexander-albon vs carlos-sainz-jr pred +0.11%  actual +0.26%  (n=24)
+    [MISS] george-russell vs lewis-hamilton   pred +0.12%  actual -0.20%  (n=24)
