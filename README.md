@@ -10,7 +10,8 @@ Built on [DoWhy's `gcm` module](https://github.com/py-why/dowhy) over the
 [f1db](https://github.com/f1db/f1db) open dataset (CC-BY-4.0).
 
 For the full system map (data flow, both modelling lines, artifacts, reproduction) see
-[`ARCHITECTURE.md`](ARCHITECTURE.md).
+[`ARCHITECTURE.md`](ARCHITECTURE.md). To pick the project back up quickly (current state + next
+action + reproduce commands) see [`RESUME.md`](RESUME.md).
 
 ## Why this can work
 
