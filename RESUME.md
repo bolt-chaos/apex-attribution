@@ -53,9 +53,13 @@ admissions value), then fun demos, then a write-up.
   - ✅ `v2/insights.py` — over-/under-rated drivers: actual finish vs SCM `do(car_pace=median)`
     expected finish → car effect in positions (Hamilton/Piastri flattered ~+4; Albon/Sargeant held
     back). Plus pace-vs-results table and best/worst car ranking. Reuses attribution_v2's SCM.
-  - **NEXT:** the **illustrative** cross-era demo (re-fit 1988–2025 to convergence first; report a
-    WIDE CrI + "off-support / biased-low / illustrative-only" caveat). Era-sigma code is on branch
-    `v2-senna-era-fit` (cherry-pick for the re-fit).
+  - ✅ `v2/cross_era.py` — "Senna in a modern Red Bull", illustrative only. Era-scale fix via
+    z-score: legend's SDs-ahead-of-their-field mapped onto the modern field spread (Senna −2.18 SD
+    → modern-equiv −1.59%, ≈ Verstappen). Fed with `red-bull@2024` pace through the modern SCM →
+    era-normalized greats land ≈ P3–3.6 (vs Verstappen P3.4). Loud caveats (off-support, era-scale
+    assumption, source model R-hat 1.04). Uses existing `v2_idata_1988_2025_sess_rw.pkl` — no re-fit.
+  - **Phase B complete.** Optional polish: a proper era-varying-σ re-fit to convergence
+    (8b, branch `v2-senna-era-fit`) would replace the z-score heuristic; not required for the demo.
 - **Phase C (write-up):** `WRITEUP.md` — the narrative (question → naive failure → fix → validation →
   honest limits → fun demos). Lead with validation.
 
