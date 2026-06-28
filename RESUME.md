@@ -50,9 +50,12 @@ admissions value), then fun demos, then a write-up.
     (`sqrt(forward)*sigma_rw` uncertainty widening). Emits a projected skill power-ranking + per-team
     H2H (expected gap + P(out-qualifies), backtest-calibrated noise). Default = last-season line-ups;
     `--lineup pairs.json` for hypotheticals. 2026: Verstappen > Tsunoda P=78%, close pairs ≈ coin-flip.
-  - **NEXT:** fun queries (over/under-rated driver vs car); the **illustrative** cross-era demo
-    (re-fit 1988–2025 to convergence first; report a WIDE CrI + "off-support / biased-low /
-    illustrative-only" caveat). Era-sigma code is on branch `v2-senna-era-fit` (cherry-pick for the re-fit).
+  - ✅ `v2/insights.py` — over-/under-rated drivers: actual finish vs SCM `do(car_pace=median)`
+    expected finish → car effect in positions (Hamilton/Piastri flattered ~+4; Albon/Sargeant held
+    back). Plus pace-vs-results table and best/worst car ranking. Reuses attribution_v2's SCM.
+  - **NEXT:** the **illustrative** cross-era demo (re-fit 1988–2025 to convergence first; report a
+    WIDE CrI + "off-support / biased-low / illustrative-only" caveat). Era-sigma code is on branch
+    `v2-senna-era-fit` (cherry-pick for the re-fit).
 - **Phase C (write-up):** `WRITEUP.md` — the narrative (question → naive failure → fix → validation →
   honest limits → fun demos). Lead with validation.
 

@@ -1,0 +1,80 @@
+========================================================================
+PHASE B (fun) — OVER-/UNDER-RATED DRIVERS (driver vs. car)
+========================================================================
+data: f1_scm_v2_2018_2025_sess_rw.parquet   drivers with >= 10 classified races: 40
+'average car' = median car pace (+0.95%). car_effect = midfield-car finish - actual finish.
+  (+) results flatter them: the car is doing the work  -> OVER-RATED
+  (-) results hide them:    a bad car holds them back   -> UNDER-RATED
+  NB 'over-rated' = results overstate the driver's share, NOT that they lack skill —
+     see [3] for the car-removed pace ranking (e.g. Hamilton is flattered yet still elite).
+
+[1] MOST OVER-RATED BY RESULTS (the car is carrying them)
+    Lewis Hamilton       finishes P 4.1, but only P 8.6 in a midfield car  -> car worth +4.5 positions
+    Oscar Piastri        finishes P 5.6, but only P 9.8 in a midfield car  -> car worth +4.1 positions
+    Valtteri Bottas      finishes P 8.2, but only P11.8 in a midfield car  -> car worth +3.6 positions
+    Sergio Pérez         finishes P 7.0, but only P10.5 in a midfield car  -> car worth +3.5 positions
+    Kimi Antonelli       finishes P 8.2, but only P11.7 in a midfield car  -> car worth +3.5 positions
+    Sebastian Vettel     finishes P 7.9, but only P10.5 in a midfield car  -> car worth +2.7 positions
+
+[2] MOST UNDER-RATED BY RESULTS (a bad car is hiding them)
+    Nikita Mazepin       finishes P17.8, would be P15.1 in a midfield car  -> car costs 2.7 positions
+    Sergey Sirotkin      finishes P14.8, would be P12.8 in a midfield car  -> car costs 2.0 positions
+    Gabriel Bortoleto    finishes P13.3, would be P11.5 in a midfield car  -> car costs 1.9 positions
+    Antonio Giovinazzi   finishes P13.4, would be P11.6 in a midfield car  -> car costs 1.8 positions
+    Robert Kubica        finishes P16.7, would be P15.1 in a midfield car  -> car costs 1.6 positions
+    Brendon Hartley      finishes P13.6, would be P12.0 in a midfield car  -> car costs 1.6 positions
+
+[3] PURE PACE vs RESULTS (rank by skill alone vs rank by where they finish)
+    driver                pace#  result#   gap
+    Max Verstappen            1        1    +0
+    Charles Leclerc           2        3    +1
+    Lando Norris              3        5    +2
+    Carlos Sainz Jr.          4        7    +3 under-rated
+    Lewis Hamilton            5        2    -3 over-rated
+    Oscar Piastri             6        4    -2
+    Alexander Albon           7       16    +9 under-rated
+    George Russell            8       11    +3 under-rated
+    Fernando Alonso           9       12    +3 under-rated
+    Valtteri Bottas          10        9    -1
+    Oliver Bearman           11       18    +7 under-rated
+    Gabriel Bortoleto        12       29   +17 under-rated
+    Sebastian Vettel         13        8    -5 over-rated
+    Pierre Gasly             14       17    +3 under-rated
+    Nico Hülkenberg          15       21    +6 under-rated
+    Antonio Giovinazzi       16       30   +14 under-rated
+    Sergio Pérez             17        6   -11 over-rated
+    Daniel Ricciardo         18       13    -5 over-rated
+    Esteban Ocon             19       15    -4 over-rated
+    Yuki Tsunoda             20       25    +5 under-rated
+    Brendon Hartley          21       31   +10 under-rated
+    Kimi Räikkönen           22       14    -8 over-rated
+    Isack Hadjar             23       20    -3 over-rated
+    Daniil Kvyat             24       19    -5 over-rated
+    Lance Stroll             25       22    -3 over-rated
+    Kimi Antonelli           26       10   -16 over-rated
+    Guanyu Zhou              27       32    +5 under-rated
+    Kevin Magnussen          28       28    +0
+    Romain Grosjean          29       27    -2
+    Sergey Sirotkin          30       35    +5 under-rated
+    Mick Schumacher          31       36    +5 under-rated
+    Liam Lawson              32       24    -8 over-rated
+    Stoffel Vandoorne        33       26    -7 over-rated
+    Marcus Ericsson          34       23   -11 over-rated
+    Franco Colapinto         35       33    -2
+    Logan Sargeant           36       38    +2
+    Nyck de Vries            37       34    -3 over-rated
+    Nicholas Latifi          38       37    -1
+    Robert Kubica            39       39    +0
+    Nikita Mazepin           40       40    +0
+
+[4] BEST & WORST CARS (mean car pace by team-year; lower = faster)
+    BEST  ferrari@2018           +0.21%
+    BEST  mercedes@2020          +0.26%
+    BEST  mercedes@2018          +0.31%
+    BEST  mercedes@2019          +0.33%
+    BEST  mercedes@2021          +0.35%
+    WORST williams@2019          +2.98%
+    WORST haas@2021              +2.12%
+    WORST williams@2018          +2.10%
+    WORST alfa-romeo@2020        +1.94%
+    WORST williams@2022          +1.85%

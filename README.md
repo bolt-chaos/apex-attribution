@@ -214,6 +214,15 @@ random walk** (a martingale — same expected skill, but the uncertainty widens 
 Only teammate H2H is claimed (car cancels, no future car data needed); absolute finishing position
 would require the unbuilt target-season cars, so it is not.
 
+**Over-/under-rated drivers** ([`v2/insights.py`](v2/insights.py)) — the fun question the model
+uniquely answers: *is a driver flattered or robbed by their machinery?* For each driver it contrasts
+their **actual** average finish (reputation, car included) with where the SCM says they'd finish on
+their own skill in an **average car** (`do(car_pace = median)`). The gap is the car effect in
+finishing positions: Hamilton/Piastri/Bottas/Pérez are *flattered* (dominant cars worth ~+4 places),
+while Albon/Sargeant/Bortoleto are *held back* by weak machinery. A pace-vs-results table keeps it
+honest ("over-rated" means results overstate the driver's share, not that they lack skill — Hamilton
+is flattered yet still pace-rank #5). See [`figures/insights_over_under_2018_2025.png`](figures/insights_over_under_2018_2025.png).
+
 **Next (cross-era, illustrative):** re-fit Senna's era to convergence, then a clearly-caveated
 "Senna in a modern Red Bull" demo. See [`ARCHITECTURE.md`](ARCHITECTURE.md) §12.
 
