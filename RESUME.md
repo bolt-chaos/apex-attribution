@@ -45,10 +45,14 @@ admissions value), then fun demos, then a write-up.
 - ✅ **Phase A — out-of-sample backtest** (`v2/backtest.py`): fit skills on 2018–2023, predict held-out
   2024–2025 teammate H2H (car cancels). **67% race / 80% season-long accuracy** (vs 50%), correlation
   0.40, intervals slightly conservative (50%→74% coverage). The model predicts the future.
-- **NEXT — Phase B (fun):** `v2/predict.py` (forecast 2026 / a race); fun queries (over/under-rated
-  driver); the **illustrative** cross-era demo (re-fit 1988–2025 to convergence first; report a WIDE
-  CrI + "off-support / biased-low / illustrative-only" caveat). Era-sigma code is on branch
-  `v2-senna-era-fit` (cherry-pick for the re-fit).
+- **Phase B (fun):**
+  - ✅ `v2/predict.py` — forecast a season's teammate H2H from skills projected forward via the RW
+    (`sqrt(forward)*sigma_rw` uncertainty widening). Emits a projected skill power-ranking + per-team
+    H2H (expected gap + P(out-qualifies), backtest-calibrated noise). Default = last-season line-ups;
+    `--lineup pairs.json` for hypotheticals. 2026: Verstappen > Tsunoda P=78%, close pairs ≈ coin-flip.
+  - **NEXT:** fun queries (over/under-rated driver vs car); the **illustrative** cross-era demo
+    (re-fit 1988–2025 to convergence first; report a WIDE CrI + "off-support / biased-low /
+    illustrative-only" caveat). Era-sigma code is on branch `v2-senna-era-fit` (cherry-pick for the re-fit).
 - **Phase C (write-up):** `WRITEUP.md` — the narrative (question → naive failure → fix → validation →
   honest limits → fun demos). Lead with validation.
 
