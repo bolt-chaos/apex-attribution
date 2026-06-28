@@ -9,6 +9,8 @@ the machinery?* — formally, as a `do(constructor = X)` intervention holding th
 Built on [DoWhy's `gcm` module](https://github.com/py-why/dowhy) over the
 [f1db](https://github.com/f1db/f1db) open dataset (CC-BY-4.0).
 
+New to the ideas here (causal inference, the teammate trick, Bayesian uncertainty)? Start with
+[`CONCEPTS.md`](CONCEPTS.md) — a plain-language guide to every concept the project rests on.
 For the full system map (data flow, both modelling lines, artifacts, reproduction) see
 [`ARCHITECTURE.md`](ARCHITECTURE.md). To pick the project back up quickly (current state + next
 action + reproduce commands) see [`RESUME.md`](RESUME.md). Running notes for the eventual write-up
