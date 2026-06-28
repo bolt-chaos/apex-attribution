@@ -1,0 +1,63 @@
+======================================================================
+PHASE B — 2026 FORECAST (skills projected from 2025)
+======================================================================
+model: v2_idata_2018_2025_sess_rw.pkl   forward 1 season(s) under the fitted RW
+projected skill = last-season skill, uncertainty widened by sqrt(1)*sigma_rw
+
+[1] PROJECTED DRIVER-SKILL RANKING (full model cohort, % quali pace vs grid avg; lower = faster)
+    ['*' = on the 2026 grid below; un-starred = seen in 2018-2025 but not in the line-up)
+   * 1. Max Verstappen         -0.53%   90% CrI [-0.69, -0.39]
+   * 2. Charles Leclerc        -0.37%   90% CrI [-0.51, -0.24]
+   * 3. Lando Norris           -0.34%   90% CrI [-0.51, -0.18]
+   * 4. Carlos Sainz Jr.       -0.30%   90% CrI [-0.43, -0.17]
+   * 5. Oscar Piastri          -0.25%   90% CrI [-0.43, -0.07]
+   * 6. Lewis Hamilton         -0.24%   90% CrI [-0.38, -0.11]
+   * 7. George Russell         -0.22%   90% CrI [-0.38, -0.06]
+   * 8. Fernando Alonso        -0.21%   90% CrI [-0.37, -0.06]
+   * 9. Alexander Albon        -0.20%   90% CrI [-0.34, -0.07]
+    10. Valtteri Bottas        -0.17%   90% CrI [-0.36, -0.00]
+   *11. Pierre Gasly           -0.16%   90% CrI [-0.30, -0.03]
+   *12. Oliver Bearman         -0.16%   90% CrI [-0.36, +0.03]
+   *13. Gabriel Bortoleto      -0.15%   90% CrI [-0.35, +0.06]
+    14. Sebastian Vettel       -0.15%   90% CrI [-0.32, +0.02]
+   *15. Nico Hülkenberg        -0.13%   90% CrI [-0.28, +0.03]
+    16. Antonio Giovinazzi     -0.12%   90% CrI [-0.36, +0.13]
+    17. Sergio Pérez           -0.11%   90% CrI [-0.28, +0.04]
+    18. Jack Doohan            -0.05%   90% CrI [-0.30, +0.19]
+   *19. Yuki Tsunoda           -0.04%   90% CrI [-0.18, +0.09]
+   *20. Esteban Ocon           -0.02%   90% CrI [-0.16, +0.12]
+    21. Daniel Ricciardo       -0.02%   90% CrI [-0.16, +0.13]
+    22. Brendon Hartley        -0.01%   90% CrI [-0.27, +0.26]
+    23. Kimi Räikkönen         +0.00%   90% CrI [-0.21, +0.23]
+   *24. Isack Hadjar           +0.00%   90% CrI [-0.22, +0.22]
+    25. Daniil Kvyat           +0.06%   90% CrI [-0.16, +0.28]
+   *26. Kimi Antonelli         +0.08%   90% CrI [-0.12, +0.28]
+   *27. Lance Stroll           +0.09%   90% CrI [-0.06, +0.24]
+    28. Guanyu Zhou            +0.10%   90% CrI [-0.10, +0.30]
+    29. Kevin Magnussen        +0.10%   90% CrI [-0.07, +0.27]
+    30. Romain Grosjean        +0.11%   90% CrI [-0.12, +0.35]
+    31. Sergey Sirotkin        +0.11%   90% CrI [-0.21, +0.44]
+    32. Mick Schumacher        +0.15%   90% CrI [-0.09, +0.41]
+    33. Stoffel Vandoorne      +0.16%   90% CrI [-0.12, +0.44]
+   *34. Liam Lawson            +0.16%   90% CrI [-0.04, +0.36]
+    35. Marcus Ericsson        +0.17%   90% CrI [-0.11, +0.45]
+   *36. Franco Colapinto       +0.21%   90% CrI [+0.02, +0.39]
+    37. Logan Sargeant         +0.23%   90% CrI [+0.02, +0.43]
+    38. Nyck de Vries          +0.29%   90% CrI [+0.04, +0.53]
+    39. Nicholas Latifi        +0.52%   90% CrI [+0.32, +0.72]
+    40. Robert Kubica          +0.55%   90% CrI [+0.27, +0.83]
+    41. Nikita Mazepin         +0.67%   90% CrI [+0.37, +0.98]
+
+[2] TEAMMATE HEAD-TO-HEAD PREDICTIONS (2026 line-ups)
+    (expected qualifying gap + P(faster driver out-qualifies teammate) over a race;
+     teammates share the car, so this is a pure skill comparison)
+    alpine        : Pierre Gasly     > Franco Colapinto  by 0.37%  (P=74%)
+    aston-martin  : Fernando Alonso  > Lance Stroll      by 0.30%  (P=68%)
+    ferrari       : Charles Leclerc  > Lewis Hamilton    by 0.13%  (P=59%)
+    haas          : Oliver Bearman   > Esteban Ocon      by 0.14%  (P=60%)
+    kick-sauber   : Gabriel Bortoleto > Nico Hülkenberg   by 0.02%  (P=51%)
+    mclaren       : Lando Norris     > Oscar Piastri     by 0.09%  (P=57%)
+    mercedes      : George Russell   > Kimi Antonelli    by 0.29%  (P=70%)
+    racing-bulls  : Isack Hadjar     > Liam Lawson       by 0.16%  (P=60%)
+    red-bull      : Max Verstappen   > Yuki Tsunoda      by 0.48%  (P=78%)
+    williams      : Carlos Sainz Jr. > Alexander Albon   by 0.10%  (P=58%)

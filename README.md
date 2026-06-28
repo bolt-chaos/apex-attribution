@@ -193,6 +193,25 @@ car pace cancels and the gap is a pure skill difference (no future car data need
 This is the validation that turns "a model that fits the past" into "a model that predicts the
 future" — and it does, for the part it claims to measure (relative driver pace).
 
+## Forecasting (Phase B): project the skills forward
+
+[`v2/predict.py`](v2/predict.py) turns the validated capability into a forward-looking forecast.
+Skills are carried from each driver's last trained season to a target season via the **fitted
+random walk** (a martingale — same expected skill, but the uncertainty widens by
+`sqrt(forward_seasons) * sigma_rw`, an honest "we know less about next year" penalty). It emits:
+
+- a **projected driver-skill power ranking** (pure qualifying pace, fastest first, with 90% CrIs)
+  — Verstappen clear #1, then Leclerc/Norris/Sainz/Piastri; and
+- **per-team teammate H2H predictions** — expected gap + `P(faster driver out-qualifies teammate)`,
+  using the same posterior-draw + StudentT race-noise machinery the backtest calibrated. Default
+  line-ups are each constructor's last-season pairing; pass `--lineup pairs.json` for a hypothetical
+  grid (e.g. two aces in one car). 2026 projection: Verstappen > Tsunoda (P=78%), Alonso > Stroll
+  (P=68%), the genuinely close pairs (Norris/Piastri, Bortoleto/Hülkenberg) near coin-flips — exactly
+  the honest behaviour the backtest showed. See [`figures/predict_2026.png`](figures/predict_2026.png).
+
+Only teammate H2H is claimed (car cancels, no future car data needed); absolute finishing position
+would require the unbuilt target-season cars, so it is not.
+
 **Next (cross-era, illustrative):** re-fit Senna's era to convergence, then a clearly-caveated
 "Senna in a modern Red Bull" demo. See [`ARCHITECTURE.md`](ARCHITECTURE.md) §12.
 
