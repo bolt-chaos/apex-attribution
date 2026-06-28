@@ -223,8 +223,26 @@ while Albon/Sargeant/Bortoleto are *held back* by weak machinery. A pace-vs-resu
 honest ("over-rated" means results overstate the driver's share, not that they lack skill — Hamilton
 is flattered yet still pace-rank #5). See [`figures/insights_over_under_2018_2025.png`](figures/insights_over_under_2018_2025.png).
 
-**Next (cross-era, illustrative):** re-fit Senna's era to convergence, then a clearly-caveated
-"Senna in a modern Red Bull" demo. See [`ARCHITECTURE.md`](ARCHITECTURE.md) §12.
+## "Senna in a modern Red Bull" (Phase B, illustrative only)
+
+The crowd-pleaser — and the most caveated thing in the repo ([`v2/cross_era.py`](v2/cross_era.py)).
+The obstacle is the **era scale**: a driver's skill is a % qualifying gap to the field, but the
+field's *spread* has collapsed (grid SD ~0.71% in 1988–94 vs ~0.25% in 2018–25 as cars and drivers
+converged), so a raw −1.3% gap in 1990 is **not** the same achievement as −1.3% in 2024. We make the
+assumption visible by showing two translations side by side:
+
+- **naive** (raw skill, no adjustment) — meaningless, shown only to demonstrate why: it scatters the
+  legends from P2.5 to P11.4 in the same car; and
+- **era-normalized** (z-score) — how many SDs the legend led *their* field, mapped onto the modern
+  field's spread. Senna was **−2.18 SD** ahead → modern-equivalent skill ≈ −1.59%, a hair past
+  Verstappen's 2024 −1.51%.
+
+Fed (with the real `red-bull@2024` car pace) through the modern race-outcome SCM, the era-normalized
+greats all land **≈ P3–3.6**, right alongside Verstappen's P3.4 — *utterly dominant but not
+physically impossible.* **Caveats are loud and in the output:** this is an off-support extrapolation,
+not an identified effect; cross-era skill rests on the era-scale assumption; and the source skill
+model is at R-hat 1.04 (not fully converged). The honest answer to the bar argument is "a
+front-running, title-winning combo — with an asterisk." See [`figures/cross_era.png`](figures/cross_era.png).
 
 ## Setup
 
