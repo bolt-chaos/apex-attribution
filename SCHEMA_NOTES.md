@@ -77,6 +77,30 @@ driver's `race_execution`; we never charge an engine failure to the driver.
 
 ---
 
+## Race-pace signal (`build_race_pace.py`) — a second skill signal
+
+Qualifying pace is one-lap speed; **race pace** captures racecraft (tyre management, consistency,
+pace under fuel). Built from `type='RACE_RESULT'` rows as `race_pct_gap = 100 * gap_to_winner /
+winner_race_time_millis` — the race analogue of quali's `pct_gap`. Coverage / handling (2018–2025):
+
+- `race_gap_millis` (same-lap gap to winner): ~61% of classified finishers. The **leader** (P1) has
+  NULL gap → pinned to 0.
+- `race_gap_laps` (**lapped** cars): ~31% — no millisecond gap, only whole laps. Folded in as
+  `race_gap_laps * avg_lap_millis` (where `avg_lap = winner_time / winner_laps`) and flagged
+  `lapped=True`. Coarse but preserves the within-team "teammate got lapped" signal; `--drop-lapped`
+  gives a sensitivity run.
+- **DNFs** dropped (no clean pace — they belong to the reliability/incident track).
+- **Known approximations** (documented, like the Q1-vs-Q3 quali caveat): pit-stop time is **not**
+  removed (similar teammate stop counts ≈ nets out within team; `race_pit_stops` carried as a
+  diagnostic only); safety-car/red-flag compression can't be filtered (no SC-lap column in f1db) —
+  mitigated structurally by within-team differencing, season averaging, and a larger race-noise σ.
+- Cap: `RACE_GAP_CAP = 8.0%` clips multi-lap-down / heavily-delayed cars.
+
+Because race pace is noisier than qualifying, downstream it is modelled as a **complement** (its own
+larger σ), never a replacement — see the joint skill model.
+
+---
+
 ## Teammate-structure / connectivity finding (pitfall in scope step 2)
 
 For the proposed v1 era **2022–2025**: all 10 constructors fielded ≥2 drivers each season (some 3–4
