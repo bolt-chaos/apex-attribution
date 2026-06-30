@@ -1,0 +1,22 @@
+====================================================================
+v2 UNCERTAINTY-PROPAGATED ATTRIBUTION (ICC over posterior draws)
+====================================================================
+draws: 30  (ICC rand=100, base=300)
+
+    car_pace           median  31.1%   90% CrI [ 24.4,  36.8]
+    driver_skill       median  13.9%   90% CrI [  9.3,  18.6]
+    grid               median  10.4%   90% CrI [  8.2,  13.3]
+    finish_pos resid   median  45.0%   90% CrI [ 39.8,  48.7]
+
+    driver:car ratio   median  0.4x   90% CrI [0.3, 0.7]
+
+    P(car > driver) across draws = 100%   <- is 'car leads' real?
+
+    vs POINT estimate (ICC on posterior mean): car 31.3%, driver 15.9% (ratio 0.5x)
+
+[INTERPRETATION]
+    Car share:    point 31.3% -> posterior median 31.1% (90% CrI [24.4, 36.8]).
+    Driver share: point 15.9% -> posterior median 13.9% (90% CrI [9.3, 18.6]).
+    Driver:car ratio median 0.4x.   P(car > driver) = 100%.
+    'CAR LEADS' IS ROBUST: car > driver in >=95% of posterior draws, even after
+    propagating the full skill/pace uncertainty. The headline holds.

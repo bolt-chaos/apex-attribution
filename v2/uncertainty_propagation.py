@@ -57,14 +57,18 @@ def main() -> int:
     ap.add_argument("--idata", default=str(ROOT / "models" / "v2_idata.pkl"))
     ap.add_argument("--results", default=str(ROOT / "data" / "f1_results.parquet"))
     ap.add_argument("--tag", default="", help="suffix for outputs, e.g. _2018_2025_rw")
+    ap.add_argument("--var-skill", default="skill",
+                    help="posterior var for driver_skill (joint model: racecraft or quali_skill)")
+    ap.add_argument("--var-pace", default="pace",
+                    help="posterior var for car_pace (joint model: pace_r or pace_q)")
     args = ap.parse_args()
     np.random.seed(SEED)
     OUT.mkdir(exist_ok=True); FIG.mkdir(exist_ok=True)
 
     idata = pickle.load(open(Path(args.idata).resolve(), "rb"))
     post = idata.posterior
-    skill_da = post["skill"].stack(s=("chain", "draw"))   # (driver[, season], s)
-    pace_da = post["pace"].stack(s=("chain", "draw"))      # (team_year, s)
+    skill_da = post[args.var_skill].stack(s=("chain", "draw"))   # (driver[, season], s)
+    pace_da = post[args.var_pace].stack(s=("chain", "draw"))      # (team_year, s)
     time_varying = "season" in skill_da.dims               # driver x season skill?
     S = skill_da.sizes["s"]
     draw_idx = np.random.choice(S, size=min(args.draws, S), replace=False)
