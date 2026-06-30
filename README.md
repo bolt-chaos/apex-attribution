@@ -263,6 +263,18 @@ ranking, Spearman ~0.78); the backmarker tail is partly race-gap *compression* (
 lose more), not pure racecraft, and even Verstappen's "races better" softens when lapped cars are
 dropped. See [`figures/v2_skill_joint_quali_vs_race_2018_2025_joint.png`](figures/v2_skill_joint_quali_vs_race_2018_2025_joint.png).
 
+**Does racecraft predict?** [`v2/backtest_race.py`](v2/backtest_race.py) repeats the out-of-sample
+test for race pace: fit on **2018–2023**, predict held-out **2024–2025** teammate race-pace H2H.
+Result: **race-level 52%** (barely above coin-flip — single-race pace is dominated by strategy/traffic
+noise), but **season-long 60%** and **correlation 0.46** (above even the quali backtest's 0.40)
+confirm the signal is real, just noisier. Every confident call lands — Verstappen ≫ Tsunoda/Pérez,
+Alonso > Stroll, Norris > Piastri — and the misses are genuinely close pairs. So racecraft is a real,
+predictive-but-noisy signal: trust it season-long, not race-by-race. See [`figures/backtest_race.png`](figures/backtest_race.png).
+
+**Threading it into the attribution** ([`v2/build_scm_data.py`](v2/build_scm_data.py) `--skill-source
+race`) shows race pace attributes **more to the car** than qualifying: car median **31.1%** / driver
+**13.9%**, **P(car>driver)=100%** (vs the quali-based 73%) — on Sundays the machinery is decisive.
+
 ## Setup
 
 ```bash
