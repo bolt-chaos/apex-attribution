@@ -244,6 +244,25 @@ not an identified effect; cross-era skill rests on the era-scale assumption; and
 model is at R-hat 1.04 (not fully converged). The honest answer to the bar argument is "a
 front-running, title-winning combo — with an asterisk." See [`figures/cross_era.png`](figures/cross_era.png).
 
+## Two abilities: qualifying pace vs racecraft (race pace as a 2nd signal)
+
+So far skill was identified from **qualifying only**. [`v2/build_race_pace.py`](v2/build_race_pace.py)
+adds a **race-pace** signal (`race_pct_gap` = % time deficit to the winner; same teammate-cancels
+logic, noisier), and [`v2/fit_skill_joint.py`](v2/fit_skill_joint.py) fits a model where each driver
+has **two correlated latent abilities** — `quali_skill` (Saturday) and `racecraft` (Sunday) — linked
+by a soft LKJ prior so each is identified by its own data (the random-walk + teammate machinery,
+twice). Race pace gets its own larger noise term, so it's a complement, not a replacement.
+
+Result (2018–2025, **R-hat 1.01 — converged**): the two abilities are **highly correlated,
+`rho = +0.92`** (90% CrI [0.82, 0.99]) — one-lap pace strongly predicts race pace — but with a small
+real residual. The per-driver `racecraft − quali_skill` **"qualifying-merchant" delta** has credible
+mid-grid signal: **Pérez races better than he qualifies** (quali ~P14 pace → racecraft top-7),
+Tsunoda/Bottas/Albon read as quali specialists. **Honest caveat (in the output):** the deltas are
+small vs noise and **lapped-car sensitive** (a `--drop-lapped` sensitivity moves the racecraft
+ranking, Spearman ~0.78); the backmarker tail is partly race-gap *compression* (a lapped car can't
+lose more), not pure racecraft, and even Verstappen's "races better" softens when lapped cars are
+dropped. See [`figures/v2_skill_joint_quali_vs_race_2018_2025_joint.png`](figures/v2_skill_joint_quali_vs_race_2018_2025_joint.png).
+
 ## Setup
 
 ```bash

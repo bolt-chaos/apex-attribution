@@ -65,8 +65,12 @@ admissions value), then fun demos, then a write-up.
 
 Cross-era detail / staged blockers: ARCHITECTURE §12. Earlier cross-era step 8a (session norm) is done.
 
-Other open threads: session-matched quali normalization; model race pace as a 2nd signal; a
-driver-error-DNF (incident-proneness) term.
+Race pace as a 2nd signal (IN PROGRESS): `v2/build_race_pace.py` + `v2/fit_skill_joint.py` fit two
+correlated latents (`quali_skill`, `racecraft`), R-hat 1.01, rho +0.92; Pérez races > qualifies,
+backmarker tail is lapped-sensitive. Next: thread race latents into the SCM (`build_scm_data.py
+--skill-source race`) + an out-of-sample race-pace backtest (`backtest_race.py`).
+
+Other open threads: a driver-error-DNF (incident-proneness) term.
 
 ## Workflow
 Land changes via **PRs, never commit to `main`** (see `CLAUDE.md`). Branch → commit → push →
