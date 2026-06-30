@@ -26,12 +26,29 @@ def main() -> int:
     ap.add_argument("--results", default=str(ROOT / "data" / "f1_results.parquet"))
     ap.add_argument("--idata", default=str(ROOT / "models" / "v2_idata.pkl"))
     ap.add_argument("--out", default=str(ROOT / "data" / "f1_scm_v2.parquet"))
+    ap.add_argument("--skill-source", choices=["quali", "race", "combined"], default="race",
+                    help="for a JOINT idata: which driver ability feeds driver_skill. race=racecraft "
+                         "(default; finish_pos is a race outcome), quali=quali_skill, combined=mean "
+                         "of the two standardized. Ignored for a legacy (single-skill) idata.")
+    ap.add_argument("--pace-source", choices=["quali", "race"], default="race",
+                    help="for a JOINT idata: pace_r (race, default) or pace_q (quali).")
     args = ap.parse_args()
     RESULTS, IDATA, OUT = Path(args.results).resolve(), Path(args.idata).resolve(), Path(args.out).resolve()
 
     idata = pickle.load(open(IDATA, "rb"))
-    skill_da = idata.posterior["skill"].mean(("chain", "draw"))
-    pace = idata.posterior["pace"].mean(("chain", "draw")).to_series()        # index: team_year
+    post = idata.posterior
+    if "racecraft" in post:                       # JOINT quali+race model -> pick latents per flags
+        def _z(da):                               # z-score across all (driver[,season]) entries
+            return (da - float(da.mean())) / float(da.std())
+        if args.skill_source == "combined":
+            skill_da = ((_z(post["racecraft"]) + _z(post["quali_skill"])) / 2).mean(("chain", "draw"))
+        else:
+            skill_da = post["racecraft" if args.skill_source == "race" else "quali_skill"].mean(("chain", "draw"))
+        pace = post["pace_r" if args.pace_source == "race" else "pace_q"].mean(("chain", "draw")).to_series()
+        print(f"joint idata: driver_skill <- {args.skill_source}, car_pace <- {args.pace_source}")
+    else:                                         # legacy single-skill idata
+        skill_da = post["skill"].mean(("chain", "draw"))
+        pace = post["pace"].mean(("chain", "draw")).to_series()               # index: team_year
 
     df = pd.read_parquet(RESULTS)  # started rows (classified flag inside)
     df["team_year"] = df.constructor_id + "@" + df.year.astype(str)

@@ -300,8 +300,22 @@ Python 3.12. `dowhy==0.14` (`gcm`), `pandas==3.0.3`, `numpy==2.4.6`, `scikit-lea
 ## 12. Roadmap
 
 Steps 4–6 reproduced a car-leaning split (P(car>driver)=73%, CrIs overlap) with believable driver
-arcs and honest intervals. Next: session-matched quali normalization; model **race pace** directly
-as a second signal; add a driver-error-DNF risk term.
+arcs and honest intervals. Next: ~~session-matched quali normalization~~ [done, 8a]; ~~model **race
+pace** directly as a second signal~~ [done, see below]; add a driver-error-DNF risk term.
+
+### Race pace as a second signal (done)
+
+`build_race_pace.py` → `fit_skill_joint.py` add race pace alongside qualifying as a **joint model**
+of two correlated driver abilities (`quali_skill`, `racecraft`; soft LKJ link, two pace terms
+`pace_q`/`pace_r`, race gets a larger σ). `build_scm_data.py` gained `--skill-source
+{quali,race,combined}` / `--pace-source {quali,race}` (default **race**, since `finish_pos` is a race
+outcome) and auto-detects a joint idata (`"racecraft" in posterior`); `uncertainty_propagation.py`
+gained `--var-skill/--var-pace`. Node names and the 5-node DAG are unchanged, so attribution is
+directly comparable. **Finding:** race pace attributes *more to the car* than qualifying — feeding
+`racecraft`/`pace_r` gives car median **31.1%** / driver **13.9%**, **P(car>driver)=100%** (vs the
+quali-based 73%); on Sundays the machinery is the decisive factor. (Quali-sourced from the same joint
+model is near-parity, ~25/28.) Caveat: the racecraft signal is lapped-car sensitive (see PR-2 / the
+joint report's merchant-table caveat).
 
 ### Cross-era comparison ("Senna in a modern Red Bull")
 
