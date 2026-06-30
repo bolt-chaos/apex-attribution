@@ -1,0 +1,31 @@
+================================================================
+RACE-PACE OUT-OF-SAMPLE BACKTEST (teammate racecraft H2H)
+================================================================
+train: 2018-2023 racecraft -> predict held-out 2024-2025
+teammate H2H comparisons: 278 (race-level), 15 season-long pairs
+
+  HEAD-TO-HEAD ACCURACY (race-level): 52.2%   (coin-flip baseline 50%)
+  HEAD-TO-HEAD ACCURACY (season-long): 60.0%
+  correlation (predicted vs actual gap): 0.46
+  mean abs error: 0.35%   vs predict-zero baseline 0.37%
+
+  (race pace is noisier than qualifying; expect below the quali backtest's 67%/80%)
+
+  CALIBRATION (does a X% interval contain reality X% of the time?):
+    50% interval -> empirical coverage 78%
+    80% interval -> empirical coverage 95%
+    90% interval -> empirical coverage 98%
+
+  season-long teammate racecraft H2H (predicted vs actual mean gap, fastest-first):
+    [OK ] max-verstappen vs yuki-tsunoda     pred -0.56%  actual -1.00%  (n=20)
+    [OK ] max-verstappen vs sergio-perez     pred -0.36%  actual -0.74%  (n=18)
+    [OK ] alexander-albon vs logan-sargeant  pred -0.28%  actual -0.75%  (n=10)
+    [OK ] fernando-alonso vs lance-stroll    pred -0.21%  actual -0.19%  (n=35)
+    [OK ] lando-norris vs oscar-piastri      pred -0.20%  actual -0.16%  (n=43)
+    [MISS] daniel-ricciardo vs yuki-tsunoda   pred -0.17%  actual +0.06%  (n=14)
+    [MISS] liam-lawson vs yuki-tsunoda        pred -0.10%  actual +0.04%  (n=4)
+    [OK ] esteban-ocon vs pierre-gasly       pred -0.00%  actual -0.01%  (n=17)
+    [MISS] carlos-sainz-jr vs charles-leclerc pred +0.02%  actual -0.06%  (n=20)
+    [MISS] charles-leclerc vs lewis-hamilton  pred +0.03%  actual -0.29%  (n=21)
+    [OK ] kevin-magnussen vs nico-hulkenberg pred +0.11%  actual +0.10%  (n=19)
+    [OK ] guanyu-zhou vs valtteri-bottas     pred +0.11%  actual +0.13%  (n=20)
