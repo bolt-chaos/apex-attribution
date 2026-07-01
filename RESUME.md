@@ -70,11 +70,13 @@ correlated latents (`quali_skill`, `racecraft`), R-hat 1.01, rho +0.92; Pérez r
 backmarker tail is lapped-sensitive. Next: thread race latents into the SCM (`build_scm_data.py
 --skill-source race`) + an out-of-sample race-pace backtest (`backtest_race.py`).
 
-Driver-error-DNF / incident-proneness (IN PROGRESS): `v2/fit_incident.py` — hierarchical logistic
+Driver-error-DNF / incident-proneness (DONE): `v2/fit_incident.py` — hierarchical logistic
 (driver + circuit hazard), partial-pooled. Shrinkage compresses raw rates (Grosjean 15.8%, Norris
 2.6%) to a narrow ~5.4-7.0% band (real but modest; ordering robust). R-hat 1.00. Saves
-`models/incident_rates_2018_2025.json`. Next: fold into a unified expected-result metric
-(`v2/unified_metric.py`): E[result] combining SCM finish + mechanical + incident risk.
+`models/incident_rates_2018_2025.json`, folded into `v2/unified_metric.py` (E_all = finish +
+mechanical + incident risk). Incident tax is stakes-dominated (Verstappen loses most/race to a low
+crash rate × costly fall); cleanliness dividend (proneness only) tiny — Norris/Hamilton save
+~0.06 pos/race. Incident-proneness = real but modest tiebreaker.
 
 Other open threads: (none major outstanding).
 
