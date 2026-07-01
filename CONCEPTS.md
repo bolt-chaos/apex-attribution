@@ -7,7 +7,7 @@ before. Each concept follows the same shape: **the intuition** → **how this pr
 
 If you read top to bottom it tells a story: the *question* → why it's *hard* (causation) → the
 *trick* that makes it possible (teammates) → the *statistics* that make it honest → how we *check*
-that it actually works.
+that it actually works → and how we *extend* it to measure more of the driver (race pace, crashes).
 
 ---
 
@@ -135,6 +135,26 @@ same session* to remove a subtle track-evolution bias.
 
 → See [`v2/build_quali.py`](v2/build_quali.py).
 
+### A second signal — quali_skill vs. racecraft
+**Intuition.** If you have *two* different tests of the same ability, use both — but trust the
+noisier one less. Qualifying (one flying lap) is a clean speed test; a *race* is a messier test
+(traffic, tyre wear, strategy) that reveals something slightly different — **racecraft**. You can
+model both at once as two related abilities per driver, each pinned by its own test, with a
+**correlation** linking them (people fast on Saturday tend to be fast on Sunday — but not
+identically).
+
+**In this project.** The joint model gives each driver two latents — `quali_skill` (Saturday) and
+`racecraft` (Sunday). Race pace gets its *own, larger* noise term, so it's a complement, not a
+replacement (see *Robust noise*, and the down-weighting idea below). The two come out highly
+correlated (`rho ≈ 0.92`), and the small gap `racecraft − quali_skill` is the **"qualifying
+merchant"** signal — who races better than they qualify (Pérez) vs. quali specialists. Honest caveat:
+that gap is small and sensitive to how lapped cars are treated, so it's read as suggestive, not
+definitive. It also feeds the attribution: measuring the driver by *race* pace attributes even more
+of a result to the car than qualifying does.
+
+→ See [`v2/build_race_pace.py`](v2/build_race_pace.py), [`v2/fit_skill_joint.py`](v2/fit_skill_joint.py),
+  [`v2/backtest_race.py`](v2/backtest_race.py).
+
 ---
 
 ## Part C — The statistics that make it honest
@@ -161,6 +181,35 @@ a wild estimate.
 **In this project.** Skill is per-driver, pace is per-team-per-season, and they're tied together by
 the shared-teammate structure. This "crossed random effects" setup is what lets the chain-of-
 teammates logic actually identify the scale.
+
+### Partial pooling and shrinkage
+**Intuition.** When some groups have very little data, their raw averages lie: flip a coin 3 times,
+get 3 heads, and the raw rate screams "100%." **Partial pooling** pulls each group's estimate toward
+the overall average by an amount that depends on how little data it has — tiny samples shrink a lot,
+big samples barely budge. It's the statistically honest way to say "that extreme number is mostly
+luck." (It's the *mechanism* that makes the hierarchical model above work.)
+
+**In this project.** This is the headline of the incident model. Raw driver-error-crash rates look
+dramatic — Grosjean 15.8%, Norris 2.6% — but they come from few events. After shrinkage the credible
+rates compress into a narrow **~5.4–7.0%** band: the *ordering* is real and believable (Grosjean/
+Latifi worst, Norris/Hamilton cleanest), but most of the eye-popping raw spread was small-sample
+noise. Shrinkage turns "Grosjean crashes 6× more!" into the truer, duller "he's somewhat more
+incident-prone."
+
+→ See [`v2/fit_incident.py`](v2/fit_incident.py),
+  [`figures/v2_incident_proneness_2018_2025.png`](figures/v2_incident_proneness_2018_2025.png).
+
+### Modeling a yes/no outcome (logistic regression)
+**Intuition.** Some outcomes aren't numbers, they're yes/no: did the driver crash out this race? You
+model the *probability* of "yes" and let it depend on factors (who's driving, which circuit). Since a
+probability must stay between 0 and 1, the math works on the **log-odds** scale — a transform that
+lets you add up effects without ever falling off the 0–1 edge.
+
+**In this project.** The incident model is Bayesian **logistic**: `logit(crash probability) =
+baseline + driver effect + circuit effect`. The circuit term controls for the fact that street
+circuits (walls close) crash more, so a driver isn't penalised just for racing at Monaco.
+
+→ See [`v2/fit_incident.py`](v2/fit_incident.py).
 
 ### Random walk — letting skill change over time
 **Intuition.** A random walk models something that drifts slowly and directionlessly: each step is
@@ -254,6 +303,50 @@ reporting stage. The choice is documented as a known tradeoff.
 
 ---
 
+## Part E — Beyond pace: the rest of a driver's contribution
+
+The models above measure how *fast* a driver is. But a driver's value is more than speed — it also
+includes *finishing the race*. These last ideas fold that in.
+
+### Incident-proneness — not crashing is a skill
+**Intuition.** Being fast isn't everything; *finishing* matters. Binning the car into a wall hands
+back points, and some drivers do it more than others. That's a real, separate part of a driver's
+value that the pace models can't see.
+
+**In this project.** Retirements are split into **mechanical** (the car's fault — never charged to
+the driver) and **driver-error** (crash/spin — a genuine driver outcome). The incident model
+estimates each driver's driver-error rate (via *partial pooling*, above), controlling for circuit
+hazard. The honest verdict: incident-proneness is real and sensibly ordered, but a *modest*
+differentiator once small-sample noise is stripped out.
+
+→ See [`v2/fit_incident.py`](v2/fit_incident.py).
+
+### Expected cost = chance × stakes (the "incident tax")
+**Intuition.** What a mistake *costs* isn't just how often you make it — it's how much you lose each
+time. A leader who crashes throws away a win; a backmarker who crashes throws away 17th. Same crash,
+very different cost. Expected loss = probability × consequence.
+
+**In this project.** The **incident tax** (positions lost per race to your own errors) turns out to
+be *stakes-dominated*: because crash rates barely differ between drivers, the tax mostly tracks how
+high you'd have finished. Verstappen's tax is the highest — not because he's reckless (he's clean)
+but because each of his rare mistakes costs a podium. A separate **cleanliness dividend** isolates
+the driver's own contribution, and it's tiny — the honest conclusion that incident-proneness is a
+minor tiebreaker between similarly-fast drivers.
+
+### The unified metric — one number, combined only at the end
+**Intuition.** A driver's real expected result blends three things: how high they'd finish, the
+chance the car breaks, and the chance they crash. You keep these *separate* while modelling (so an
+engine failure is never blamed on the driver), then combine them only at the reporting step:
+`expected result ≈ (chance of finishing) × (expected finish) + (chance of a DNF) × (back of field)`.
+
+**In this project.** This is "Option A" — pace, mechanical risk, and incident risk are estimated
+independently and mixed only in the final metric, so no imputed crash ever pollutes the skill
+estimate.
+
+→ See [`v2/unified_metric.py`](v2/unified_metric.py), [`v2/fit_incident.py`](v2/fit_incident.py).
+
+---
+
 ## One-screen glossary
 
 | Term | One-line meaning |
@@ -266,8 +359,12 @@ reporting stage. The choice is documented as a known tradeoff.
 | **Teammate trick** | Same car ⇒ the gap between teammates is pure skill. |
 | **Connected component** | Chaining shared-teammate links to compare drivers who never met. |
 | **Latent variable** | A real quantity you infer rather than measure (skill, pace). |
+| **Second signal (racecraft)** | A noisier extra measurement (race pace), down-weighted, not a replacement for quali. |
+| **Qualifying merchant** | Fast on Saturday, worse on Sunday — the `racecraft − quali_skill` gap. |
 | **Prior / posterior** | Belief before / after seeing the data (Bayesian). |
 | **Hierarchical model** | Respects nesting (drivers in teams) so estimates borrow strength. |
+| **Partial pooling / shrinkage** | Pull noisy small-sample rates toward the average; extremes are mostly luck. |
+| **Logistic regression** | Model a yes/no outcome's probability (on the log-odds scale). |
 | **Random walk** | Slow directionless drift; uncertainty grows like √time. |
 | **Credible interval** | The range the true value is probably in (e.g. 90%). |
 | **R-hat** | Convergence check; should be ≈ 1.00. |
@@ -276,6 +373,9 @@ reporting stage. The choice is documented as a known tradeoff.
 | **Calibration** | Is the model's stated confidence honest? |
 | **ICC** | Share of result-variance due to each cause (car vs. driver). |
 | **DNF censoring** | Non-random missing results that must be handled carefully. |
+| **Incident-proneness** | Per-driver driver-error-crash rate — finishing is a skill too. |
+| **Expected cost = chance × stakes** | A mistake costs more the higher you'd have finished (the incident tax). |
+| **Unified metric** | Combine pace + mechanical + crash risk into one expected result, at reporting only. |
 
 ---
 
