@@ -275,6 +275,24 @@ predictive-but-noisy signal: trust it season-long, not race-by-race. See [`figur
 race`) shows race pace attributes **more to the car** than qualifying: car median **31.1%** / driver
 **13.9%**, **P(car>driver)=100%** (vs the quali-based 73%) — on Sundays the machinery is decisive.
 
+## Incident-proneness: how often a driver throws a result away
+
+Speed isn't the whole of a driver — *not binning the car* is a skill too. The DNF taxonomy already
+splits retirements into `mechanical` (charged to the car, never the driver) and `driver_error`
+(collision / accident / spun off). [`v2/fit_incident.py`](v2/fit_incident.py) models the per-driver
+**driver-error-DNF risk** as a hierarchical logistic (`logit p = alpha + incident[driver] +
+hazard[circuit_type]`), with **partial pooling** so rare/short-career rates shrink toward the field
+and circuit hazard is controlled (street circuits crash ~30% more).
+
+The headline is the **shrinkage**: raw rates look dramatic (Grosjean 15.8%, Latifi 11.5% vs Norris
+2.6%), but once small-sample noise is corrected the credible per-start risks compress to a narrow
+**~5.4–7.0%** band with heavily overlapping CrIs — *incident-proneness is real and robustly ordered
+(Grosjean/Latifi/Albon worst; Norris/Hamilton/Alonso/Verstappen cleanest) but a smaller effect than
+raw rates suggest.* R-hat 1.00. See [`figures/v2_incident_proneness_2018_2025.png`](figures/v2_incident_proneness_2018_2025.png).
+(Caveat: attributed to the driver controlling for circuit only — a small car-induced-error component
+may fold in.) Per-driver rates are saved to `models/incident_rates_2018_2025.json` for the unified
+expected-result metric.
+
 ## Setup
 
 ```bash

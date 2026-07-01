@@ -70,7 +70,13 @@ correlated latents (`quali_skill`, `racecraft`), R-hat 1.01, rho +0.92; Pérez r
 backmarker tail is lapped-sensitive. Next: thread race latents into the SCM (`build_scm_data.py
 --skill-source race`) + an out-of-sample race-pace backtest (`backtest_race.py`).
 
-Other open threads: a driver-error-DNF (incident-proneness) term.
+Driver-error-DNF / incident-proneness (IN PROGRESS): `v2/fit_incident.py` — hierarchical logistic
+(driver + circuit hazard), partial-pooled. Shrinkage compresses raw rates (Grosjean 15.8%, Norris
+2.6%) to a narrow ~5.4-7.0% band (real but modest; ordering robust). R-hat 1.00. Saves
+`models/incident_rates_2018_2025.json`. Next: fold into a unified expected-result metric
+(`v2/unified_metric.py`): E[result] combining SCM finish + mechanical + incident risk.
+
+Other open threads: (none major outstanding).
 
 ## Workflow
 Land changes via **PRs, never commit to `main`** (see `CLAUDE.md`). Branch → commit → push →

@@ -1,0 +1,31 @@
+==================================================================
+v2 DRIVER INCIDENT-PRONENESS (driver-error-DNF risk) — RESULTS
+==================================================================
+max R-hat = 1.000   base driver-error-DNF rate = 6.0% per start
+circuit hazard (log-odds vs avg): RACE -0.06, ROAD -0.06, STREET +0.10
+sigma_driver = 0.16 (spread of driver proneness)
+
+[MOST INCIDENT-PRONE] shrunk per-race driver-error-DNF prob (>= 20 starts)
+    Romain Grosjean      7.0%  90% CrI [5.2%, 10.4%]  (raw 15.8%, 57 starts)
+    Nicholas Latifi      6.6%  90% CrI [5.0%, 9.2%]  (raw 11.5%, 61 starts)
+    Gabriel Bortoleto    6.6%  90% CrI [4.9%, 9.4%]  (raw 16.7%, 24 starts)
+    Alexander Albon      6.4%  90% CrI [5.0%, 8.5%]  (raw 8.6%, 128 starts)
+    Liam Lawson          6.4%  90% CrI [4.8%, 8.8%]  (raw 11.4%, 35 starts)
+    Nikita Mazepin       6.4%  90% CrI [4.8%, 8.8%]  (raw 14.3%, 21 starts)
+    Carlos Sainz Jr.     6.3%  90% CrI [5.0%, 8.2%]  (raw 7.7%, 169 starts)
+    Lance Stroll         6.3%  90% CrI [5.0%, 8.2%]  (raw 7.7%, 169 starts)
+
+[CLEANEST] least incident-prone
+    Lando Norris         5.4%  90% CrI [3.6%, 6.7%]  (raw 2.6%, 152 starts)
+    Lewis Hamilton       5.5%  90% CrI [3.8%, 6.8%]  (raw 3.5%, 172 starts)
+    Fernando Alonso      5.6%  90% CrI [3.9%, 6.9%]  (raw 3.7%, 135 starts)
+    Valtteri Bottas      5.6%  90% CrI [3.9%, 7.1%]  (raw 4.0%, 149 starts)
+    Max Verstappen       5.7%  90% CrI [4.2%, 7.1%]  (raw 4.6%, 173 starts)
+    Pierre Gasly         5.7%  90% CrI [4.2%, 7.1%]  (raw 4.7%, 172 starts)
+    George Russell       5.7%  90% CrI [4.2%, 7.1%]  (raw 4.6%, 152 starts)
+    Sebastian Vettel     5.7%  90% CrI [4.1%, 7.2%]  (raw 4.0%, 101 starts)
+
+  (shrinkage pulls rare/short-career rates toward the field; note e.g. how far the
+   raw rate moves for low-start drivers. Circuit hazard is controlled.)
+  CAVEAT: attributed to the DRIVER (controlling for circuit only) — a small
+  car-induced-error component may be folded in; see docstring.
