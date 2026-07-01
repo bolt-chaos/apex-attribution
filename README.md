@@ -293,6 +293,17 @@ raw rates suggest.* R-hat 1.00. See [`figures/v2_incident_proneness_2018_2025.pn
 may fold in.) Per-driver rates are saved to `models/incident_rates_2018_2025.json` for the unified
 expected-result metric.
 
+**Unified expected-result metric** ([`v2/unified_metric.py`](v2/unified_metric.py)) folds both DNF
+routes into one number: `E_all = (1 − p_mech − p_inc)·E[finish|classified] + (p_mech + p_inc)·DNF`
+(combined at reporting only — Option A). It exposes the **incident tax** (positions/race lost to a
+driver's own errors), which is *stakes-dominated*: because shrunk incident rates barely vary, the tax
+tracks how high a driver would finish, not how often they crash — Verstappen loses the most per race
+(~0.9 pos) to a *low* crash rate × a costly fall from P3. A **cleanliness dividend** isolates the
+proneness itself (positions saved vs a field-average driver in the same seat): Norris/Hamilton save
+the most (~0.06 pos/race), Grosjean/Sainz lose the most (~0.05) — real but tiny, so incident-proneness
+is a modest tiebreaker, most valuable when it protects a front-runner's podium. See
+[`figures/v2_unified_metric_2018_2025.png`](figures/v2_unified_metric_2018_2025.png).
+
 ## Setup
 
 ```bash

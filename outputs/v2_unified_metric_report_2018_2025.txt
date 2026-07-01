@@ -1,0 +1,67 @@
+============================================================================
+v2 UNIFIED EXPECTED-RESULT METRIC (finish + mechanical + incident risk)
+============================================================================
+E_all = (1 - p_mech - p_inc)*E[finish|classified] + (p_mech + p_inc)*18   (combined at reporting only, Option A)
+drivers with >= 30 starts, in their most-raced car; DNF scores P18
+
+  driver               car           E[fin|cl]  p_mech  p_inc  E_all  inc.tax
+  Max Verstappen       red-bull            3.0   4.3%  5.7%    4.5   +0.86
+  George Russell       mercedes            5.0   3.5%  5.7%    6.2   +0.74
+  Lewis Hamilton       mercedes            5.2   3.5%  5.5%    6.3   +0.70
+  Carlos Sainz Jr.     ferrari             5.1   4.1%  6.3%    6.5   +0.81
+  Charles Leclerc      ferrari             5.2   4.1%  6.1%    6.5   +0.78
+  Sebastian Vettel     ferrari             5.3   4.1%  5.7%    6.5   +0.73
+  Valtteri Bottas      mercedes            6.0   3.5%  5.6%    7.1   +0.68
+  Sergio Pérez         red-bull            6.2   4.3%  5.9%    7.4   +0.70
+  Lando Norris         mclaren             7.0   4.9%  5.4%    8.2   +0.59
+  Fernando Alonso      aston-martin        8.9   5.3%  5.6%    9.9   +0.51
+  Oscar Piastri        mclaren             9.2   4.9%  5.8%   10.2   +0.51
+  Daniel Ricciardo     mclaren            10.2   4.9%  6.0%   11.0   +0.47
+  Pierre Gasly         alpine             10.1   7.1%  5.7%   11.1   +0.45
+  Esteban Ocon         alpine             10.6   7.1%  5.8%   11.5   +0.43
+  Liam Lawson          racing-bulls       11.5   2.1%  6.4%   12.0   +0.42
+  Lance Stroll         aston-martin       11.5   5.3%  6.3%   12.3   +0.41
+  Antonio Giovinazzi   alfa-romeo         11.5   7.7%  5.9%   12.4   +0.38
+  Daniil Kvyat         toro-rosso         11.7   8.3%  6.0%   12.6   +0.38
+  Yuki Tsunoda         alphatauri         12.1   5.5%  6.3%   12.8   +0.37
+  Kimi Räikkönen       alfa-romeo         12.3   7.7%  5.8%   13.0   +0.33
+  Guanyu Zhou          alfa-romeo         12.5   7.7%  5.8%   13.3   +0.32
+  Kevin Magnussen      haas               12.6   7.0%  6.0%   13.3   +0.33
+  Romain Grosjean      haas               12.9   7.0%  7.0%   13.6   +0.36
+  Nico Hülkenberg      haas               13.0   7.0%  6.1%   13.6   +0.31
+  Mick Schumacher      haas               14.5   7.0%  6.1%   14.9   +0.22
+  Alexander Albon      williams           14.8   6.1%  6.4%   15.2   +0.21
+  Nicholas Latifi      williams           15.6   6.1%  6.6%   15.9   +0.15
+  Logan Sargeant       williams           15.7   6.1%  6.0%   16.0   +0.14
+
+[INCIDENT TAX] positions/race a driver loses to their OWN errors = p_inc * (DNF - E[finish|classified])
+  KEY: this is STAKES-dominated. Because shrunk incident rates barely vary (~5.4-7.0%),
+  the tax tracks how HIGH a driver would finish, not how often they crash — a front-
+  runner loses ~15 places per DNF, a backmarker only a few. So a clean front-runner's
+  cleanliness is worth the most, and a crashy backmarker's proneness costs the least.
+  most positions lost per race to own errors (front of grid — most at stake):
+    Max Verstappen       +0.86 pos/race  (p_inc 5.7%, would finish P3.0)
+    Carlos Sainz Jr.     +0.81 pos/race  (p_inc 6.3%, would finish P5.1)
+    Charles Leclerc      +0.78 pos/race  (p_inc 6.1%, would finish P5.2)
+    George Russell       +0.74 pos/race  (p_inc 5.7%, would finish P5.0)
+    Sebastian Vettel     +0.73 pos/race  (p_inc 5.7%, would finish P5.3)
+    Lewis Hamilton       +0.70 pos/race  (p_inc 5.5%, would finish P5.2)
+  least at stake (back of grid — low tax despite SIMILAR crash rates, not 'cleaner'):
+    Logan Sargeant       +0.14 pos/race  (p_inc 6.0%, would finish P15.7)
+    Nicholas Latifi      +0.15 pos/race  (p_inc 6.6%, would finish P15.6)
+    Alexander Albon      +0.21 pos/race  (p_inc 6.4%, would finish P14.8)
+    Mick Schumacher      +0.22 pos/race  (p_inc 6.1%, would finish P14.5)
+
+[CLEANLINESS DIVIDEND] positions/race saved vs a field-average-rate driver in the SAME seat
+  = (p_inc_field - p_inc_driver) * (DNF - E[finish|classified]) — isolates proneness x stakes
+    Lando Norris         +0.065  (cleaner than avg; p_inc 5.4%)
+    Lewis Hamilton       +0.062  (cleaner than avg; p_inc 5.5%)
+    Valtteri Bottas      +0.041  (cleaner than avg; p_inc 5.6%)
+    Max Verstappen       +0.038  (cleaner than avg; p_inc 5.7%)
+    Romain Grosjean      -0.054  (crashier than avg; p_inc 7.0%)
+    Carlos Sainz Jr.     -0.046  (crashier than avg; p_inc 6.3%)
+    Liam Lawson          -0.028  (crashier than avg; p_inc 6.4%)
+
+  Dividends are tiny (|0.07| pos/race at most): after shrinkage,
+  incident-proneness is a real but MODEST tiebreaker between similarly-fast drivers.
+  Where it matters most: a clean front-runner (Verstappen) protects a podium each race.
