@@ -108,6 +108,50 @@ driver vs. the car?* — and, just as importantly, figured out exactly when it c
   not an identified effect; reported with a wide interval and a caveat.
 - **Calibration is slightly conservative** — the model modestly over-states its own uncertainty.
 
+## How a causal-inference purist (Judea Pearl) would critique this — and the roadmap it implies
+*(A steelman of Pearl's likely reaction, not a quote. This is strong essay material: it situates the
+project in the field's rigorous frame and shows you know its frontier. His criticisms are mostly of
+the form "you found the right problems by hand — now formalize them with the tools built for exactly
+this," which is praise disguised as a to-do list.)*
+
+**What he'd praise.** It climbs his **Ladder of Causation** — most "who's best" analysis is rung-1
+association (win counts); this reaches rung 2 (`do(constructor=X)`) and rung 3 (counterfactuals). It
+**commits to an explicit DAG** (assumptions drawn, not hidden) and even runs `falsify_graph`. And the
+v1 **non-identification finding** is his central thesis in miniature — no amount of data/ML separates
+driver from car when each driver sits in one car; identification is a property of *structure*, not
+sample size. He'd applaud that the project refuses to trust a non-identified number.
+
+**What he'd criticize (each = a concrete improvement):**
+- **It's really a *positivity/overlap* failure, not just confounding.** With each driver nested in ~one
+  car (Cramér's V 0.84), `do(car = Red Bull)` asks about a driver never observed near a Red Bull — no
+  overlap. The v2 fixes (team-switchers, wider era) are *overlap-improvement* strategies; frame them
+  that way.
+- **The associational→causal seam.** Skill/pace are fit by a rung-1 regression, then fed into the SCM
+  as if they were clean manipulable causes. What does `do(car_pace = −1.5%)` physically intervene on?
+  It's a fitted construct, and skill/pace are still entangled (corr 0.49–0.54).
+- **ICC variance-shares aren't structural — and the era-dependence proves it.** "Car 32% / driver 21%"
+  is a population-specific variance decomposition, so of course it shifts with the era window. Pearl
+  would read the era-dependence as a *symptom* of reporting a non-transportable summary, and push toward
+  effect/mediation measures that are more invariant.
+- **`grid` is a mediator with no formal mediation analysis.** "How much of a driver's edge is Saturday
+  (grid) vs Sunday (racecraft)?" is a textbook natural-direct/indirect-effect decomposition (his
+  mediation formula); the quali-vs-racecraft split answers it only informally.
+- **Cross-era = a *transportability* problem.** The "Senna" z-score era-normalization is exactly what
+  Pearl & Bareinboim formalized with **selection diagrams** and transport formulas. He'd call the
+  z-score an ad-hoc patch and want the era gap modeled structurally.
+- **DNF/incident selection lives outside the graph.** "Option A" (combine at reporting) is pragmatic;
+  the principled route is a **selection node** in the DAG + recoverability-from-selection-bias theory.
+- **Causal sufficiency & sensitivity.** Likely unmeasured common causes (team budget → car pace *and*
+  hiring *and* strategy; weather/tires omitted). He'd want an explicit **sensitivity analysis to
+  unmeasured confounding**, not just an acknowledgment.
+- **Identifiability found empirically, not proven.** Run the **ID algorithm / do-calculus** on the graph
+  up front to certify whether `E[finish | do(car_pace)]` is identifiable *before* fitting.
+
+**Concrete next steps this implies:** add a driver→team **assignment/selection node** + check positivity;
+run the **ID algorithm** to certify the query; replace ICC with a **mediation decomposition** through
+`grid`; recast cross-era as **transportability** with selection diagrams; put **DNF selection in the
+graph**; add a **confounding sensitivity analysis**.
+
 ## Fun results & hooks (to engage a reader)
 - "Senna in a modern Red Bull" — the dream query, shipped as an explicitly playful, caveated demo.
 - Driver career arcs that match what fans remember (Hamilton's peak, Alonso's resurgence, Vettel's fade).
