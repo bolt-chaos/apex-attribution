@@ -332,6 +332,16 @@ positions — the old "car dominates by ICC" was partly an independence artifact
 driver 68%; OLS pace 0.47 > skill 0.35). `uncertainty_propagation.py` gained a matching `--hiring-edge`
 flag (default off) + an ICC-is-demoted caveat.
 
+### Errors-in-variables de-attenuation (done)
+
+`attribution_eiv.py` corrects the attenuation from feeding *estimated* latents into the finish
+regression as if exact. Using the posterior draws to estimate the measurement-error covariance Σ_uu
+and applying the multivariate correction `β_corr = (Σ_WW − Σ_uu)⁻¹ Σ_WY`. **Finding:** the driver
+latent is noisier (reliability 0.78 vs car 0.93), so de-attenuation raises the *driver* — standardized
+betas 0.35/0.47 → 0.40/0.40 (parity). It corrects a real bias but doesn't rescue the car; it confirms
+car ≈ driver on the wide era. (Corrects the linear seam only; the gcm measures would shift the same
+way.)
+
 ### Cross-era comparison ("Senna in a modern Red Bull")
 
 The query is already expressible as `do(car_pace = 2024-Red-Bull, driver_skill = Senna)` → predict

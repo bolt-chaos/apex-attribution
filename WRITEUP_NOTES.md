@@ -129,6 +129,13 @@ sample size. He'd applaud that the project refuses to trust a non-identified num
 - **The associational→causal seam.** Skill/pace are fit by a rung-1 regression, then fed into the SCM
   as if they were clean manipulable causes. What does `do(car_pace = −1.5%)` physically intervene on?
   It's a fitted construct, and skill/pace are still entangled (corr 0.49–0.54).
+  **✅ PARTLY ADDRESSED — errors-in-variables (`v2/attribution_eiv.py`).** The latents are *estimates*,
+  so feeding point values into the finish regression **attenuates** the noisier one (regression
+  dilution). Correcting it (multivariate EIV using the posterior error covariance) gave an honest
+  surprise: the **driver** is the noisier latent (reliability **0.78** vs the car's **0.93**), so
+  de-attenuation raises the *driver* — standardized betas 0.35/0.47 → **0.40/0.40 (parity)**. Great
+  essay beat: I expected this to rescue the car; done right it did the opposite and *confirmed*
+  car ≈ driver. (Residual: it corrects the linear seam, not the full latents-in-the-SCM problem.)
 - **ICC variance-shares aren't structural — and the era-dependence proves it.** "Car 32% / driver 21%"
   is a population-specific variance decomposition, so of course it shifts with the era window. Pearl
   would read the era-dependence as a *symptom* of reporting a non-transportable summary, and push toward

@@ -1,0 +1,17 @@
+======================================================================
+v2 ERRORS-IN-VARIABLES de-attenuation of finish ~ driver_skill + car_pace
+======================================================================
+regression rows: 3009   latents: racecraft / pace_r
+
+[RELIABILITY] fraction of each latent's observed spread that is real signal (1 = no error)
+    driver_skill  0.784   car_pace  0.931   -> the DRIVER latent is noisier / more attenuated
+    (measurement-error correlation skill<->pace: -0.54)
+
+[STANDARDIZED BETAS] naive (attenuated) vs EIV-corrected (de-attenuated)
+    finish ~ skill+pace   NAIVE:      driver +0.35   car +0.47   (car leads)
+    finish ~ skill+pace   EIV-CORR:   driver +0.40   car +0.40   (parity)
+
+[READING] measurement error attenuates the noisier latent; correcting it moves that latent
+    UP. Here the driver was the noisier one, so de-attenuation raises the DRIVER toward the
+    car -> parity. It does NOT rescue the car: the car is the better-identified latent.
+    (The gcm interventional/necessity measures would shift the same way — driver up.)
