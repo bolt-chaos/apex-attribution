@@ -133,6 +133,15 @@ sample size. He'd applaud that the project refuses to trust a non-identified num
   is a population-specific variance decomposition, so of course it shifts with the era window. Pearl
   would read the era-dependence as a *symptom* of reporting a non-transportable summary, and push toward
   effect/mediation measures that are more invariant.
+  **✅ IMPLEMENTED (`v2/attribution_v2.py`, the two "spec + reporting" fixes):** (1) put the confounder
+  in the graph via the hiring edge `driver_skill→car_pace` (`--hiring-edge`, default on); (2) demote ICC
+  to a descriptive number and lead with graph-robust measures. The payoff is the strongest possible
+  vindication of the criticism: **adding the edge swings the ICC split ~25pp — from car 26%/driver 16%
+  to car 1%/driver 58%, flipping the verdict — while the interventional spread moves 0.0 positions.**
+  So the old "car dominates by ICC" headline was largely an independent-roots artifact. By every
+  *graph-robust* measure the car and driver are near-parity on the wide era (car 10.6 vs driver 10.1
+  positions; a **rung-3 necessity query** says a podium needs the car 82% vs the driver 68%; OLS pace
+  0.47 > skill 0.35). Figure: `figures/v2_necessity_2018_2025_joint.png`.
 - **`grid` is a mediator with no formal mediation analysis.** "How much of a driver's edge is Saturday
   (grid) vs Sunday (racecraft)?" is a textbook natural-direct/indirect-effect decomposition (his
   mediation formula); the quali-vs-racecraft split answers it only informally.

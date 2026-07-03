@@ -304,6 +304,32 @@ the most (~0.06 pos/race), Grosjean/Sainz lose the most (~0.05) — real but tin
 is a modest tiebreaker, most valuable when it protects a front-runner's podium. See
 [`figures/v2_unified_metric_2018_2025.png`](figures/v2_unified_metric_2018_2025.png).
 
+## Putting the confounder in the graph — and why ICC is no longer the headline
+
+A [Pearl-style review](IDEAS.md) flagged two "specification + reporting" fixes, now implemented in
+[`v2/attribution_v2.py`](v2/attribution_v2.py):
+
+1. **Specification.** `driver_skill` and `car_pace` were drawn as *independent* roots, but they're
+   correlated (~0.5) because good drivers are hired into good cars. We put that confounder *in the
+   graph* via the hiring edge `driver_skill → car_pace` (`--hiring-edge`, default on).
+2. **Reporting.** Demote ICC (the variance share) from headline to a descriptive number, and lead
+   with the graph-**robust** measures.
+
+**Why it matters — the striking result:** ICC assumes *independent* root noise, so adding the hiring
+edge **swings the split ~25pp — from car 26% / driver 16% to car 1% / driver 58%, flipping the
+verdict** — while the interventional car-vs-driver spread moves **0.0 positions**. The `do()`-sweeps
+and counterfactuals set *both* roots, so they're invariant to how the confounding is modelled; only
+the variance share isn't. So the earlier "car dominates X% by ICC" headline was partly an
+independent-roots **artifact**.
+
+**The graph-robust answer (wide era, race pace):** by every measure that doesn't depend on the
+confounding spec, the car and driver are **near-parity, car slightly ahead** — interventional car
+**10.6** vs driver **10.1** positions; OLS `finish ~ pace 0.47 > skill 0.35`; and a new **rung-3
+necessity query** ("would this podium have happened *but for* the car / the driver?") says a podium
+needs the **car 82%** vs the **driver 68%** of the time (Räikkönen/Bottas/Piastri most car-dependent;
+Alonso/Verstappen most driver-dependent). See [`figures/v2_necessity_2018_2025_joint.png`](figures/v2_necessity_2018_2025_joint.png).
+ICC is kept only as a clearly-caveated descriptive number.
+
 ## Setup
 
 ```bash
