@@ -82,6 +82,10 @@ but good hygiene — already guards the model's forward-looking claims.
 
 ## 2. Mapping to *The Book of Why*
 
+> A fuller, chapter-by-chapter version of this mapping — with a scorecard of which of the book's
+> warnings the project has since acted on — now lives in [`BOOK_OF_WHY.md`](BOOK_OF_WHY.md). The
+> sketch below is the seed it grew from.
+
 The v1→v2 arc is a literal ascent of the **Ladder of Causation** (Ch. 1):
 
 - **Rung 1 — association:** win counts; Bell et al.; the project's own rung-1 instruments (OLS
