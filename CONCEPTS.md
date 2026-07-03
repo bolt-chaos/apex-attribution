@@ -397,6 +397,8 @@ estimate.
 | **ICC** | Share of result-variance due to each cause — *demoted*: population- and graph-dependent. |
 | **Probability of Necessity** | "But for" the car/driver, would this podium have happened? A robust rung-3 contrast. |
 | **Hiring edge** | `driver_skill→car_pace` — puts the "good drivers get good cars" confounder in the graph. |
+| **Attenuation / errors-in-variables** | A noisy *estimated* predictor biases its effect toward zero; correcting it de-attenuates. |
+| **Reliability** | Fraction of a measured variable's spread that's real signal (skill 0.78, car 0.93 here). |
 | **DNF censoring** | Non-random missing results that must be handled carefully. |
 | **Incident-proneness** | Per-driver driver-error-crash rate — finishing is a skill too. |
 | **Expected cost = chance × stakes** | A mistake costs more the higher you'd have finished (the incident tax). |

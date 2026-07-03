@@ -330,6 +330,15 @@ needs the **car 82%** vs the **driver 68%** of the time (Räikkönen/Bottas/Pias
 Alonso/Verstappen most driver-dependent). See [`figures/v2_necessity_2018_2025_joint.png`](figures/v2_necessity_2018_2025_joint.png).
 ICC is kept only as a clearly-caveated descriptive number.
 
+**Errors-in-variables — correcting the estimated-latents bias** ([`v2/attribution_eiv.py`](v2/attribution_eiv.py)).
+`driver_skill`/`car_pace` are posterior *estimates* fed into the finish regression as if exact —
+a measurement-error problem that **attenuates** the noisier latent's coefficient. Using the posterior
+draws to estimate the error covariance and applying the standard multivariate correction: the
+**driver** latent is the noisier one (reliability **0.78** vs the car's **0.93**), so de-attenuation
+raises the *driver* — standardized `finish ~ skill+pace` goes from naive **0.35 / 0.47** to corrected
+**0.40 / 0.40 (parity)**. So the attenuation was suppressing the *driver*, not the car; correcting it
+confirms car ≈ driver rather than rescuing the car. See [`figures/v2_eiv_2018_2025_joint.png`](figures/v2_eiv_2018_2025_joint.png).
+
 ## Setup
 
 ```bash
