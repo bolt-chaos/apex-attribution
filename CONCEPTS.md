@@ -288,7 +288,30 @@ single answer**: it depends on the era. Over the tightly-matched 2018–2025 car
 ≈ 21% (close, overlapping). Over the wild-variation 2006–2025 span, car ≈ 44% / driver ≈ 12%
 (car clearly dominant). More car variety in the window → more the car explains.
 
-→ See [`v2/attribution_v2.py`](v2/attribution_v2.py), `intrinsic_causal_influence`.
+**Why it's now *demoted*.** A variance share isn't a property of the world — it depends on the
+population (which is why it moves with the era) *and* on the graph. ICC assumes the root causes have
+*independent* noise; but skill and car pace are correlated (good drivers get good cars), and once you
+put that confounder in the graph the ICC split **swings ~25pp and flips** (car 26%/driver 16% →
+car 1%/driver 58%) — while the interventional/counterfactual answers don't move at all. So the project
+now leads with those robust measures and keeps ICC only as a clearly-caveated descriptive number.
+
+→ See [`v2/attribution_v2.py`](v2/attribution_v2.py), `intrinsic_causal_influence`; and *Probability
+  of Necessity* below.
+
+### Probability of Necessity — the "but for" question
+**Intuition.** A sharp, rung-3 way to ask "how much was it the car vs. the driver" *without* a
+variance share: of the podiums a driver actually got, how many would have **vanished but for** the
+car (imagine the same driver, same day, in a midfield car) — versus but for the driver (a median
+driver, same car)? This is a counterfactual applied to the events that *happened*, so it doesn't
+depend on the population's spread the way ICC does.
+
+**In this project.** On the wide era a podium needs the **car 82%** of the time vs the **driver 68%**
+— near-parity, car slightly ahead, agreeing with the interventional spread and OLS (and unlike the
+wildly-swinging ICC). Face-valid: Räikkönen/Bottas/Piastri's podiums are the most car-dependent;
+Alonso's and Verstappen's the most driver-dependent.
+
+→ See `necessity_query` in [`v2/attribution_v2.py`](v2/attribution_v2.py),
+  [`figures/v2_necessity_2018_2025_joint.png`](figures/v2_necessity_2018_2025_joint.png).
 
 ### DNF censoring
 **Intuition.** Missing data is rarely random. If a driver retires (DNF — Did Not Finish) on lap 1,
@@ -371,7 +394,9 @@ estimate.
 | **Student-t** | Outlier-tolerant "fat-tailed" bell curve. |
 | **Backtest** | Predict held-out data to prove it's not just memorizing. |
 | **Calibration** | Is the model's stated confidence honest? |
-| **ICC** | Share of result-variance due to each cause (car vs. driver). |
+| **ICC** | Share of result-variance due to each cause — *demoted*: population- and graph-dependent. |
+| **Probability of Necessity** | "But for" the car/driver, would this podium have happened? A robust rung-3 contrast. |
+| **Hiring edge** | `driver_skill→car_pace` — puts the "good drivers get good cars" confounder in the graph. |
 | **DNF censoring** | Non-random missing results that must be handled carefully. |
 | **Incident-proneness** | Per-driver driver-error-crash rate — finishing is a skill too. |
 | **Expected cost = chance × stakes** | A mistake costs more the higher you'd have finished (the incident tax). |

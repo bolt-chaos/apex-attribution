@@ -61,6 +61,11 @@ def main() -> int:
                     help="posterior var for driver_skill (joint model: racecraft or quali_skill)")
     ap.add_argument("--var-pace", default="pace",
                     help="posterior var for car_pace (joint model: pace_r or pace_q)")
+    ap.add_argument("--hiring-edge", default=False, action=argparse.BooleanOptionalAction,
+                    help="add driver_skill->car_pace. NOTE this is an ICC tool and ICC is now a "
+                         "DEMOTED descriptive metric — the edge collapses the car's ICC share "
+                         "(see attribution_v2's specification check). Default off (keeps the "
+                         "descriptive independent-roots credible intervals).")
     args = ap.parse_args()
     np.random.seed(SEED)
     OUT.mkdir(exist_ok=True); FIG.mkdir(exist_ok=True)
@@ -96,8 +101,9 @@ def main() -> int:
         return d[NODES].dropna()
 
     # assign mechanisms ONCE on the posterior-mean data; re-fit per draw (fast)
+    edges = EDGES + [("driver_skill", "car_pace")] if args.hiring_edge else EDGES
     mean_data = data_for(None)
-    scm = gcm.InvertibleStructuralCausalModel(nx.DiGraph(EDGES))
+    scm = gcm.InvertibleStructuralCausalModel(nx.DiGraph(edges))
     gcm.auto.assign_causal_mechanisms(scm, mean_data, quality=gcm.auto.AssignmentQuality.GOOD)
 
     # point-estimate baseline: ICC on the posterior-mean data (correct for any model/era)
@@ -120,8 +126,14 @@ def main() -> int:
     def ci(x):
         return np.percentile(x, 5), np.median(x), np.percentile(x, 95)
 
+    graph = "hiring edge (driver_skill->car_pace)" if args.hiring_edge else "independent roots"
     L = ["=" * 68, "v2 UNCERTAINTY-PROPAGATED ATTRIBUTION (ICC over posterior draws)", "=" * 68,
-         f"draws: {len(draw_idx)}  (ICC rand={args.icc_rand}, base={args.icc_base})", ""]
+         f"draws: {len(draw_idx)}  (ICC rand={args.icc_rand}, base={args.icc_base})  graph: {graph}",
+         "CAVEAT: ICC is a DEMOTED descriptive metric. Beyond this sampling CrI, the ICC split also",
+         "swings ~25pp depending on whether the skill<->car_pace confounding is in the graph (run",
+         "with --hiring-edge; see attribution_v2's specification check) — a graph uncertainty that",
+         "DWARFS the sampling one below. The graph-robust car-vs-driver answer is the interventional",
+         "/ necessity result in attribution_v2, not this variance share.", ""]
     for name, x in [("car_pace", car), ("driver_skill", drv), ("grid", df.grid),
                     ("finish_pos resid", df.finish_pos)]:
         lo, md, hi = ci(x)

@@ -317,6 +317,21 @@ quali-based 73%); on Sundays the machinery is the decisive factor. (Quali-source
 model is near-parity, ~25/28.) Caveat: the racecraft signal is lapped-car sensitive (see PR-2 / the
 joint report's merchant-table caveat).
 
+### Confounder in the graph + ICC demotion (Pearl review, done)
+
+Two "specification + reporting" fixes from a Pearl-style review ([`IDEAS.md`](IDEAS.md)), in
+`attribution_v2.py`: (1) the roots are correlated (good drivers → good cars), so we add the hiring
+edge `driver_skill → car_pace` (`--hiring-edge`, default on) — putting the confounder in the graph;
+(2) ICC is demoted to a caveated descriptive number and the report now leads with graph-**robust**
+measures: the interventional `do()`-sweeps, a rung-3 **necessity** query (`necessity_query`: "would
+this podium have happened but for the car / the driver?", computed on the separable independent-roots
+graph), and OLS. **Finding:** ICC assumes independent root noise, so the edge swings it **~25pp and
+flips it** (car 26%/driver 16% → car 1%/driver 58%), while the interventional spread moves 0.0
+positions — the old "car dominates by ICC" was partly an independence artifact. Graph-robust verdict
+(wide era): near-parity, car slightly ahead (spread car 10.6 vs driver 10.1; podium needs car 82% vs
+driver 68%; OLS pace 0.47 > skill 0.35). `uncertainty_propagation.py` gained a matching `--hiring-edge`
+flag (default off) + an ICC-is-demoted caveat.
+
 ### Cross-era comparison ("Senna in a modern Red Bull")
 
 The query is already expressible as `do(car_pace = 2024-Red-Bull, driver_skill = Senna)` → predict

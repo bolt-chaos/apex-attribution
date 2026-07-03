@@ -1,7 +1,12 @@
 ====================================================================
 v2 UNCERTAINTY-PROPAGATED ATTRIBUTION (ICC over posterior draws)
 ====================================================================
-draws: 30  (ICC rand=100, base=300)
+draws: 30  (ICC rand=100, base=300)  graph: independent roots
+CAVEAT: ICC is a DEMOTED descriptive metric. Beyond this sampling CrI, the ICC split also
+swings ~25pp depending on whether the skill<->car_pace confounding is in the graph (run
+with --hiring-edge; see attribution_v2's specification check) — a graph uncertainty that
+DWARFS the sampling one below. The graph-robust car-vs-driver answer is the interventional
+/ necessity result in attribution_v2, not this variance share.
 
     car_pace           median  31.1%   90% CrI [ 24.4,  36.8]
     driver_skill       median  13.9%   90% CrI [  9.3,  18.6]
