@@ -1,0 +1,50 @@
+{
+  "alphatauri": {
+    "p_mech_dnf": 0.0465,
+    "n_started": 86
+  },
+  "alpine": {
+    "p_mech_dnf": 0.0659,
+    "n_started": 182
+  },
+  "aston-martin": {
+    "p_mech_dnf": 0.0559,
+    "n_started": 179
+  },
+  "ferrari": {
+    "p_mech_dnf": 0.0385,
+    "n_started": 182
+  },
+  "haas": {
+    "p_mech_dnf": 0.08,
+    "n_started": 50
+  },
+  "mclaren": {
+    "p_mech_dnf": 0.0217,
+    "n_started": 184
+  },
+  "mercedes": {
+    "p_mech_dnf": 0.038,
+    "n_started": 184
+  },
+  "racing-bulls": {
+    "p_mech_dnf": 0.0208,
+    "n_started": 48
+  },
+  "rb": {
+    "p_mech_dnf": 0.0208,
+    "n_started": 48
+  },
+  "red-bull": {
+    "p_mech_dnf": 0.0217,
+    "n_started": 184
+  },
+  "williams": {
+    "p_mech_dnf": 0.0663,
+    "n_started": 181
+  },
+  "_overall": {
+    "p_mech_dnf": 0.04376657824933687,
+    "n_started": 1508
+  }
+}
