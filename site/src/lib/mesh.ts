@@ -52,4 +52,9 @@ export function finishBand(mesh: Mesh, skillDraws: number[], paceDraws: number[]
   return { lo: q(0.05), med: q(0.5), hi: q(0.95), samples };
 }
 
+/** Band over skill draws at a single fixed pace (e.g. one specific car) — for the cross-era query. */
+export function finishBandAtPace(mesh: Mesh, skillDraws: number[], pace: number): FinishBand {
+  return finishBand(mesh, skillDraws, new Array(skillDraws.length).fill(pace));
+}
+
 export { FINISH_MIN, FINISH_MAX };
