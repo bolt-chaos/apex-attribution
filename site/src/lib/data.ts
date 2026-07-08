@@ -1,6 +1,8 @@
 // Typed loaders for the committed JSON artifacts (see ../../DATA.md for the schema of each).
 // Everything the site needs at runtime lives in these files — there is no backend.
 
+import type { Teammates } from "./graph";
+
 export interface Names {
   drivers: Record<string, string>;
   constructors: Record<string, string>;
@@ -88,17 +90,19 @@ export interface CoreData {
   mesh: Mesh;
   era: EraRow[];
   crossEra: CrossEra;
+  teammates: Teammates;
   manifest: Manifest;
 }
 
 export async function loadCore(): Promise<CoreData> {
-  const [drivers, cars, mesh, era, crossEra, manifest] = await Promise.all([
+  const [drivers, cars, mesh, era, crossEra, teammates, manifest] = await Promise.all([
     loadJSON<Drivers>("drivers"),
     loadJSON<Cars>("cars"),
     loadJSON<Mesh>("finish_mesh"),
     loadJSON<EraRow[]>("era"),
     loadJSON<CrossEra>("cross_era"),
+    loadJSON<Teammates>("teammates"),
     loadJSON<Manifest>("manifest"),
   ]);
-  return { drivers, cars, mesh, era, crossEra, manifest };
+  return { drivers, cars, mesh, era, crossEra, teammates, manifest };
 }
