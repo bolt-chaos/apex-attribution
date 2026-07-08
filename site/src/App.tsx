@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import { loadCore, type CoreData } from "./lib/data";
 import { CarSwap } from "./components/CarSwap";
+import { EraSlider } from "./components/EraSlider";
+import { CrossEra } from "./components/CrossEra";
 
-// Feature registry — later PRs (era slider, cross-era, pathfinder, career arcs) add tabs here.
-const TABS = [{ id: "car-swap", label: "Car swap" }] as const;
+// Feature registry — later PRs (pathfinder, career arcs) add tabs here.
+const TABS = [
+  { id: "car-swap", label: "Car swap" },
+  { id: "era", label: "Era slider" },
+  { id: "cross-era", label: "Cross-era" },
+] as const;
 type TabId = (typeof TABS)[number]["id"];
 
 export default function App() {
@@ -50,6 +56,8 @@ export default function App() {
         )}
         {!error && !data && <p className="status">Loading the model…</p>}
         {data && tab === "car-swap" && <CarSwap data={data} />}
+        {data && tab === "era" && <EraSlider data={data} />}
+        {data && tab === "cross-era" && <CrossEra data={data} />}
       </main>
 
       <footer className="footer">

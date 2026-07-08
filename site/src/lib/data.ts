@@ -45,6 +45,24 @@ export interface EraRow {
   driverSpread: number;
 }
 
+export interface Legend {
+  name: string;
+  peak: [number, number];
+  eraMean: number;
+  eraSd: number;
+  rawDraws: number[];
+}
+
+export interface CrossEra {
+  mesh: Mesh;
+  modMean: number;
+  modSd: number;
+  legends: Record<string, Legend>;
+  cars: Record<string, { name: string; pace: number }>;
+  verstappen2024: number | null;
+  caveat: string;
+}
+
 export interface Manifest {
   generated: string;
   nDraws: number;
@@ -63,20 +81,24 @@ export async function loadJSON<T>(name: string): Promise<T> {
   return (await res.json()) as T;
 }
 
-// The bundle of artifacts the current (PR2) feature set needs.
+// The bundle of artifacts the site's feature set needs (all small; loaded once up front).
 export interface CoreData {
   drivers: Drivers;
   cars: Cars;
   mesh: Mesh;
+  era: EraRow[];
+  crossEra: CrossEra;
   manifest: Manifest;
 }
 
 export async function loadCore(): Promise<CoreData> {
-  const [drivers, cars, mesh, manifest] = await Promise.all([
+  const [drivers, cars, mesh, era, crossEra, manifest] = await Promise.all([
     loadJSON<Drivers>("drivers"),
     loadJSON<Cars>("cars"),
     loadJSON<Mesh>("finish_mesh"),
+    loadJSON<EraRow[]>("era"),
+    loadJSON<CrossEra>("cross_era"),
     loadJSON<Manifest>("manifest"),
   ]);
-  return { drivers, cars, mesh, manifest };
+  return { drivers, cars, mesh, era, crossEra, manifest };
 }

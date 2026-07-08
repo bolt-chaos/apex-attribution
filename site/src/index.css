@@ -250,6 +250,141 @@ code {
   stroke-dasharray: 3 3;
 }
 
+/* --- era slider --- */
+.era__slider {
+  margin: 0.5rem 0 0.5rem;
+}
+.era__slider input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.era__ticks {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+.era__tick {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.era__tick.is-active {
+  color: var(--text);
+  border-color: var(--accent);
+  background: rgba(225, 6, 0, 0.12);
+}
+.era__headline {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+.era__num {
+  font-weight: 800;
+}
+.era__num--car {
+  color: var(--accent-soft);
+}
+.era__num--drv {
+  color: var(--band);
+}
+.era__chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.era__barlabel {
+  fill: var(--muted);
+  font-size: 14px;
+  text-anchor: end;
+}
+.era__barval {
+  fill: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+}
+.era__spread {
+  margin-top: 0.8rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.era__spread strong {
+  color: var(--text);
+}
+
+/* --- cross-era --- */
+.xera__caveat {
+  background: rgba(225, 6, 0, 0.08);
+  border: 1px solid rgba(225, 6, 0, 0.4);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.xera__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+.xera__card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.xera__card--naive {
+  opacity: 0.82;
+}
+.xera__card--norm {
+  border-color: rgba(46, 204, 113, 0.4);
+}
+.xera__tag {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+.xera__card--norm .xera__tag {
+  color: var(--good);
+}
+.xera__big {
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.xera__card--naive .xera__big {
+  color: var(--muted);
+}
+.xera__card--norm .xera__big {
+  color: var(--good);
+}
+.xera__range {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+.xera__explain {
+  color: var(--muted);
+  font-size: 0.83rem;
+  margin: 0.6rem 0 0;
+}
+.xera__explain strong {
+  color: var(--text);
+}
+
+@media (max-width: 620px) {
+  .xera__pair {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* --- footer --- */
 .footer {
   border-top: 1px solid var(--line);
