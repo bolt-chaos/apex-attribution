@@ -6,6 +6,7 @@ import { CrossEra } from "./components/CrossEra";
 import { Pathfinder } from "./components/Pathfinder";
 import { CareerArcs } from "./components/CareerArcs";
 import { Lineup } from "./components/Lineup";
+import { About } from "./components/About";
 
 const TABS = [
   { id: "car-swap", label: "Car swap" },
@@ -14,6 +15,7 @@ const TABS = [
   { id: "chain", label: "Teammate chain" },
   { id: "arcs", label: "Career arcs" },
   { id: "h2h", label: "Head-to-head" },
+  { id: "about", label: "How it works" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -59,13 +61,14 @@ export default function App() {
             was built from the repo root so <code>public/data</code> is present.
           </p>
         )}
-        {!error && !data && <p className="status">Loading the model…</p>}
+        {!error && !data && tab !== "about" && <p className="status">Loading the model…</p>}
         {data && tab === "car-swap" && <CarSwap data={data} />}
         {data && tab === "era" && <EraSlider data={data} />}
         {data && tab === "cross-era" && <CrossEra data={data} />}
         {data && tab === "chain" && <Pathfinder data={data} />}
         {data && tab === "arcs" && <CareerArcs data={data} />}
         {data && tab === "h2h" && <Lineup data={data} />}
+        {tab === "about" && <About />}
       </main>
 
       <footer className="footer">

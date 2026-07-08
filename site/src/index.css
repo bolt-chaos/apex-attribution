@@ -575,6 +575,41 @@ code {
   margin: 0.7rem 0 0;
 }
 
+/* --- about / methodology --- */
+.about h3 {
+  margin: 1.5rem 0 0.4rem;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+.about p {
+  color: var(--muted);
+}
+.about p strong {
+  color: var(--text);
+}
+.about__list {
+  margin: 0.3rem 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+}
+.about__list li {
+  margin: 0.35rem 0;
+}
+.about__list strong {
+  color: var(--text);
+}
+.about__list--caveats li::marker {
+  color: var(--accent);
+}
+.about__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.1rem;
+}
+.about__links a {
+  font-weight: 600;
+}
+
 /* --- footer --- */
 .footer {
   border-top: 1px solid var(--line);

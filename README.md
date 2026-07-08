@@ -16,6 +16,25 @@ For the full system map (data flow, both modelling lines, artifacts, reproductio
 action + reproduce commands) see [`RESUME.md`](RESUME.md). Running notes for the eventual write-up
 (story, results, decisions, bugs, limitations) are in [`WRITEUP_NOTES.md`](WRITEUP_NOTES.md).
 
+## Interactive site
+
+**▶ [bolt-chaos.github.io/apex-attribution](https://bolt-chaos.github.io/apex-attribution/)** — play
+with the model in the browser: put any driver in any car, drag the era window, drop a legend into a
+modern chassis, trace the teammate chain between any two drivers, and compare careers head-to-head.
+
+The site is **fully static** — no backend. [`scripts/export_site.py`](scripts/export_site.py) bakes
+the model down to ~300 KB of JSON in `site/public/data/` (downsampled posterior draws + a
+precomputed `E[finish]` mesh for in-browser bilinear interpolation); a Vite + React + TypeScript app
+in [`site/`](site/) reads it. Every query is either a lookup into posterior draws or a smooth
+function of `(skill, pace)`, so nothing needs Python at runtime. See
+[`site/DATA.md`](site/DATA.md) for the artifact schema. A GitHub Actions workflow rebuilds and
+deploys to Pages on every change under `site/`; regenerate the data locally with:
+
+```bash
+.venv/bin/python scripts/export_site.py     # refresh site/public/data/*.json when a model changes
+cd site && npm install && npm run dev        # local preview
+```
+
 ## Why this can work
 
 Two drivers in the same constructor in a season **share the car**, so their head-to-head

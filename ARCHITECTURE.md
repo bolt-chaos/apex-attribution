@@ -362,3 +362,24 @@ finish; the architecture supports its *shape*. The blockers are not plumbing:
 Staged path: (A) uncertainty machinery [done, Step 6] → (B) walk era back / connectivity [done,
 Step 7] → (C) session-consistent quali normalization [done, Step 8a] + era-varying skill spread
 [8b] → (D) a thin cross-era counterfactual wrapper [8c].
+
+## 13. Interactive site (`site/`)
+
+A fully static, browser-side layer over the fitted models — no runtime Python. Live at
+**https://bolt-chaos.github.io/apex-attribution/**.
+
+- **Export** — [`scripts/export_site.py`](scripts/export_site.py) runs locally (models are
+  gitignored) and writes ~300 KB of JSON to `site/public/data/`: downsampled posterior draws per
+  driver/car, a precomputed `E[finish]` mesh over `(driver_skill, car_pace)` (built via `exp_finish`
+  at high sample count for a smooth surface), per-era ICC shares + interventional spreads, the
+  cross-era legend draws + their own (1988-model-scale) mesh, and the full shared-teammate graph.
+  Schema: [`site/DATA.md`](site/DATA.md). The committed JSON is the source of truth for CI.
+- **Why static works** — every interactive is a lookup into posterior draws or a smooth function of
+  `(skill, pace)`: car-swap = bilinear interpolation of the mesh + posterior draws → credible band;
+  era slider / cross-era / H2H / career arcs are all closed-form over the shipped draws. Two scales
+  are kept strictly separate (main = joint racecraft/pace_r; cross-era = 1988 sess_rw skill).
+- **App** — Vite + React + TypeScript in `site/`. `src/lib/` holds the reusable math (`mesh.ts`
+  bilinear interp + band, `posterior.ts` P(A ahead), `graph.ts` BFS pathfinding); `src/components/`
+  one file per interactive. d3-force lays out the teammate network once (static positions).
+- **Deploy** — [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds `site/` and
+  publishes to GitHub Pages on pushes touching `site/**`. No Python in CI.
