@@ -478,6 +478,103 @@ code {
   font-weight: 700;
 }
 
+/* --- career arcs --- */
+.arc__add {
+  margin-top: 0.4rem;
+}
+.arc__add .select {
+  max-width: 240px;
+}
+.arc__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.arc__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.85rem;
+}
+.arc__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.arc__x {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+}
+.arc {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 1.2rem;
+}
+.arc__grid {
+  stroke: var(--line);
+  stroke-width: 1;
+  opacity: 0.4;
+}
+.arc__axislabel {
+  fill: var(--muted);
+  font-size: 12px;
+  text-anchor: middle;
+}
+.arc__axislabel--y {
+  text-anchor: start;
+  font-style: italic;
+}
+
+/* --- head-to-head --- */
+.h2h__headline {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+.h2h__pct {
+  font-weight: 800;
+  color: var(--accent-soft);
+}
+.h2h__bar {
+  display: flex;
+  height: 46px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.h2h__side {
+  display: flex;
+  align-items: center;
+  padding: 0 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: width 0.25s ease;
+  overflow: hidden;
+}
+.h2h__side--a {
+  background: var(--accent);
+  color: #fff;
+}
+.h2h__side--b {
+  background: var(--band);
+  color: #fff;
+  justify-content: flex-end;
+}
+.h2h__same {
+  color: var(--accent-soft);
+  margin: 0.7rem 0 0;
+}
+
 /* --- footer --- */
 .footer {
   border-top: 1px solid var(--line);
