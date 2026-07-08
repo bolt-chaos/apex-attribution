@@ -4,13 +4,16 @@ import { CarSwap } from "./components/CarSwap";
 import { EraSlider } from "./components/EraSlider";
 import { CrossEra } from "./components/CrossEra";
 import { Pathfinder } from "./components/Pathfinder";
+import { CareerArcs } from "./components/CareerArcs";
+import { Lineup } from "./components/Lineup";
 
-// Feature registry — later PRs (career arcs) add tabs here.
 const TABS = [
   { id: "car-swap", label: "Car swap" },
   { id: "era", label: "Era slider" },
   { id: "cross-era", label: "Cross-era" },
   { id: "chain", label: "Teammate chain" },
+  { id: "arcs", label: "Career arcs" },
+  { id: "h2h", label: "Head-to-head" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -61,6 +64,8 @@ export default function App() {
         {data && tab === "era" && <EraSlider data={data} />}
         {data && tab === "cross-era" && <CrossEra data={data} />}
         {data && tab === "chain" && <Pathfinder data={data} />}
+        {data && tab === "arcs" && <CareerArcs data={data} />}
+        {data && tab === "h2h" && <Lineup data={data} />}
       </main>
 
       <footer className="footer">
