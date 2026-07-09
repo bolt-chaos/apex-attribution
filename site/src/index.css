@@ -568,6 +568,10 @@ code {
   text-anchor: start;
   font-style: italic;
 }
+/* narrow viewBox (~360u ≈ device px on a phone): bump label size so it renders ~15px, not ~6px */
+.arc--sm .arc__axislabel {
+  font-size: 15px;
+}
 
 /* --- head-to-head --- */
 .h2h__headline {

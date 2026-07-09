@@ -4,15 +4,21 @@
 
 import { useMemo, useState } from "react";
 import type { CoreData } from "../lib/data";
+import { useMediaQuery } from "../lib/useMediaQuery";
 import { Select } from "./shared/Select";
 
 const PALETTE = ["#e10600", "#3a8ee6", "#2ecc71", "#f39c12", "#b07cff", "#1abac6"];
-const W = 720;
-const H = 380;
-const PADX = 44;
-const PADY = 28;
 
 export function CareerArcs({ data }: { data: CoreData }) {
+  // On phones, shrink the viewBox toward the device width so a unit ≈ a px and labels stay
+  // legible (see .arc--sm in index.css), with a taller-relative aspect.
+  const isNarrow = useMediaQuery("(max-width: 560px)");
+  const W = isNarrow ? 360 : 720;
+  const H = isNarrow ? 340 : 380;
+  const PADX = isNarrow ? 30 : 44;
+  const PADY = isNarrow ? 24 : 28;
+  const labelEvery = isNarrow ? 2 : 1;
+
   const allSeasons = useMemo(() => {
     const s = new Set<number>();
     Object.values(data.drivers).forEach((d) => d.seasons.forEach((y) => s.add(y)));
@@ -79,16 +85,21 @@ export function CareerArcs({ data }: { data: CoreData }) {
         </div>
       </div>
 
-      <svg className="arc" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Driver skill trajectories over time">
-        {/* season gridlines */}
-        {allSeasons.map((yr) => (
-          <g key={yr}>
-            <line x1={x(yr)} y1={PADY} x2={x(yr)} y2={H - PADY} className="arc__grid" />
-            <text x={x(yr)} y={H - 8} className="arc__axislabel">
-              {yr}
-            </text>
-          </g>
-        ))}
+      <svg className={`arc ${isNarrow ? "arc--sm" : ""}`} viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Driver skill trajectories over time">
+        {/* season gridlines (always) with year labels thinned on narrow screens */}
+        {allSeasons.map((yr, i) => {
+          const showLabel = i % labelEvery === 0 || yr === y0 || yr === y1;
+          return (
+            <g key={yr}>
+              <line x1={x(yr)} y1={PADY} x2={x(yr)} y2={H - PADY} className="arc__grid" />
+              {showLabel && (
+                <text x={x(yr)} y={H - 8} className="arc__axislabel">
+                  {yr}
+                </text>
+              )}
+            </g>
+          );
+        })}
         <text x={12} y={PADY + 4} className="arc__axislabel arc__axislabel--y">
           faster
         </text>
