@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { loadCore, type CoreData } from "./lib/data";
 import { CarSwap } from "./components/CarSwap";
 import { EraSlider } from "./components/EraSlider";
@@ -23,45 +23,10 @@ export default function App() {
   const [data, setData] = useState<CoreData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<TabId>("car-swap");
-  // Which edges of the mobile tab strip get a fade hint: none / more-right / both / more-left.
-  const [navFade, setNavFade] = useState<"none" | "right" | "both" | "left">("none");
-  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     loadCore().then(setData).catch((e) => setError(String(e)));
   }, []);
-
-  // Show the fade only on the side that actually has more tabs, so the last pill (How it works)
-  // isn't left dimmed under a permanent right-edge fade once you've scrolled to the end.
-  const updateNavFade = () => {
-    const nav = navRef.current;
-    if (!nav) return;
-    const scrollable = nav.scrollWidth - nav.clientWidth;
-    if (scrollable <= 1) return setNavFade("none");
-    const atStart = nav.scrollLeft <= 1;
-    const atEnd = nav.scrollLeft >= scrollable - 1;
-    setNavFade(atStart ? "right" : atEnd ? "left" : "both");
-  };
-
-  useEffect(() => {
-    updateNavFade();
-    window.addEventListener("resize", updateNavFade);
-    return () => window.removeEventListener("resize", updateNavFade);
-  }, [data]);
-
-  // On mobile the tabs are a horizontal scroll strip; keep the active pill in view after a tap.
-  // Scroll ONLY the nav strip — not with Element.scrollIntoView, which also scrolls the document
-  // horizontally to centre a right-side pill and drags the whole page left.
-  useEffect(() => {
-    const nav = navRef.current;
-    const active = nav?.querySelector<HTMLElement>(".is-active");
-    if (!nav || !active) return;
-    const navRect = nav.getBoundingClientRect();
-    const activeRect = active.getBoundingClientRect();
-    const target =
-      nav.scrollLeft + (activeRect.left - navRect.left) - (nav.clientWidth - activeRect.width) / 2;
-    nav.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
-  }, [tab]);
 
   return (
     <div className="app">
@@ -77,7 +42,7 @@ export default function App() {
         </div>
       </header>
 
-      <nav className="tabs" aria-label="Interactives" ref={navRef} data-fade={navFade} onScroll={updateNavFade}>
+      <nav className="tabs" aria-label="Interactives">
         {TABS.map((t) => (
           <button
             key={t.id}

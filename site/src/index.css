@@ -118,39 +118,15 @@ code {
   border-color: var(--line);
 }
 
-/* On phones/small tablets the tabs become a single swipeable row instead of wrapping into
-   2–3 stacked rows. A right-edge mask fade signals there's more to scroll. */
+/* On phones/small tablets the pills wrap onto centred rows — no horizontal scrolling, so nothing
+   to shift or dim. Larger tap targets than the desktop pills. */
 @media (max-width: 760px) {
   .tabs {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    padding-bottom: var(--sp-2);
-  }
-  .tabs::-webkit-scrollbar {
-    display: none; /* WebKit */
-  }
-  /* Fade only the edge that has more tabs, driven by data-fade in App.tsx, so the last pill
-     isn't left dimmed once you've scrolled to the end. */
-  .tabs[data-fade="right"] {
-    -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent);
-    mask-image: linear-gradient(90deg, #000 88%, transparent);
-  }
-  .tabs[data-fade="left"] {
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%);
-    mask-image: linear-gradient(90deg, transparent, #000 12%);
-  }
-  .tabs[data-fade="both"] {
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    justify-content: center;
   }
   .tabs__btn {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-    padding: var(--sp-2) var(--sp-4);
     min-height: 40px;
+    padding: var(--sp-2) var(--sp-4);
     font-size: 1rem;
   }
 }
