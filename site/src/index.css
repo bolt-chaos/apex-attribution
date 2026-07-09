@@ -76,6 +76,7 @@ code {
   max-width: var(--maxw);
   margin: 0 auto;
   padding: 2.2rem 1.25rem 1.6rem;
+  text-align: center;
 }
 .masthead h1 {
   margin: 0;
@@ -87,7 +88,7 @@ code {
   color: var(--accent);
 }
 .masthead__tagline {
-  margin: 0.5rem 0 0;
+  margin: 0.5rem auto 0;
   color: var(--muted);
   max-width: 46ch;
   font-size: clamp(0.95rem, 2.6vw, 1.1rem);
