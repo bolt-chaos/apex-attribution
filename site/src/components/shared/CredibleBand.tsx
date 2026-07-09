@@ -2,6 +2,7 @@
 // Uncertainty is always visible — never a bare point estimate (the project's design DNA).
 
 import { FINISH_MAX, FINISH_MIN } from "../../lib/mesh";
+import { useMediaQuery } from "../../lib/useMediaQuery";
 
 interface Props {
   lo: number;
@@ -11,20 +12,22 @@ interface Props {
   reference?: { pos: number; label: string };
 }
 
-const W = 640;
 const H = 96;
 const PAD = 28;
 
-function x(pos: number): number {
-  const t = (pos - FINISH_MIN) / (FINISH_MAX - FINISH_MIN);
-  return PAD + t * (W - 2 * PAD);
-}
-
 export function CredibleBand({ lo, med, hi, reference }: Props) {
+  // Narrow the viewBox on phones (a unit ≈ a device px) so the P-labels stay legible instead of
+  // shrinking with a fixed 640-wide box — matters most inside the two half-width cross-era cards.
+  const compact = useMediaQuery("(max-width: 560px)");
+  const W = compact ? 360 : 640;
+  const x = (pos: number): number => {
+    const t = (pos - FINISH_MIN) / (FINISH_MAX - FINISH_MIN);
+    return PAD + t * (W - 2 * PAD);
+  };
   const ticks = [1, 5, 10, 15, 20];
   const trackY = H / 2;
   return (
-    <svg className="band" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Expected finish P${med.toFixed(1)}, 90% range P${lo.toFixed(1)} to P${hi.toFixed(1)}`}>
+    <svg className={`band ${compact ? "band--sm" : ""}`} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Expected finish P${med.toFixed(1)}, 90% range P${lo.toFixed(1)} to P${hi.toFixed(1)}`}>
       {/* baseline */}
       <line x1={PAD} y1={trackY} x2={W - PAD} y2={trackY} className="band__axis" />
       {ticks.map((t) => (

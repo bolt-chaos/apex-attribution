@@ -283,6 +283,14 @@ code {
   stroke-width: 2;
   stroke-dasharray: 3 3;
 }
+/* narrow viewBox (~360u ≈ device px): keep P-labels legible, esp. in the half-width cross-era cards */
+.band--sm .band__ticklabel,
+.band--sm .band__reflabel {
+  font-size: 15px;
+}
+.band--sm .band__medlabel {
+  font-size: 16px;
+}
 
 /* --- era slider --- */
 .era__slider {
@@ -416,6 +424,10 @@ code {
 @media (max-width: 760px) {
   .xera__pair {
     grid-template-columns: 1fr;
+  }
+  /* stack the controls one tier before the full phone column, so the mid range isn't cramped */
+  .controls {
+    align-items: stretch;
   }
 }
 
@@ -666,10 +678,51 @@ code {
 }
 
 @media (max-width: 560px) {
+  /* tighten the big paddings so content gets more of the narrow viewport */
+  .masthead__inner {
+    padding: var(--sp-5) var(--sp-4) var(--sp-4);
+  }
+  .feature,
+  .content,
+  .result {
+    padding: var(--sp-4);
+  }
+
+  /* controls become a full single column; drop the "in a" / "vs" connectors */
   .controls {
+    flex-direction: column;
     align-items: stretch;
   }
   .controls__in {
     display: none;
+  }
+  .select {
+    flex: 1 1 auto;
+  }
+
+  /* era ticks: a wrapping row with real tap targets instead of squeezed space-between */
+  .era__ticks {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .era__tick {
+    padding: var(--sp-2) var(--sp-3);
+    min-height: 40px;
+    font-size: 0.9rem;
+  }
+
+  /* long driver names shouldn't overflow chips; give the remove × a finger-friendly hit area */
+  .arc__chip,
+  .chain__chip {
+    max-width: 100%;
+  }
+  .arc__chip {
+    flex-wrap: wrap;
+  }
+  .arc__x {
+    min-width: 32px;
+    min-height: 32px;
+    margin: calc(-1 * var(--sp-2)) 0;
   }
 }
