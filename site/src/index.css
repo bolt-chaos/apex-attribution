@@ -12,6 +12,15 @@
   --good: #2ecc71;
   --radius: 12px;
   --maxw: 860px;
+  /* spacing scale — consumed by the responsive blocks so mobile tightening is a token swap.
+     Breakpoint tiers (applied as max-width, since the base layer is desktop-tuned):
+       760px = "compact" (large phone / small tablet), 560px = "phone". */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2.25rem;
   font-synthesis: none;
 }
 
@@ -149,7 +158,7 @@ code {
 .controls {
   display: flex;
   align-items: flex-end;
-  gap: 0.75rem;
+  gap: var(--sp-3);
   flex-wrap: wrap;
 }
 .controls__in {
@@ -186,7 +195,7 @@ code {
 
 /* --- result --- */
 .result {
-  margin-top: 1.5rem;
+  margin-top: var(--sp-5);
   background: var(--bg-elev);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -281,7 +290,7 @@ code {
 }
 .era__headline {
   font-size: 1.1rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--sp-4);
 }
 .era__num {
   font-weight: 800;
@@ -329,14 +338,14 @@ code {
 .xera__pair {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: var(--sp-4);
   margin-top: 1.4rem;
 }
 .xera__card {
   background: var(--bg-elev);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 1rem;
+  padding: var(--sp-4);
 }
 .xera__card--naive {
   opacity: 0.82;
@@ -379,7 +388,7 @@ code {
   color: var(--text);
 }
 
-@media (max-width: 620px) {
+@media (max-width: 760px) {
   .xera__pair {
     grid-template-columns: 1fr;
   }
@@ -391,7 +400,7 @@ code {
   background: var(--bg-elev);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 1rem;
+  padding: var(--sp-4);
 }
 .chain__step {
   display: inline-flex;
@@ -538,7 +547,7 @@ code {
 /* --- head-to-head --- */
 .h2h__headline {
   font-size: 1.1rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--sp-4);
 }
 .h2h__pct {
   font-weight: 800;
@@ -623,7 +632,7 @@ code {
   font-size: 0.85rem;
 }
 
-@media (max-width: 540px) {
+@media (max-width: 560px) {
   .controls {
     align-items: stretch;
   }
