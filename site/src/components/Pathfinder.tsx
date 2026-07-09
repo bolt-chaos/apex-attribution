@@ -13,6 +13,7 @@ import {
 } from "d3-force";
 import type { CoreData } from "../lib/data";
 import { buildAdjacency, shortestPath } from "../lib/graph";
+import { useMediaQuery } from "../lib/useMediaQuery";
 import { Select, type Option } from "./shared/Select";
 
 interface SimNode extends SimulationNodeDatum {
@@ -23,11 +24,8 @@ interface SimLink {
   target: string;
 }
 
-const W = 900;
-const H = 560;
-
 // Run the force layout to a settled state ONCE (positions are static; the path only restyles).
-function layout(nodeIds: string[], edges: { a: string; b: string }[]) {
+function layout(nodeIds: string[], edges: { a: string; b: string }[], W: number, H: number) {
   const nodes: SimNode[] = nodeIds.map((id) => ({ id }));
   const links: SimLink[] = edges.map((e) => ({ source: e.a, target: e.b }));
   const sim = forceSimulation(nodes)
@@ -53,7 +51,13 @@ export function Pathfinder({ data }: { data: CoreData }) {
     [tm],
   );
   const adj = useMemo(() => buildAdjacency(tm.edges), [tm]);
-  const pos = useMemo(() => layout(tm.nodes.map((n) => n.id), tm.edges), [tm]);
+
+  // Portrait, near-device-width canvas on phones (taller aspect + larger labels via .net--sm),
+  // vs the wide landscape network on desktop. Re-settles only when the breakpoint flips.
+  const isNarrow = useMediaQuery("(max-width: 560px)");
+  const W = isNarrow ? 360 : 900;
+  const H = 560;
+  const pos = useMemo(() => layout(tm.nodes.map((n) => n.id), tm.edges, W, H), [tm, W, H]);
 
   const has = (id: string) => nameOf.has(id);
   const [a, setA] = useState(has("ayrton-senna") ? "ayrton-senna" : options[0].value);
@@ -104,7 +108,7 @@ export function Pathfinder({ data }: { data: CoreData }) {
         <p className="chain__none">No shared-teammate chain connects these two in the data.</p>
       )}
 
-      <svg className="net" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Shared-teammate network with the chosen chain highlighted">
+      <svg className={`net ${isNarrow ? "net--sm" : ""}`} viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Shared-teammate network with the chosen chain highlighted">
         {tm.edges.map((e, i) => {
           const p = pos.get(e.a)!;
           const q = pos.get(e.b)!;
