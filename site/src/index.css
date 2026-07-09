@@ -511,6 +511,10 @@ code {
   fill: var(--text);
   font-weight: 700;
 }
+/* narrow viewBox (~360u ≈ device px): keep the highlighted-path labels legible */
+.net--sm .net__label {
+  font-size: 14px;
+}
 
 /* --- career arcs --- */
 .arc__add {
