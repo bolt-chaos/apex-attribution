@@ -30,10 +30,17 @@ export default function App() {
   }, []);
 
   // On mobile the tabs are a horizontal scroll strip; keep the active pill in view after a tap.
+  // Scroll ONLY the nav strip — not with Element.scrollIntoView, which also scrolls the document
+  // horizontally to centre a right-side pill and drags the whole page left.
   useEffect(() => {
-    navRef.current
-      ?.querySelector(".is-active")
-      ?.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+    const nav = navRef.current;
+    const active = nav?.querySelector<HTMLElement>(".is-active");
+    if (!nav || !active) return;
+    const navRect = nav.getBoundingClientRect();
+    const activeRect = active.getBoundingClientRect();
+    const target =
+      nav.scrollLeft + (activeRect.left - navRect.left) - (nav.clientWidth - activeRect.width) / 2;
+    nav.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
   }, [tab]);
 
   return (
