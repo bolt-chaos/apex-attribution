@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { loadCore, type CoreData } from "./lib/data";
 import { CarSwap } from "./components/CarSwap";
 import { EraSlider } from "./components/EraSlider";
@@ -23,10 +23,18 @@ export default function App() {
   const [data, setData] = useState<CoreData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<TabId>("car-swap");
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     loadCore().then(setData).catch((e) => setError(String(e)));
   }, []);
+
+  // On mobile the tabs are a horizontal scroll strip; keep the active pill in view after a tap.
+  useEffect(() => {
+    navRef.current
+      ?.querySelector(".is-active")
+      ?.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+  }, [tab]);
 
   return (
     <div className="app">
@@ -42,11 +50,12 @@ export default function App() {
         </div>
       </header>
 
-      <nav className="tabs" aria-label="Interactives">
+      <nav className="tabs" aria-label="Interactives" ref={navRef}>
         {TABS.map((t) => (
           <button
             key={t.id}
             className={`tabs__btn ${tab === t.id ? "is-active" : ""}`}
+            aria-current={tab === t.id ? "page" : undefined}
             onClick={() => setTab(t.id)}
           >
             {t.label}

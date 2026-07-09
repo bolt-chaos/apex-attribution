@@ -111,6 +111,31 @@ code {
   border-color: var(--line);
 }
 
+/* On phones/small tablets the tabs become a single swipeable row instead of wrapping into
+   2–3 stacked rows. A right-edge mask fade signals there's more to scroll. */
+@media (max-width: 760px) {
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    padding-bottom: var(--sp-2);
+    -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, #000 88%, transparent);
+  }
+  .tabs::-webkit-scrollbar {
+    display: none; /* WebKit */
+  }
+  .tabs__btn {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    padding: var(--sp-2) var(--sp-4);
+    min-height: 40px;
+    font-size: 1rem;
+  }
+}
+
 /* --- content --- */
 .content {
   flex: 1;
