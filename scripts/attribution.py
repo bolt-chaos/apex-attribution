@@ -28,7 +28,6 @@ import pandas as pd
 
 import dowhy.gcm as gcm
 
-from dag import build_dag, finish_scm_graph
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "f1_results.parquet"
@@ -217,8 +216,8 @@ def main() -> int:
     report = "\n".join(L)
     print(report)
     (OUT / "attribution_report.txt").write_text(report + "\n")
-    print(f"\nWrote outputs/attribution_report.txt, outputs/intervention_grid.csv, "
-          f"figures/attribution_diagnostic.png")
+    print("\nWrote outputs/attribution_report.txt, outputs/intervention_grid.csv, "
+          "figures/attribution_diagnostic.png")
     return 0
 
 

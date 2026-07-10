@@ -1,0 +1,10 @@
+# Bug-only linting for research code: F (pyflakes: undefined names, unused imports, …) and
+# E9 (syntax errors). Style rules are deliberately off — the scripts favor compact research
+# idioms (semicolon one-liners, long lines) that aren't worth churning.
+target-version = "py312"
+
+[lint]
+select = ["F", "E9"]
+# F841 (unused variable) is all PyMC idiom here: `with pm.Model() as model:`, dimension
+# unpacking (D, C = …), and pm.Deterministic side-effect registrations. Noise, not bugs.
+ignore = ["F841"]

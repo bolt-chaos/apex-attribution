@@ -1,0 +1,43 @@
+name: CI
+
+# Pre-merge checks — deploy.yml only runs after merge, so without this a PR gets zero validation.
+# Deliberately light: no model deps are installed (dowhy/pymc are GBs and the models are
+# gitignored anyway). Three fast jobs: site typecheck+build, bug-only Python lint, and a schema
+# sanity check on the committed site data artifacts.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  site:
+    name: Site typecheck + build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+      - run: npm run build   # tsc -b && vite build
+
+  python-lint:
+    name: Python lint (ruff, bug-only)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3   # rules pinned in ruff.toml (F + E9, style off)
+        with:
+          src: "scripts v2"
+
+  site-data:
+    name: Site data artifacts sanity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/check_site_data.py   # stdlib only

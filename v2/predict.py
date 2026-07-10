@@ -122,8 +122,8 @@ def main() -> int:
          f"model: {Path(args.idata).name}   forward {fwd} season(s) under the fitted RW",
          f"projected skill = last-season skill, uncertainty widened by sqrt({fwd})*sigma_rw",
          "",
-         f"[1] PROJECTED DRIVER-SKILL RANKING (full model cohort, % quali pace vs grid avg; "
-         f"lower = faster)",
+         "[1] PROJECTED DRIVER-SKILL RANKING (full model cohort, % quali pace vs grid avg; "
+         "lower = faster)",
          f"    ['*' = on the {args.season} grid below; un-starred = seen in 2018-{last_season} but "
          f"not in the line-up)"]
     for i, r in rank.iterrows():

@@ -160,7 +160,7 @@ def main() -> int:
     ax.legend(fontsize=8)
     fig.tight_layout()
     fig.savefig(FIG / "backtest.png", dpi=130, bbox_inches="tight")
-    print(f"\nWrote outputs/backtest_report.txt, figures/backtest.png")
+    print("\nWrote outputs/backtest_report.txt, figures/backtest.png")
     return 0
 
 
