@@ -3,7 +3,7 @@
 Node names == dataframe columns in data/f1_results.parquet, so phase (d) can call
 gcm.fit(scm, df) with no renaming.
 
-Design note (Option A for DNFs — see SCHEMA_NOTES.md / project memory):
+Design note (Option A for DNFs — see docs/SCHEMA_NOTES.md / project memory):
 `finish_pos` is modelled on CLASSIFIED (finished) rows only. Conditioning on "finished"
 means `reliability_dnf` has no variation within that subset, so it is NOT a structural
 parent of `finish_pos`. Instead it is a parallel leaf consequence of the constructor:

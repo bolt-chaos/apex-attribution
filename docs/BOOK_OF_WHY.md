@@ -202,5 +202,5 @@ upgrade. → criticism #6 in [`IDEAS.md`](IDEAS.md); `CONCEPTS.md` R-hat note.
 
 *Companion docs: [`CONCEPTS.md`](CONCEPTS.md) (plain-language concept guide), [`IDEAS.md`](IDEAS.md)
 (the full Pearl-referee review + future directions), [`WRITEUP_NOTES.md`](WRITEUP_NOTES.md) (running
-write-up notes), [`ARCHITECTURE.md`](ARCHITECTURE.md) (system map), [`README.md`](README.md) (phase
+write-up notes), [`ARCHITECTURE.md`](ARCHITECTURE.md) (system map), [`README.md`](../README.md) (phase
 log & results).*

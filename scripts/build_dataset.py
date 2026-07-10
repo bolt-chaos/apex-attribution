@@ -5,7 +5,7 @@ teammate-connected component), with the columns the DAG (phase c) will consume.
 
 Reproducible end-to-end: reads data/f1db.sqlite, recomputes the connected component
 in-script (nothing about the cohort is hardcoded), writes data/f1_results.parquet
-(+ .csv for eyeballing), and prints a summary. See SCHEMA_NOTES.md for the schema.
+(+ .csv for eyeballing), and prints a summary. See docs/SCHEMA_NOTES.md for the schema.
 
 Usage:
     python scripts/build_dataset.py

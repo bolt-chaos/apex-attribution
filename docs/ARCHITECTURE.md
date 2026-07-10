@@ -2,10 +2,13 @@
 
 System map for **apex-attribution** — a causal driver-vs-car attribution metric for Formula 1.
 
-This documents the state through **v2 phase 2**. v1 (phases a–f) and v2 phase 1 are on `main`;
-v2 phase 2 (`v2/build_scm_data.py`, `v2/attribution_v2.py`) lands with **PR #7** — links to those
-two files resolve once it merges. See `README.md` for status, `SCHEMA_NOTES.md` for the data
-schema, and `CLAUDE.md` for working conventions.
+This is the **system map**: data flow, both modelling lines (v1 archived, v2 current through the
+joint quali+race fit, incidents, cross-era, and the interactive site — §13). Everything described
+here is on `main`. The **authority on what's current** is `README.md` (status + phase log +
+headline results, repo root); this file explains *how the pieces fit*, and §§5–6 deliberately keep
+the v1→v2 history because the non-identification story is part of the design rationale. See
+`SCHEMA_NOTES.md` (this folder) for the data schema and `CLAUDE.md` (repo root) for working
+conventions.
 
 ## 1. Purpose
 
@@ -60,28 +63,36 @@ There are **two modelling lines**:
 
 ```
 apex-attribution/
-├── README.md             status, headline findings, setup
-├── ARCHITECTURE.md       this file
-├── SCHEMA_NOTES.md       f1db entity→column map, DNF taxonomy, gcm-0.14 API notes
+├── README.md             status + phase log + headline results (the authority on what's current)
 ├── CLAUDE.md             agent conventions (PR-based workflow)
 ├── requirements.txt      pinned deps (verified env)
-├── scripts/              v1 pipeline + shared data prep
+├── docs/                 reference docs — see the README reading map
+│   ├── ARCHITECTURE.md     this file (system map)
+│   ├── SCHEMA_NOTES.md     f1db entity→column map, DNF taxonomy, gcm-0.14 API notes
+│   ├── CONCEPTS.md         plain-language concept guide
+│   ├── BOOK_OF_WHY.md      mapping onto Pearl's ladder
+│   ├── WRITEUP_NOTES.md    running write-up notes
+│   ├── IDEAS.md            Pearl-style critique + backlog
+│   └── RESUME.md           fast re-entry: current state + next action
+├── scripts/              v1 pipeline (archived; §5) + shared data prep + site export
 │   ├── download_data.py    cache f1db SQLite (idempotent, version-pinned)
 │   ├── build_dataset.py    -> data/f1_results.parquet (cohort + DNF taxonomy)
 │   ├── dag.py              v1 causal DAG (networkx.DiGraph) + figure
 │   ├── fit_model.py        assign gcm mechanisms + fit -> models/scm_*.pkl
 │   ├── validate_model.py   evaluate_causal_model + falsify_graph + chi-square
-│   └── attribution.py      ICC + counterfactual swaps + unified metric
-├── v2/                   hierarchical latent skill/pace line
-│   ├── build_quali.py      -> data/f1_quali.parquet (pct gap to pole)
-│   ├── fit_skill.py        PyMC crossed random-effects -> models/v2_idata.pkl
-│   ├── fit_skill_rw.py     time-varying skill (per-season Gaussian random walk)
-│   ├── build_scm_data.py   merge posterior latents -> data/f1_scm_v2.parquet
-│   ├── attribution_v2.py   race-outcome SCM with continuous skill/pace
-│   ├── uncertainty_propagation.py  ICC over posterior draws (credible intervals)
-│   └── era_connectivity.py  teammate-graph connectivity sweep vs start year
+│   ├── attribution.py      v1 ICC + counterfactual swaps (superseded by v2)
+│   └── export_site.py      bake models -> site/public/data/*.json
+├── v2/                   hierarchical latent skill/pace line — full pipeline in §6
+│   ├── build_quali.py / build_race_pace.py    identifying signals (quali %, race pace)
+│   ├── fit_skill*.py       PyMC fits (pooled / _rw random-walk / _joint quali+race)
+│   ├── build_scm_data.py   merge posterior latents -> data/f1_scm_v2_*.parquet
+│   ├── attribution_v2.py   race-outcome SCM: ICC, do()-sweeps, rung-3 necessity
+│   ├── fit_incident.py / unified_metric.py    incident-proneness + E_all
+│   ├── cross_era.py / era_connectivity.py     era work
+│   └── backtest*.py / insights.py / predict.py / attribution_eiv.py / uncertainty_propagation.py
+├── site/                 Vite + React + TS interactive site (§13); data schema in site/DATA.md
 ├── data/                 (gitignored except f1db.version) source DB + derived frames
-├── models/               (gitignored *.pkl) fitted SCMs + idata; reliability_rates.json tracked
+├── models/               (gitignored *.pkl) fitted SCMs + idata; *_rates.json tracked
 ├── outputs/              text reports + intervention grids (tracked)
 └── figures/              PNG diagrams (tracked)
 ```
@@ -100,10 +111,13 @@ Three derived dataframes (all reproducible, gitignored):
 | `data/f1_quali.parquet` | quali entry | 1480 | `pct_gap` (% off pole), team_year |
 | `data/f1_scm_v2.parquet` | race entry + latents | 1508 | adds `driver_skill`, `car_pace` |
 
-**Cohort (both lines):** 2022–2025 (one broad regulation era), restricted to the **largest
-teammate-connected component (25 drivers)** so the comparison scale is identified. Six detached
-Haas/Sauber backmarkers are dropped (logged). DNFs split into `mechanical` / `driver_error` /
-`other` so a car failure is never charged to the driver (Option A — see §7).
+**Cohort:** always the **largest teammate-connected component** within the chosen window, so the
+comparison scale is identified; detached backmarkers are dropped (logged). v1 fixed the window at
+2022–2025 (25 drivers); in v2 the **era is a CLI parameter** — the canonical modern window is
+**2018–2025**, with wider windows (2006–2025, 1988–2025) fitted separately for the era slider and
+cross-era work (the table above shows the original 2022–2025 row counts). DNFs split into
+`mechanical` / `driver_error` / `other` so a car failure is never charged to the driver
+(Option A — see §7).
 
 ## 5. v1 pipeline — gcm SCM with categorical nodes
 
@@ -150,7 +164,7 @@ Teammates share `pace`; team-switchers chain the scales. Converges (R-hat 1.00) 
 separated — the v1 separation failure is fixed at the quali stage.
 (`figures/v2_driver_skill.png`)
 
-**Step 2 — feed latents into the SCM** (`v2/build_scm_data.py` + `v2/attribution_v2.py`, PR #7).
+**Step 2 — feed latents into the SCM** (`v2/build_scm_data.py` + `v2/attribution_v2.py`).
 Posterior means replace the categorical nodes:
 
 ```
@@ -229,7 +243,7 @@ foundation for 8b/8c.
 
 | decision | choice | why |
 |---|---|---|
-| Era | 2022–2025 | one broad regulation era; minimizes era/reg confounds |
+| Era | CLI parameter; canonical **2018–2025** (v1 used 2022–2025) | wide enough for grid connectivity within one hybrid era; wider windows (2006–, 1988–2025) fitted separately because the car/driver split is era-dependent — that dependence is itself a finding |
 | Cohort | largest teammate-connected component (25 drivers) | one identified comparison scale |
 | DNF handling | **Option A** — finish_pos on classified rows only; reliability a separate leaf | never charge a mechanical failure to the driver; unified metric combined only at reporting |
 | v2 identifying signal | **qualifying pace** (% gap to pole) | cleanest car-equalized skill measure; avoids DNF/strategy/lap-1 noise |
@@ -268,8 +282,8 @@ python scripts/attribution.py           # ICC + counterfactuals + unified metric
 # v2 line
 python v2/build_quali.py                # -> data/f1_quali.parquet
 python v2/fit_skill.py                   # PyMC -> models/v2_idata.pkl
-python v2/build_scm_data.py             # merge latents -> data/f1_scm_v2.parquet   (PR #7)
-python v2/attribution_v2.py             # race-outcome attribution w/ latents       (PR #7)
+python v2/build_scm_data.py             # merge latents -> data/f1_scm_v2.parquet
+python v2/attribution_v2.py             # race-outcome attribution w/ latents
 ```
 
 ## 10. Known limitations & open problems
@@ -368,12 +382,12 @@ Step 7] → (C) session-consistent quali normalization [done, Step 8a] + era-var
 A fully static, browser-side layer over the fitted models — no runtime Python. Live at
 **https://bolt-chaos.github.io/apex-attribution/**.
 
-- **Export** — [`scripts/export_site.py`](scripts/export_site.py) runs locally (models are
+- **Export** — [`scripts/export_site.py`](../scripts/export_site.py) runs locally (models are
   gitignored) and writes ~300 KB of JSON to `site/public/data/`: downsampled posterior draws per
   driver/car, a precomputed `E[finish]` mesh over `(driver_skill, car_pace)` (built via `exp_finish`
   at high sample count for a smooth surface), per-era ICC shares + interventional spreads, the
   cross-era legend draws + their own (1988-model-scale) mesh, and the full shared-teammate graph.
-  Schema: [`site/DATA.md`](site/DATA.md). The committed JSON is the source of truth for CI.
+  Schema: [`site/DATA.md`](../site/DATA.md). The committed JSON is the source of truth for CI.
 - **Why static works** — every interactive is a lookup into posterior draws or a smooth function of
   `(skill, pace)`: car-swap = bilinear interpolation of the mesh + posterior draws → credible band;
   era slider / cross-era / H2H / career arcs are all closed-form over the shipped draws. Two scales

@@ -11,7 +11,7 @@ Guidance for agents working in this repo.
 ## Project orientation
 
 Causal driver-vs-car attribution for F1 (DoWhy `gcm` over the f1db dataset), built in phases
-(a)→(f). See `README.md` for status and `SCHEMA_NOTES.md` for the data schema, the DNF taxonomy,
+(a)→(f). See `README.md` for status and `docs/SCHEMA_NOTES.md` for the data schema, the DNF taxonomy,
 the connectivity finding, and the verified `gcm`-0.14 API notes.
 
 - Reproduce data/models with `scripts/download_data.py` → `build_dataset.py` → `fit_model.py`.

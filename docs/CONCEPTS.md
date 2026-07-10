@@ -48,8 +48,8 @@ Once you commit to the diagram, math can answer cause-and-effect questions on it
 `grid` (qualifying position) and `finish_pos` (race result). We use the `gcm` module of the DoWhy
 library to fit and query it.
 
-→ See [`ARCHITECTURE.md`](ARCHITECTURE.md) §5–6, [`scripts/dag.py`](scripts/dag.py),
-  [`v2/attribution_v2.py`](v2/attribution_v2.py) (the `NODES`/`EDGES` lists).
+→ See [`ARCHITECTURE.md`](ARCHITECTURE.md) §5–6, [`scripts/dag.py`](../scripts/dag.py),
+  [`v2/attribution_v2.py`](../v2/attribution_v2.py) (the `NODES`/`EDGES` lists).
 
 ### Intervention — the `do()` operator
 **Intuition.** There's a difference between *observing* and *doing*. "People who take this medicine
@@ -69,7 +69,7 @@ intervention because it keeps the original race's luck and circumstances fixed.
 **In this project.** "Albon actually finished P13 in the Williams — where would *that same race* have
 put him in a Red Bull?" → the model says ~P7. Same driver, same day, same luck; only the car changes.
 
-→ See `gcm.counterfactual_samples(...)` in [`v2/attribution_v2.py`](v2/attribution_v2.py).
+→ See `gcm.counterfactual_samples(...)` in [`v2/attribution_v2.py`](../v2/attribution_v2.py).
 
 ### Identification — the deepest idea here
 **Intuition.** A question is **identified** if the data can actually pin down the answer; it's
@@ -84,7 +84,7 @@ sum to 10. The model couldn't split them and dumped the car's speed onto the dri
 v2 is about *engineering identification* — getting the data into a shape where the split is
 recoverable.
 
-→ See [`README.md`](README.md) "the attribution is not identified", [`ARCHITECTURE.md`](ARCHITECTURE.md) §6.
+→ See [`README.md`](../README.md) "the attribution is not identified", [`ARCHITECTURE.md`](ARCHITECTURE.md) §6.
 
 ---
 
@@ -110,8 +110,8 @@ drivers all linked by some chain of shared teammates. A driver floating with no 
 links can't be placed on the same scale, so they're excluded. Crucially, *how wide a span of
 seasons you include* changes connectivity, and that turned out to drive the headline result.
 
-→ See `largest_connected_cohort` in [`scripts/build_dataset.py`](scripts/build_dataset.py),
-  [`v2/era_connectivity.py`](v2/era_connectivity.py), [`SCHEMA_NOTES.md`](SCHEMA_NOTES.md) connectivity section.
+→ See `largest_connected_cohort` in [`scripts/build_dataset.py`](../scripts/build_dataset.py),
+  [`v2/era_connectivity.py`](../v2/era_connectivity.py), [`SCHEMA_NOTES.md`](SCHEMA_NOTES.md) connectivity section.
 
 ### Latent variables — skill and pace
 **Intuition.** A **latent** variable is something real but not directly measured — you infer it from
@@ -133,7 +133,7 @@ each driver was, as a percentage (`pct_gap`; 0% = pole). Percentages make differ
 comparable. A later refinement (`--gap-method session`) compares each lap to the fastest lap *in the
 same session* to remove a subtle track-evolution bias.
 
-→ See [`v2/build_quali.py`](v2/build_quali.py).
+→ See [`v2/build_quali.py`](../v2/build_quali.py).
 
 ### A second signal — quali_skill vs. racecraft
 **Intuition.** If you have *two* different tests of the same ability, use both — but trust the
@@ -152,8 +152,8 @@ that gap is small and sensitive to how lapped cars are treated, so it's read as 
 definitive. It also feeds the attribution: measuring the driver by *race* pace attributes even more
 of a result to the car than qualifying does.
 
-→ See [`v2/build_race_pace.py`](v2/build_race_pace.py), [`v2/fit_skill_joint.py`](v2/fit_skill_joint.py),
-  [`v2/backtest_race.py`](v2/backtest_race.py).
+→ See [`v2/build_race_pace.py`](../v2/build_race_pace.py), [`v2/fit_skill_joint.py`](../v2/fit_skill_joint.py),
+  [`v2/backtest_race.py`](../v2/backtest_race.py).
 
 ---
 
@@ -170,7 +170,7 @@ the data has a **likelihood** (how well any guess explains what you saw), and co
 skill = −0.34%"; it outputs thousands of plausible values for it. Every error bar in the project
 comes from that.
 
-→ See [`v2/fit_skill.py`](v2/fit_skill.py), [`v2/fit_skill_rw.py`](v2/fit_skill_rw.py).
+→ See [`v2/fit_skill.py`](../v2/fit_skill.py), [`v2/fit_skill_rw.py`](../v2/fit_skill_rw.py).
 
 ### Hierarchical (multilevel) model
 **Intuition.** Data often has structure: drivers nested in teams, races nested in seasons. A
@@ -196,8 +196,8 @@ Latifi worst, Norris/Hamilton cleanest), but most of the eye-popping raw spread 
 noise. Shrinkage turns "Grosjean crashes 6× more!" into the truer, duller "he's somewhat more
 incident-prone."
 
-→ See [`v2/fit_incident.py`](v2/fit_incident.py),
-  [`figures/v2_incident_proneness_2018_2025.png`](figures/v2_incident_proneness_2018_2025.png).
+→ See [`v2/fit_incident.py`](../v2/fit_incident.py),
+  [`figures/v2_incident_proneness_2018_2025.png`](../figures/v2_incident_proneness_2018_2025.png).
 
 ### Modeling a yes/no outcome (logistic regression)
 **Intuition.** Some outcomes aren't numbers, they're yes/no: did the driver crash out this race? You
@@ -209,7 +209,7 @@ lets you add up effects without ever falling off the 0–1 edge.
 baseline + driver effect + circuit effect`. The circuit term controls for the fact that street
 circuits (walls close) crash more, so a driver isn't penalised just for racing at Monaco.
 
-→ See [`v2/fit_incident.py`](v2/fit_incident.py).
+→ See [`v2/fit_incident.py`](../v2/fit_incident.py).
 
 ### Random walk — letting skill change over time
 **Intuition.** A random walk models something that drifts slowly and directionlessly: each step is
@@ -221,8 +221,8 @@ a per-season random walk. The model *learns* the step size (`sigma_rw ≈ 0.11%/
 skill is fairly stable). This is also what lets `predict.py` project skill into next season while
 honestly widening the error bars.
 
-→ See [`v2/fit_skill_rw.py`](v2/fit_skill_rw.py); recovered career arcs in
-  [`figures/v2_skill_trajectories_2018_2025_rw.png`](figures/v2_skill_trajectories_2018_2025_rw.png).
+→ See [`v2/fit_skill_rw.py`](../v2/fit_skill_rw.py); recovered career arcs in
+  [`figures/v2_skill_trajectories_2018_2025_rw.png`](../figures/v2_skill_trajectories_2018_2025_rw.png).
 
 ### Credible interval
 **Intuition.** A range that the true value is *probably* in. "90% credible interval `[−0.69, −0.39]`"
@@ -267,7 +267,7 @@ predict every teammate qualifying head-to-head in the **held-out 2024–2025** (
 saw). Result: **67% race-level / 80% season-long** accuracy vs. a 50% coin-flip, correlation 0.40.
 It predicts the future, for the thing it claims to measure.
 
-→ See [`v2/backtest.py`](v2/backtest.py), [`figures/backtest.png`](figures/backtest.png).
+→ See [`v2/backtest.py`](../v2/backtest.py), [`figures/backtest.png`](../figures/backtest.png).
 
 ### Calibration
 **Intuition.** Separate from being *accurate*, a model should be *honest about its confidence*. If you
@@ -295,7 +295,7 @@ put that confounder in the graph the ICC split **swings ~25pp and flips** (car 2
 car 1%/driver 58%) — while the interventional/counterfactual answers don't move at all. So the project
 now leads with those robust measures and keeps ICC only as a clearly-caveated descriptive number.
 
-→ See [`v2/attribution_v2.py`](v2/attribution_v2.py), `intrinsic_causal_influence`; and *Probability
+→ See [`v2/attribution_v2.py`](../v2/attribution_v2.py), `intrinsic_causal_influence`; and *Probability
   of Necessity* below.
 
 ### Probability of Necessity — the "but for" question
@@ -310,8 +310,8 @@ depend on the population's spread the way ICC does.
 wildly-swinging ICC). Face-valid: Räikkönen/Bottas/Piastri's podiums are the most car-dependent;
 Alonso's and Verstappen's the most driver-dependent.
 
-→ See `necessity_query` in [`v2/attribution_v2.py`](v2/attribution_v2.py),
-  [`figures/v2_necessity_2018_2025_joint.png`](figures/v2_necessity_2018_2025_joint.png).
+→ See `necessity_query` in [`v2/attribution_v2.py`](../v2/attribution_v2.py),
+  [`figures/v2_necessity_2018_2025_joint.png`](../figures/v2_necessity_2018_2025_joint.png).
 
 ### DNF censoring
 **Intuition.** Missing data is rarely random. If a driver retires (DNF — Did Not Finish) on lap 1,
@@ -322,7 +322,7 @@ you don't know where they'd have finished — and *whether* they DNF'd may itsel
 finishes only, and "expected finish *including* breakdown risk" is recombined separately at the
 reporting stage. The choice is documented as a known tradeoff.
 
-→ See [`SCHEMA_NOTES.md`](SCHEMA_NOTES.md) DNF section, [`README.md`](README.md) DNF handling note.
+→ See [`SCHEMA_NOTES.md`](SCHEMA_NOTES.md) DNF section, [`README.md`](../README.md) DNF handling note.
 
 ---
 
@@ -342,7 +342,7 @@ estimates each driver's driver-error rate (via *partial pooling*, above), contro
 hazard. The honest verdict: incident-proneness is real and sensibly ordered, but a *modest*
 differentiator once small-sample noise is stripped out.
 
-→ See [`v2/fit_incident.py`](v2/fit_incident.py).
+→ See [`v2/fit_incident.py`](../v2/fit_incident.py).
 
 ### Expected cost = chance × stakes (the "incident tax")
 **Intuition.** What a mistake *costs* isn't just how often you make it — it's how much you lose each
@@ -366,7 +366,7 @@ engine failure is never blamed on the driver), then combine them only at the rep
 independently and mixed only in the final metric, so no imputed crash ever pollutes the skill
 estimate.
 
-→ See [`v2/unified_metric.py`](v2/unified_metric.py), [`v2/fit_incident.py`](v2/fit_incident.py).
+→ See [`v2/unified_metric.py`](../v2/unified_metric.py), [`v2/fit_incident.py`](../v2/fit_incident.py).
 
 ---
 
@@ -407,5 +407,5 @@ estimate.
 ---
 
 *This doc explains the ideas; for the system map and pipeline see [`ARCHITECTURE.md`](ARCHITECTURE.md),
-for the phase-by-phase story and results see [`README.md`](README.md), and for the data schema see
+for the phase-by-phase story and results see [`README.md`](../README.md), and for the data schema see
 [`SCHEMA_NOTES.md`](SCHEMA_NOTES.md).*
