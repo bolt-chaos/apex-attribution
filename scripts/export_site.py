@@ -60,27 +60,26 @@ ERAS = [
 ]
 
 # The rung-3 necessity result for the masthead hook ("would this podium have happened BUT FOR the
-# car / the driver?"). Transcribed from outputs/v2_attribution_report_2018_2025_joint.txt §[2]
-# (v2/attribution_v2.py necessity_query, --pn-threshold 3, joint 2018-2025 model — the same model
-# the main site runs on). attribution_v2.py emits a text report, not JSON, so this is a curated
-# constant: re-run attribution_v2.py and update these numbers whenever that model is refit.
-NECESSITY = {
-    "era": "2018–2025",
-    "threshold": 3,           # "success" = podium (finish <= P3)
-    "nPodiums": 519,
-    "carPct": 82,             # % of podiums lost if car_pace -> midfield
-    "driverPct": 68,          # % of podiums lost if driver_skill -> median
-    "mostCarDependent": [
-        {"name": "Kimi Räikkönen", "pct": 100},
-        {"name": "Valtteri Bottas", "pct": 100},
-        {"name": "Oscar Piastri", "pct": 96},
-    ],
-    "mostDriverDependent": [
-        {"name": "Fernando Alonso", "pct": 100},
-        {"name": "Max Verstappen", "pct": 100},
-        {"name": "Carlos Sainz Jr.", "pct": 93},
-    ],
-}
+# car / the driver?"), read from attribution_v2.py's machine-readable artifact — the same joint
+# 2018-2025 model the main site runs on. Regenerate the artifact with:
+#   python v2/attribution_v2.py --data data/f1_scm_v2_2018_2025_joint.parquet --tag _2018_2025_joint
+ATTRIBUTION_JSON = ROOT / "outputs" / "v2_attribution_2018_2025_joint.json"
+NECESSITY_ERA = "2018–2025"
+
+
+def export_necessity(names: dict) -> dict:
+    art = json.loads(ATTRIBUTION_JSON.read_text())
+    pn = art["necessity"]
+    per = pn["perDriver"]  # insertion order = alphabetical driver id; sorted() below is stable
+
+    def top3(key: str) -> list:
+        best = sorted(per.items(), key=lambda kv: -kv[1][key])[:3]
+        return [{"name": names["drivers"].get(d) or titlecase(d), "pct": round(100 * v[key])}
+                for d, v in best]
+
+    return {"era": NECESSITY_ERA, "threshold": pn["threshold"], "nPodiums": pn["nPodiums"],
+            "carPct": round(100 * pn["pnCar"]), "driverPct": round(100 * pn["pnDriver"]),
+            "mostCarDependent": top3("pnCar"), "mostDriverDependent": top3("pnDriver")}
 
 
 def load_names() -> dict:
@@ -302,7 +301,7 @@ def main() -> int:
     print("eras…");        write("era", export_eras(rng))
     print("cross-era…");   write("cross_era", export_cross_era(names, rng))
     print("teammates…");   write("teammates", export_teammates(names))
-    print("necessity…");   write("necessity", NECESSITY)
+    print("necessity…");   write("necessity", export_necessity(names))
 
     for src in ["incident_rates_2018_2025.json", "reliability_rates.json"]:
         shutil.copy(MODELS / src, out / src)
