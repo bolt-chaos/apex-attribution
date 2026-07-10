@@ -169,7 +169,7 @@ def main() -> int:
     ax.legend(fontsize=8)
     fig.tight_layout()
     fig.savefig(FIG / "backtest_race.png", dpi=130, bbox_inches="tight")
-    print(f"\nWrote outputs/backtest_race_report.txt, figures/backtest_race.png")
+    print("\nWrote outputs/backtest_race_report.txt, figures/backtest_race.png")
     return 0
 
 

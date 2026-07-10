@@ -116,7 +116,7 @@ def main() -> int:
          "  - This is an EXTRAPOLATION, not an identified effect: no legend ever drove this car.",
          "  - Cross-era skill is only comparable AFTER an era-scale assumption (z-score below);",
          "    the raw/naive number is shown ONLY to demonstrate why it is wrong.",
-         f"  - Source skill model has max R-hat 1.04 (NOT fully converged) -> treat as a story,",
+         "  - Source skill model has max R-hat 1.04 (NOT fully converged) -> treat as a story,",
          "    not a measurement. Intervals are WIDE on purpose.",
          "",
          f"  field spread collapsed over time: 1988-1994 SD ~{spread.loc[1988:1994].sd.mean():.2f}%"

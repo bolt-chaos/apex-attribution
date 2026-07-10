@@ -124,7 +124,7 @@ def main() -> int:
     haz_mean = post["hazard"].mean(("chain", "draw")).to_series()
     L = ["=" * 66, "v2 DRIVER INCIDENT-PRONENESS (driver-error-DNF risk) — RESULTS", "=" * 66,
          f"max R-hat = {rh:.3f}   base driver-error-DNF rate = {base_rate:.1%} per start",
-         f"circuit hazard (log-odds vs avg): " +
+         "circuit hazard (log-odds vs avg): " +
          ", ".join(f"{c} {haz_mean[c]:+.2f}" for c in circuits),
          f"sigma_driver = {float(post['sigma_driver'].mean()):.2f} (spread of driver proneness)",
          "",

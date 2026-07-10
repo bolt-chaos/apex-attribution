@@ -211,9 +211,9 @@ def main() -> int:
 
     pn_verdict = ("the CAR is more often necessary" if pn["pn_car"] > pn["pn_drv"] else
                   "the DRIVER is more often necessary")
-    L.append(f"\n[2] NECESSITY — would the result have happened BUT FOR the car / the driver? (rung-3)")
+    L.append("\n[2] NECESSITY — would the result have happened BUT FOR the car / the driver? (rung-3)")
     L.append(f"    of {pn['n']} podiums (finish <= P{pn['threshold']}) actually achieved, fraction LOST if we")
-    L.append(f"    counterfactually downgrade ONE factor (abduct luck, swap factor, replay):")
+    L.append("    counterfactually downgrade ONE factor (abduct luck, swap factor, replay):")
     L.append(f"      BUT FOR the car   (car_pace -> midfield):    {pn['pn_car']:.0%} of podiums lost")
     L.append(f"      BUT FOR the driver (driver_skill -> median): {pn['pn_drv']:.0%} of podiums lost")
     L.append(f"    -> {pn_verdict} for a podium (robust to the confounding-graph choice, unlike ICC).")
@@ -234,13 +234,13 @@ def main() -> int:
     L.append(f"    finish ~ skill+pace+grid : {sbeta(['driver_skill','car_pace','grid'])}")
 
     L.append("\n[5] ICC variance share (DESCRIPTIVE ONLY — population/era-dependent, NOT structural)")
-    L.append(f"    intrinsic_causal_influence assumes INDEPENDENT root noise, but skill<->pace are")
+    L.append("    intrinsic_causal_influence assumes INDEPENDENT root noise, but skill<->pace are")
     L.append(f"    correlated (corr {corr:.2f}; good drivers hired into good cars). So the share is")
     L.append(f"    graph-dependent and swings by {abs(he_car-ind_car)*100:.0f}pp on that modelling choice:")
     L.append(f"      independent roots:  car {100*ind_car:.1f}% / driver {100*ind_drv:.1f}%")
     L.append(f"      + hiring edge:      car {100*he_car:.1f}% / driver {100*he_drv:.1f}%")
-    L.append(f"    That swing can flip the car-vs-driver verdict, while [1]/[2] barely move -- which is")
-    L.append(f"    exactly why ICC is NOT the headline. Full node breakdown (hiring-edge graph):")
+    L.append("    That swing can flip the car-vs-driver verdict, while [1]/[2] barely move -- which is")
+    L.append("    exactly why ICC is NOT the headline. Full node breakdown (hiring-edge graph):")
     for k, v in sorted(icc_he.items(), key=lambda kv: -abs(kv[1])):
         L.append(f"      {k:14s} {v:8.3f}   {100*abs(v)/tot_he:5.1f}%")
 

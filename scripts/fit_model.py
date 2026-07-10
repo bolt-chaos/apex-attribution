@@ -128,7 +128,7 @@ def main() -> int:
     print("assigned mechanisms:")
     for n in scm_finish.graph.nodes:
         print(f"  {n:16s} {type(scm_finish.causal_mechanism(n)).__name__}")
-    print(f"\nreliability SCM: constructor_id -> reliability_dnf")
+    print("\nreliability SCM: constructor_id -> reliability_dnf")
     print(f"  reliability_dnf  {type(scm_reliability.causal_mechanism('reliability_dnf')).__name__}")
     print("\nempirical P(mechanical DNF | constructor), worst 5:")
     worst = sorted(((v["p_mech_dnf"], k, v["n_started"]) for k, v in rel_table.items()
@@ -136,7 +136,7 @@ def main() -> int:
     for p, c, n in worst:
         print(f"  {c:16s} {p:.3f}  (n={n})")
     print(f"  {'OVERALL':16s} {rel_table['_overall']['p_mech_dnf']:.3f}")
-    print(f"\nWrote models/scm_finish.pkl, models/scm_reliability.pkl, models/reliability_rates.json")
+    print("\nWrote models/scm_finish.pkl, models/scm_reliability.pkl, models/reliability_rates.json")
     return 0
 
 

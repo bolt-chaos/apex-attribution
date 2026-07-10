@@ -109,7 +109,7 @@ def main() -> int:
     ax1.legend(h1 + h2, l1 + l2, fontsize=8, loc="center left")
     fig.tight_layout()
     fig.savefig(FIG / "era_connectivity.png", dpi=130, bbox_inches="tight")
-    print(f"\nWrote outputs/era_connectivity.txt, figures/era_connectivity.png")
+    print("\nWrote outputs/era_connectivity.txt, figures/era_connectivity.png")
     return 0
 
 

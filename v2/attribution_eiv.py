@@ -116,7 +116,7 @@ def main() -> int:
          f"({lead_corr})",
          "",
          "[READING] measurement error attenuates the noisier latent; correcting it moves that latent",
-         f"    UP. Here the driver was the noisier one, so de-attenuation raises the DRIVER toward the",
+         "    UP. Here the driver was the noisier one, so de-attenuation raises the DRIVER toward the",
          f"    car -> {lead_corr}. It does NOT rescue the car: the car is the better-identified latent.",
          "    (The gcm interventional/necessity measures would shift the same way — driver up.)"]
     if not posdef:
