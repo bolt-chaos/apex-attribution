@@ -1,5 +1,5 @@
 // Plain-language "how it works" + the honest caveats in one place. Links out to the repo's deeper
-// writeups (CONCEPTS.md, BOOK_OF_WHY.md) for anyone who wants the full story.
+// writeups (docs/CONCEPTS.md, docs/BOOK_OF_WHY.md) for anyone who wants the full story.
 
 import type { Necessity } from "../lib/data";
 
@@ -90,8 +90,8 @@ export function About({ necessity }: { necessity?: Necessity }) {
 
       <h3>Go deeper</h3>
       <p className="about__links">
-        <a href={`${REPO}/blob/main/CONCEPTS.md`}>Concepts guide</a>
-        <a href={`${REPO}/blob/main/BOOK_OF_WHY.md`}>Mapping to “The Book of Why”</a>
+        <a href={`${REPO}/blob/main/docs/CONCEPTS.md`}>Concepts guide</a>
+        <a href={`${REPO}/blob/main/docs/BOOK_OF_WHY.md`}>Mapping to “The Book of Why”</a>
         <a href={`${REPO}/blob/main/README.md`}>Full methodology &amp; results</a>
         <a href={REPO}>Source code</a>
       </p>

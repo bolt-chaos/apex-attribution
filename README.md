@@ -9,12 +9,21 @@ the machinery?* — formally, as a `do(constructor = X)` intervention holding th
 Built on [DoWhy's `gcm` module](https://github.com/py-why/dowhy) over the
 [f1db](https://github.com/f1db/f1db) open dataset (CC-BY-4.0).
 
-New to the ideas here (causal inference, the teammate trick, Bayesian uncertainty)? Start with
-[`CONCEPTS.md`](CONCEPTS.md) — a plain-language guide to every concept the project rests on.
-For the full system map (data flow, both modelling lines, artifacts, reproduction) see
-[`ARCHITECTURE.md`](ARCHITECTURE.md). To pick the project back up quickly (current state + next
-action + reproduce commands) see [`RESUME.md`](RESUME.md). Running notes for the eventual write-up
-(story, results, decisions, bugs, limitations) are in [`WRITEUP_NOTES.md`](WRITEUP_NOTES.md).
+**Reading map** — each doc has one job (all under [`docs/`](docs/)):
+
+| You want… | Read |
+|---|---|
+| The concepts, in plain language (causal inference, the teammate trick, Bayesian uncertainty) | [`docs/CONCEPTS.md`](docs/CONCEPTS.md) |
+| The system map: data flow, both modelling lines, artifacts, reproduction | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| Current state + next action + reproduce commands (fast re-entry) | [`docs/RESUME.md`](docs/RESUME.md) |
+| The data schema, DNF taxonomy, verified `gcm`-0.14 API notes | [`docs/SCHEMA_NOTES.md`](docs/SCHEMA_NOTES.md) |
+| Running write-up notes: story, results, decisions, bugs, limitations | [`docs/WRITEUP_NOTES.md`](docs/WRITEUP_NOTES.md) |
+| The Pearl-style critique + backlog of ideas | [`docs/IDEAS.md`](docs/IDEAS.md) |
+| How the project maps onto *The Book of Why* | [`docs/BOOK_OF_WHY.md`](docs/BOOK_OF_WHY.md) |
+| The site's JSON artifact schema | [`site/DATA.md`](site/DATA.md) |
+
+This README carries the **status + phase log + headline results** and is the authority on
+what's current; the docs above go deep on their one topic each.
 
 ## Interactive site
 
@@ -48,7 +57,7 @@ queries — "put driver A in constructor B's car" — that an associational mode
 
 MVP, built incrementally:
 
-- [x] **(a)** env + data download + schema introspection → [`SCHEMA_NOTES.md`](SCHEMA_NOTES.md)
+- [x] **(a)** env + data download + schema introspection → [`docs/SCHEMA_NOTES.md`](docs/SCHEMA_NOTES.md)
 - [x] **(b)** clean per-result dataframe with the teammate-connected-component filter
 - [x] **(c)** DAG definition (`networkx.DiGraph`) → [`scripts/dag.py`](scripts/dag.py), [`figures/dag.png`](figures/dag.png)
 - [x] **(d)** mechanism fitting (`gcm.auto.assign_causal_mechanisms`, `gcm.fit`) → [`scripts/fit_model.py`](scripts/fit_model.py)
@@ -57,7 +66,7 @@ MVP, built incrementally:
 
 **v1 scope:** 2022–2025 (single-ish regulation era), the 25-driver largest teammate-connected
 component. Known limitations (selection confounding, latent skill/pace, DNF censoring, era
-effects) are documented in `SCHEMA_NOTES.md` and handled explicitly, not papered over.
+effects) are documented in `docs/SCHEMA_NOTES.md` and handled explicitly, not papered over.
 
 ## Headline finding (v1): the machinery works, but the attribution is not identified
 
@@ -177,7 +186,7 @@ even wider intervals).
 
 Remaining cross-era blockers (connectivity solved): the 2006 quali-format change (single-session vs
 knockout best-lap — the `qt` fallback unifies the column but mixing the two needs care), era-varying
-skill spread, and the off-support counterfactual. See [`ARCHITECTURE.md`](ARCHITECTURE.md) §12.
+skill spread, and the off-support counterfactual. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) §12.
 
 **Phase 8a — session-consistent quali normalization** ([`v2/build_quali.py`](v2/build_quali.py)
 `--gap-method session`). The first cross-era blocker, and a real fix to current results. Instead of
@@ -325,7 +334,7 @@ is a modest tiebreaker, most valuable when it protects a front-runner's podium. 
 
 ## Putting the confounder in the graph — and why ICC is no longer the headline
 
-A [Pearl-style review](IDEAS.md) flagged two "specification + reporting" fixes, now implemented in
+A [Pearl-style review](docs/IDEAS.md) flagged two "specification + reporting" fixes, now implemented in
 [`v2/attribution_v2.py`](v2/attribution_v2.py):
 
 1. **Specification.** `driver_skill` and `car_pace` were drawn as *independent* roots, but they're

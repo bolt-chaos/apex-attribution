@@ -10,7 +10,7 @@ DAG (parallels v1, but driver_skill / car_pace replace the nested categoricals):
     circuit_type ────────────────────┘
 
 Because skill and pace are now decoupled (corr ~0.5, vs v1's near-perfect nesting) the SCM CAN
-separate them. Following a Pearl-style review (see IDEAS.md) this stage was refactored twice:
+separate them. Following a Pearl-style review (see docs/IDEAS.md) this stage was refactored twice:
 
   1. SPECIFICATION FIX — the roots are correlated (good drivers are hired into good cars), so
      drawing them as INDEPENDENT was a mis-specification. We put the confounder in the graph via
