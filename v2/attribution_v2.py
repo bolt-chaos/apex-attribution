@@ -33,7 +33,7 @@ Usage: python v2/attribution_v2.py [--icc-rand 150] [--icc-base 500] [--n 2000]
 from __future__ import annotations
 
 import argparse
-import pickle
+import json
 from pathlib import Path
 
 import networkx as nx
@@ -258,6 +258,32 @@ def main() -> int:
     print(report + L_tail)
     (OUT / f"v2_attribution_report{args.tag}.txt").write_text(report + L_tail + "\n")
 
+    # Machine-readable twin of the report, so downstream consumers (scripts/export_site.py, CI)
+    # read numbers instead of hand-transcribing them from the prose. Driver ids stay raw here;
+    # display-name mapping is the consumer's job.
+    artifact = {
+        "tag": args.tag,
+        "data": Path(args.data).name,
+        "nRows": int(len(data)),
+        "hiringEdge": bool(args.hiring_edge),
+        "interventional": {"carSpread": round(car_spread, 3), "driverSpread": round(drv_spread, 3),
+                           "verdict": verdict},
+        "necessity": {
+            "threshold": int(pn["threshold"]),
+            "nPodiums": int(pn["n"]),
+            "pnCar": round(pn["pn_car"], 4),
+            "pnDriver": round(pn["pn_drv"], 4),
+            "perDriver": {d: {"n": int(r.n), "pnCar": round(float(r.pn_car), 4),
+                              "pnDriver": round(float(r.pn_drv), 4)}
+                          for d, r in pn["per_driver"].iterrows()},
+        },
+        "ols": {"skillPace": b, "skillPaceGrid": sbeta(["driver_skill", "car_pace", "grid"])},
+        "icc": {"corrSkillPace": round(corr, 4),
+                "independentRoots": {"carPct": round(100 * ind_car, 2), "driverPct": round(100 * ind_drv, 2)},
+                "hiringEdge": {"carPct": round(100 * he_car, 2), "driverPct": round(100 * he_drv, 2)}},
+    }
+    (OUT / f"v2_attribution{args.tag}.json").write_text(json.dumps(artifact, indent=1) + "\n")
+
     # --- figures: (A) interventional diagnostic, (B) necessity but-for ---
     import matplotlib
     matplotlib.use("Agg")
@@ -285,7 +311,7 @@ def main() -> int:
     fig2.tight_layout()
     fig2.savefig(FIG / f"v2_necessity{args.tag}.png", dpi=130, bbox_inches="tight")
 
-    print(f"\nWrote outputs/v2_attribution_report{args.tag}.txt, "
+    print(f"\nWrote outputs/v2_attribution_report{args.tag}.txt, outputs/v2_attribution{args.tag}.json, "
           f"figures/v2_attribution_diagnostic{args.tag}.png, figures/v2_necessity{args.tag}.png")
     return 0
 

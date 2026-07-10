@@ -110,9 +110,10 @@ BFS over `edges` gives the shortest shared-teammate path (e.g. Senna → … →
 ```
 "Would this podium have happened *but for* the car / the driver?" — abduct luck, swap one factor
 to mid-field, replay. The two percentages deliberately **do not sum to 100** (necessity isn't a
-partition; most podiums needed both). Curated constant in `export_site.py` transcribed from
-`outputs/v2_attribution_report_2018_2025_joint.txt` §[2] (`v2/attribution_v2.py`, same joint
-2018–2025 model as the main site) — update it when that model is refit.
+partition; most podiums needed both). Derived by `export_necessity()` in `export_site.py` from the
+machine-readable `outputs/v2_attribution_2018_2025_joint.json` that `v2/attribution_v2.py` emits
+alongside its text report (same joint 2018–2025 model as the main site) — re-run that script after
+a refit and re-export; no hand-transcription.
 
 ### `incident_rates_2018_2025.json`, `reliability_rates.json`
 Copied verbatim from `models/`. `incident_rates`: `Record<driverId, number>` + `_overall`.

@@ -1,0 +1,111 @@
+{
+ "tag": "_2018_2025_joint",
+ "data": "f1_scm_v2_2018_2025_joint.parquet",
+ "nRows": 3009,
+ "hiringEdge": true,
+ "interventional": {
+  "carSpread": 10.611,
+  "driverSpread": 10.066,
+  "verdict": "car ahead"
+ },
+ "necessity": {
+  "threshold": 3,
+  "nPodiums": 519,
+  "pnCar": 0.8227,
+  "pnDriver": 0.6763,
+  "perDriver": {
+   "carlos-sainz-jr": {
+    "n": 29,
+    "pnCar": 0.6552,
+    "pnDriver": 0.931
+   },
+   "charles-leclerc": {
+    "n": 50,
+    "pnCar": 0.84,
+    "pnDriver": 0.9
+   },
+   "daniel-ricciardo": {
+    "n": 5,
+    "pnCar": 0.4,
+    "pnDriver": 0.4
+   },
+   "fernando-alonso": {
+    "n": 9,
+    "pnCar": 0.7778,
+    "pnDriver": 1.0
+   },
+   "george-russell": {
+    "n": 24,
+    "pnCar": 0.9583,
+    "pnDriver": 0.75
+   },
+   "kimi-raikkonen": {
+    "n": 12,
+    "pnCar": 1.0,
+    "pnDriver": 0.0
+   },
+   "lando-norris": {
+    "n": 44,
+    "pnCar": 0.7727,
+    "pnDriver": 0.7955
+   },
+   "lewis-hamilton": {
+    "n": 85,
+    "pnCar": 0.9529,
+    "pnDriver": 0.5059
+   },
+   "max-verstappen": {
+    "n": 116,
+    "pnCar": 0.7586,
+    "pnDriver": 1.0
+   },
+   "oscar-piastri": {
+    "n": 26,
+    "pnCar": 0.9615,
+    "pnDriver": 0.4231
+   },
+   "pierre-gasly": {
+    "n": 5,
+    "pnCar": 0.0,
+    "pnDriver": 0.6
+   },
+   "sebastian-vettel": {
+    "n": 23,
+    "pnCar": 0.913,
+    "pnDriver": 0.3478
+   },
+   "sergio-perez": {
+    "n": 32,
+    "pnCar": 0.6562,
+    "pnDriver": 0.625
+   },
+   "valtteri-bottas": {
+    "n": 45,
+    "pnCar": 1.0,
+    "pnDriver": 0.2444
+   }
+  }
+ },
+ "ols": {
+  "skillPace": {
+   "driver_skill": 0.35,
+   "car_pace": 0.47
+  },
+  "skillPaceGrid": {
+   "driver_skill": 0.21,
+   "car_pace": 0.26,
+   "grid": 0.45
+  }
+ },
+ "icc": {
+  "corrSkillPace": 0.536,
+  "independentRoots": {
+   "carPct": 25.71,
+   "driverPct": 15.66
+  },
+  "hiringEdge": {
+   "carPct": 0.91,
+   "driverPct": 57.56
+  }
+ }
+}
