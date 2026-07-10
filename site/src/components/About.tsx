@@ -1,9 +1,11 @@
 // Plain-language "how it works" + the honest caveats in one place. Links out to the repo's deeper
 // writeups (CONCEPTS.md, BOOK_OF_WHY.md) for anyone who wants the full story.
 
+import type { Necessity } from "../lib/data";
+
 const REPO = "https://github.com/bolt-chaos/apex-attribution";
 
-export function About() {
+export function About({ necessity }: { necessity?: Necessity }) {
   return (
     <section className="feature about">
       <h2>How this works</h2>
@@ -23,6 +25,28 @@ export function About() {
         turns those gaps into a skill number for every driver and a pace number for every car, each with
         honest uncertainty.
       </p>
+
+      {necessity && (
+        <>
+          <h3>Why the headline doesn't sum to 100%</h3>
+          <p>
+            The front page says a podium needed the car <strong>{necessity.carPct}%</strong> of the
+            time and the driver <strong>{necessity.driverPct}%</strong> — more than 100%, on purpose.
+            They answer two <em>separate</em> counterfactual questions, asked of all{" "}
+            {necessity.nPodiums} podiums in {necessity.era}: rewind the race keeping everything else
+            the same, downgrade <em>just the car</em> to mid-field — does the podium survive? Then
+            rewind again and downgrade <em>just the driver</em>. One podium can fail both tests: a
+            fire needs the match <em>and</em> the oxygen, so "necessary" isn't a pie chart. In fact,
+            since {necessity.carPct} + {necessity.driverPct} &gt; 100, at least{" "}
+            {necessity.carPct + necessity.driverPct - 100}% of podiums needed <strong>both</strong> —
+            remove either ingredient and the result evaporates. Pundit percentages ("that win was 70%
+            car") assume every result has one necessary cause; the model says that's the wrong
+            question. Most car-dependent podiums:{" "}
+            {necessity.mostCarDependent.map((d) => d.name).join(", ")}. Most driver-dependent:{" "}
+            {necessity.mostDriverDependent.map((d) => d.name).join(", ")}.
+          </p>
+        </>
+      )}
 
       <h3>What each tab does</h3>
       <ul className="about__list">
