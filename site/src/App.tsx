@@ -39,6 +39,22 @@ export default function App() {
             How much of a Formula 1 result is the <strong>driver</strong>, and how much is the{" "}
             <strong>car</strong>? A causal model you can play with.
           </p>
+          {data && (
+            <p className="masthead__hook">
+              Rewind any {data.necessity.era} podium:{" "}
+              <strong className="masthead__hook-num masthead__hook-num--car">
+                {data.necessity.carPct}%
+              </strong>{" "}
+              vanish without the car,{" "}
+              <strong className="masthead__hook-num masthead__hook-num--drv">
+                {data.necessity.driverPct}%
+              </strong>{" "}
+              without the driver. More than 100% — most needed <em>both</em>.{" "}
+              <button className="masthead__hook-why" onClick={() => setTab("about")}>
+                Why that's the point →
+              </button>
+            </p>
+          )}
         </div>
       </header>
 
@@ -69,7 +85,7 @@ export default function App() {
         {data && tab === "chain" && <Pathfinder data={data} />}
         {data && tab === "arcs" && <CareerArcs data={data} />}
         {data && tab === "h2h" && <Lineup data={data} />}
-        {tab === "about" && <About />}
+        {tab === "about" && <About necessity={data?.necessity} />}
       </main>
 
       <footer className="footer">

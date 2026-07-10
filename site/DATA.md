@@ -101,6 +101,19 @@ cross-era `mesh` at the car's `pace`. **Era-normalized** = map each draw
 ```
 BFS over `edges` gives the shortest shared-teammate path (e.g. Senna → … → Verstappen).
 
+### `necessity.json` — rung-3 podium-necessity result (masthead hook + About explainer)
+```ts
+{ era: string; threshold: number; nPodiums: number;
+  carPct: number; driverPct: number;   // % of podiums LOST but-for the car / the driver
+  mostCarDependent: Array<{ name: string; pct: number }>;
+  mostDriverDependent: Array<{ name: string; pct: number }> }
+```
+"Would this podium have happened *but for* the car / the driver?" — abduct luck, swap one factor
+to mid-field, replay. The two percentages deliberately **do not sum to 100** (necessity isn't a
+partition; most podiums needed both). Curated constant in `export_site.py` transcribed from
+`outputs/v2_attribution_report_2018_2025_joint.txt` §[2] (`v2/attribution_v2.py`, same joint
+2018–2025 model as the main site) — update it when that model is refit.
+
 ### `incident_rates_2018_2025.json`, `reliability_rates.json`
 Copied verbatim from `models/`. `incident_rates`: `Record<driverId, number>` + `_overall`.
 `reliability`: `Record<constructorId, { p_mech_dnf: number; n_started: number }>` + `_overall`.

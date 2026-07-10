@@ -93,6 +93,36 @@ code {
   max-width: 46ch;
   font-size: clamp(0.95rem, 2.6vw, 1.1rem);
 }
+/* the necessity hook — one arresting causal finding under the tagline */
+.masthead__hook {
+  margin: var(--sp-4) auto 0;
+  max-width: 56ch;
+  color: var(--muted);
+  font-size: 0.92rem;
+  border-top: 1px solid var(--line);
+  padding-top: var(--sp-3);
+}
+.masthead__hook-num {
+  font-size: 1.15em;
+  font-weight: 800;
+}
+.masthead__hook-num--car {
+  color: var(--accent-soft);
+}
+.masthead__hook-num--drv {
+  color: var(--band);
+}
+.masthead__hook-why {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent-soft);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
 
 /* --- tabs --- */
 .tabs {

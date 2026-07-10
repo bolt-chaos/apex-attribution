@@ -65,6 +65,16 @@ export interface CrossEra {
   caveat: string;
 }
 
+export interface Necessity {
+  era: string;
+  threshold: number;
+  nPodiums: number;
+  carPct: number;
+  driverPct: number;
+  mostCarDependent: { name: string; pct: number }[];
+  mostDriverDependent: { name: string; pct: number }[];
+}
+
 export interface Manifest {
   generated: string;
   nDraws: number;
@@ -91,18 +101,20 @@ export interface CoreData {
   era: EraRow[];
   crossEra: CrossEra;
   teammates: Teammates;
+  necessity: Necessity;
   manifest: Manifest;
 }
 
 export async function loadCore(): Promise<CoreData> {
-  const [drivers, cars, mesh, era, crossEra, teammates, manifest] = await Promise.all([
+  const [drivers, cars, mesh, era, crossEra, teammates, necessity, manifest] = await Promise.all([
     loadJSON<Drivers>("drivers"),
     loadJSON<Cars>("cars"),
     loadJSON<Mesh>("finish_mesh"),
     loadJSON<EraRow[]>("era"),
     loadJSON<CrossEra>("cross_era"),
     loadJSON<Teammates>("teammates"),
+    loadJSON<Necessity>("necessity"),
     loadJSON<Manifest>("manifest"),
   ]);
-  return { drivers, cars, mesh, era, crossEra, teammates, manifest };
+  return { drivers, cars, mesh, era, crossEra, teammates, necessity, manifest };
 }
