@@ -41,9 +41,9 @@ export function About({ necessity }: { necessity?: Necessity }) {
             {necessity.carPct + necessity.driverPct - 100}% of podiums needed <strong>both</strong> —
             remove either ingredient and the result evaporates. Pundit percentages ("that win was 70%
             car") assume every result has one necessary cause; the model says that's the wrong
-            question. Most car-dependent podiums:{" "}
-            {necessity.mostCarDependent.map((d) => d.name).join(", ")}. Most driver-dependent:{" "}
-            {necessity.mostDriverDependent.map((d) => d.name).join(", ")}.
+            question. Most driver-dependent podiums:{" "}
+            {necessity.mostDriverDependent.map((d) => d.name).join(", ")} — most car-dependent:{" "}
+            {necessity.mostCarDependent.map((d) => d.name).join(", ")}.
           </p>
         </>
       )}
