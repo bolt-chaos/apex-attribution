@@ -89,7 +89,8 @@ apex-attribution/
 │   ├── attribution_v2.py   race-outcome SCM: ICC, do()-sweeps, rung-3 necessity
 │   ├── fit_incident.py / unified_metric.py    incident-proneness + E_all
 │   ├── cross_era.py / era_connectivity.py     era work
-│   └── backtest*.py / insights.py / predict.py / attribution_eiv.py / uncertainty_propagation.py
+│   ├── backtest*.py / insights.py / predict.py / attribution_eiv.py / uncertainty_propagation.py
+│   └── score_forecast.py  score a published forward forecast against the season that happened
 ├── site/                 Vite + React + TS interactive site (§13); data schema in site/DATA.md
 ├── data/                 (gitignored except f1db.version) source DB + derived frames
 ├── models/               (gitignored *.pkl) fitted SCMs + idata; *_rates.json tracked

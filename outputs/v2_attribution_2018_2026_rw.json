@@ -1,0 +1,116 @@
+{
+ "tag": "_2018_2026_rw",
+ "data": "f1_scm_v2_2018_2026_rw.parquet",
+ "nRows": 3203,
+ "hiringEdge": true,
+ "interventional": {
+  "carSpread": 11.806,
+  "driverSpread": 8.883,
+  "verdict": "car ahead"
+ },
+ "necessity": {
+  "threshold": 3,
+  "nPodiums": 552,
+  "pnCar": 0.9167,
+  "pnDriver": 0.5652,
+  "perDriver": {
+   "carlos-sainz-jr": {
+    "n": 29,
+    "pnCar": 0.7931,
+    "pnDriver": 0.7241
+   },
+   "charles-leclerc": {
+    "n": 54,
+    "pnCar": 0.963,
+    "pnDriver": 0.7778
+   },
+   "daniel-ricciardo": {
+    "n": 5,
+    "pnCar": 0.8,
+    "pnDriver": 0.6
+   },
+   "fernando-alonso": {
+    "n": 9,
+    "pnCar": 1.0,
+    "pnDriver": 1.0
+   },
+   "george-russell": {
+    "n": 29,
+    "pnCar": 0.931,
+    "pnDriver": 0.6897
+   },
+   "kimi-antonelli": {
+    "n": 12,
+    "pnCar": 1.0,
+    "pnDriver": 0.0833
+   },
+   "kimi-raikkonen": {
+    "n": 12,
+    "pnCar": 1.0,
+    "pnDriver": 0.0
+   },
+   "lando-norris": {
+    "n": 47,
+    "pnCar": 0.8298,
+    "pnDriver": 0.7447
+   },
+   "lewis-hamilton": {
+    "n": 90,
+    "pnCar": 0.9778,
+    "pnDriver": 0.3667
+   },
+   "max-verstappen": {
+    "n": 120,
+    "pnCar": 0.85,
+    "pnDriver": 0.9083
+   },
+   "oscar-piastri": {
+    "n": 28,
+    "pnCar": 0.9286,
+    "pnDriver": 0.5357
+   },
+   "pierre-gasly": {
+    "n": 6,
+    "pnCar": 0.8333,
+    "pnDriver": 0.5
+   },
+   "sebastian-vettel": {
+    "n": 23,
+    "pnCar": 0.913,
+    "pnDriver": 0.1739
+   },
+   "sergio-perez": {
+    "n": 32,
+    "pnCar": 1.0,
+    "pnDriver": 0.25
+   },
+   "valtteri-bottas": {
+    "n": 45,
+    "pnCar": 1.0,
+    "pnDriver": 0.0889
+   }
+  }
+ },
+ "ols": {
+  "skillPace": {
+   "driver_skill": 0.39,
+   "car_pace": 0.41
+  },
+  "skillPaceGrid": {
+   "driver_skill": 0.21,
+   "car_pace": 0.19,
+   "grid": 0.5
+  }
+ },
+ "icc": {
+  "corrSkillPace": 0.4603,
+  "independentRoots": {
+   "carPct": 36.82,
+   "driverPct": 13.21
+  },
+  "hiringEdge": {
+   "carPct": 1.95,
+   "driverPct": 51.1
+  }
+ }
+}

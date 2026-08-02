@@ -19,6 +19,7 @@ car variation the window spans):
 | era | car (median, 90% CrI) | driver | P(car>driver) |
 |---|---|---|---|
 | 2018–2025 (4 yr) | 31.9% [23, 42] | 21.4% [13, 29] | 73% (overlapping) |
+| 2018–2026 (+ new regs, half season) | 41.9% [37, 48] | 13.5% [8, 19] | 100% (separated) |
 | 2006–2025 (20 yr) | 43.6% [35, 48] | 12.4% [6, 15] | 100% (separated) |
 
 `v1/` (categorical SCM) is the documented baseline that **fails** identification — do not trust v1 numbers.
@@ -35,6 +36,9 @@ python v2/attribution_v2.py --data data/f1_scm_v2_2018_2025_rw.parquet --tag _20
 python v2/uncertainty_propagation.py --idata models/v2_idata_2018_2025_rw.pkl \
     --results data/f1_results_2018_2025.parquet --tag _2018_2025_rw   # credible intervals
 python v2/era_connectivity.py                                          # teammate-graph sweep
+
+# current-regs view: same chain with --start 2018 --end 2026 / --out-tag _2018_2026 / --tag _2018_2026_rw
+python v2/score_forecast.py                                            # score the 2026 forecast vs reality
 ```
 `.pkl`/`data/*.parquet` are gitignored (regenerable); reports/figures are tracked.
 
@@ -77,6 +81,17 @@ Driver-error-DNF / incident-proneness (DONE): `v2/fit_incident.py` — hierarchi
 mechanical + incident risk). Incident tax is stakes-dominated (Verstappen loses most/race to a low
 crash rate × costly fall); cleanliness dividend (proneness only) tiny — Norris/Hamilton save
 ~0.06 pos/race. Incident-proneness = real but modest tiebreaker.
+
+2026 data (DONE, f1db pin `v2026.11.0`): first half of 2026 (rounds 1–11, to the summer break)
+imported. Two results. (1) `v2/score_forecast.py` scores the pre-season 2026 forecast against
+reality — a truly prospective test, nothing retuned: **70% season-long teammate H2H (7/10)**, 58%
+race-level, corr 0.39; confident calls held (Verstappen > Hadjar, Alonso > Stroll), clearest miss is
+**Antonelli beating Russell** (predicted P=70% the other way). Honest negative: MAE 0.42% loses to a
+predict-zero baseline because the reg reset widened the field 2.6× (grid SD 0.46% → 1.19%) — ordering
+survives, magnitudes are mis-scaled. (2) The reset re-stratified the grid, so 2018–2026 shifts hard
+toward the car (necessity: driver 84% → 57%; OLS pace overtakes skill; ICC P(car>driver) 73% → 100%).
+**Caveat: half a season** — refresh when 2026 completes. 2018–2025 artifacts preserved as the
+converged-era baseline.
 
 Other open threads: (none major outstanding).
 

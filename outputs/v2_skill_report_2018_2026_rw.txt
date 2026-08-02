@@ -1,0 +1,58 @@
+==================================================================
+v2 TIME-VARYING SKILL (per-season random walk) — RESULTS
+==================================================================
+max R-hat = 1.000   sigma_rw = 0.094% / season (90% HDI [0.054, 0.134])
+
+[CAREER-MEAN DRIVER SKILL] % vs grid avg (negative = faster), best first
+    max-verstappen       -0.74%   (drift across career: 0.35%)
+    charles-leclerc      -0.49%   (drift across career: 0.14%)
+    lando-norris         -0.46%   (drift across career: 0.25%)
+    oscar-piastri        -0.36%   (drift across career: 0.09%)
+    carlos-sainz-jr      -0.36%   (drift across career: 0.21%)
+    lewis-hamilton       -0.32%   (drift across career: 0.09%)
+    george-russell       -0.32%   (drift across career: 0.23%)
+    fernando-alonso      -0.29%   (drift across career: 0.13%)
+    kimi-antonelli       -0.26%   (drift across career: 0.06%)
+    isack-hadjar         -0.22%   (drift across career: 0.05%)
+    pierre-gasly         -0.20%   (drift across career: 0.13%)
+    oliver-bearman       -0.18%   (drift across career: 0.05%)
+    gabriel-bortoleto    -0.17%   (drift across career: 0.01%)
+    sergio-perez         -0.13%   (drift across career: 0.14%)
+    alexander-albon      -0.13%   (drift across career: 0.06%)
+    sebastian-vettel     -0.12%   (drift across career: 0.12%)
+    valtteri-bottas      -0.11%   (drift across career: 0.06%)
+    nico-hulkenberg      -0.11%   (drift across career: 0.11%)
+    daniel-ricciardo     -0.07%   (drift across career: 0.25%)
+    arvid-lindblad       -0.04%   (drift across career: 0.00%)
+    jack-doohan          -0.01%   (drift across career: 0.01%)
+    antonio-giovinazzi   -0.01%   (drift across career: 0.11%)
+    esteban-ocon         +0.01%   (drift across career: 0.18%)
+    yuki-tsunoda         +0.05%   (drift across career: 0.16%)
+    daniil-kvyat         +0.05%   (drift across career: 0.02%)
+    kimi-raikkonen       +0.08%   (drift across career: 0.06%)
+    mick-schumacher      +0.09%   (drift across career: 0.04%)
+    sergey-sirotkin      +0.12%   (drift across career: 0.00%)
+    romain-grosjean      +0.12%   (drift across career: 0.03%)
+    brendon-hartley      +0.13%   (drift across career: 0.00%)
+    liam-lawson          +0.15%   (drift across career: 0.03%)
+    kevin-magnussen      +0.18%   (drift across career: 0.10%)
+    stoffel-vandoorne    +0.21%   (drift across career: 0.00%)
+    franco-colapinto     +0.23%   (drift across career: 0.03%)
+    lance-stroll         +0.24%   (drift across career: 0.21%)
+    guanyu-zhou          +0.26%   (drift across career: 0.06%)
+    nyck-de-vries        +0.33%   (drift across career: 0.03%)
+    marcus-ericsson      +0.37%   (drift across career: 0.00%)
+    robert-kubica        +0.43%   (drift across career: 0.08%)
+    logan-sargeant       +0.51%   (drift across career: 0.00%)
+    nicholas-latifi      +0.51%   (drift across career: 0.05%)
+    nikita-mazepin       +0.59%   (drift across career: 0.00%)
+
+[BIGGEST SKILL DRIFT across career] (improvement or decline the RW found)
+    max-verstappen     span 0.35%   2018:-0.53 2019:-0.62 2020:-0.70 2021:-0.73 2022:-0.74 2023:-0.80 2024:-0.84 2025:-0.87 2026:-0.83
+    daniel-ricciardo   span 0.25%   2018:-0.19 2019:-0.18 2020:-0.13 2021:-0.06 2022:+0.00 2023:+0.00 2024:+0.07
+    lando-norris       span 0.25%   2019:-0.28 2020:-0.36 2021:-0.46 2022:-0.52 2023:-0.53 2024:-0.54 2025:-0.51 2026:-0.51
+    george-russell     span 0.23%   2019:-0.18 2020:-0.23 2021:-0.27 2022:-0.31 2023:-0.35 2024:-0.40 2025:-0.41 2026:-0.37
+    lance-stroll       span 0.21%   2018:+0.16 2019:+0.17 2020:+0.16 2021:+0.19 2022:+0.22 2023:+0.29 2024:+0.30 2025:+0.35 2026:+0.37
+    carlos-sainz-jr    span 0.21%   2018:-0.22 2019:-0.30 2020:-0.33 2021:-0.36 2022:-0.36 2023:-0.38 2024:-0.43 2025:-0.43 2026:-0.43
+    esteban-ocon       span 0.18%   2018:-0.07 2020:-0.03 2021:-0.04 2022:-0.02 2023:+0.01 2024:+0.03 2025:+0.08 2026:+0.11
+    yuki-tsunoda       span 0.16%   2021:+0.15 2022:+0.07 2023:+0.04 2024:-0.01 2025:-0.01

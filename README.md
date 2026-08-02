@@ -176,11 +176,14 @@ even wider intervals).
   | era | car (median, 90% CrI) | driver | P(car>driver) |
   |---|---|---|---|
   | 2018–2025 (4 yr) | 31.9% [23, 42] | 21.4% [13, 29] | 73% (overlapping) |
+  | 2018–2026 (+ new regs) | 41.9% [37, 48] | 13.5% [8, 19] | **100%** (separated) |
   | 2006–2025 (20 yr) | 43.6% [35, 48] | 12.4% [6, 15] | **100%** (separated) |
 
   A 20-year window spans huge car variation (multiple reg eras, dominant vs terrible cars), so the
   car explains more of the finishing-position variance; the converged cost-cap 2018–2025 cars give
-  near-parity. **There is no single "X% driver / Y% car" — it depends on the window.**
+  near-parity. **There is no single "X% driver / Y% car" — it depends on the window.** The 2026 row
+  is the sharpest demonstration: adding *half a season* of post-reg-reset racing moves the split as
+  far as adding twelve extra years does (see the 2026 section below).
 - **Believable 20-year career arcs** ([`figures/v2_skill_trajectories_2006_2025_rw.png`](figures/v2_skill_trajectories_2006_2025_rw.png)):
   Hamilton peaks ~2016 then declines; Alonso's McLaren-Honda dip and Aston resurgence; Vettel's decline.
 
@@ -221,7 +224,9 @@ car pace cancels and the gap is a pure skill difference (no future car data need
   over-states its own uncertainty). See [`figures/backtest.png`](figures/backtest.png).
 
 This is the validation that turns "a model that fits the past" into "a model that predicts the
-future" — and it does, for the part it claims to measure (relative driver pace).
+future" — and it does, for the part it claims to measure (relative driver pace). A stronger,
+*prospective* version of this test — scoring the published 2026 forecast against the season as it
+actually unfolded — is in [the 2026 section](#the-2026-season-scoring-that-forecast-and-what-the-reg-reset-did-to-the-split).
 
 ## Forecasting (Phase B): project the skills forward
 
@@ -241,6 +246,55 @@ random walk** (a martingale — same expected skill, but the uncertainty widens 
 
 Only teammate H2H is claimed (car cancels, no future car data needed); absolute finishing position
 would require the unbuilt target-season cars, so it is not.
+
+## The 2026 season: scoring that forecast, and what the reg reset did to the split
+
+f1db `v2026.11.0` brings the first half of 2026 (rounds 1–11, Australia → Hungary, to the summer
+break). Two things fall out — one a validation, one a result.
+
+**1. The forecast, scored** ([`v2/score_forecast.py`](v2/score_forecast.py)). The 2026 projection above
+was published before a single 2026 lap was run, so scoring it against reality is a *genuinely*
+prospective test — stronger than the backtest, which merely held seasons out. The forecast model
+(`v2_idata_2018_2025_sess_rw.pkl`) is unchanged and nothing was retuned. Against the real first half:
+
+- **Season-long teammate H2H: 70% (7/10 pairs)**; race-level **58%**; correlation **0.39** season-long.
+  Weaker than the backtest's 80%/67% — as it should be, since 2026 is a new car generation.
+- **The confident calls held**: Verstappen > Hadjar (won 8/10), Alonso > Stroll (8/10), Gasly >
+  Colapinto (7/11). The three misses were **Antonelli beating Russell** (the clearest miss — predicted
+  P=70% for Russell, Antonelli took 9/11), plus two near-coin-flips (Pérez > Bottas, Hülkenberg >
+  Bortoleto, both predicted at P≈51–56%).
+- **Honest negative:** mean absolute error **0.42%** *loses* to a predict-zero baseline (0.38%). The
+  reg reset widened the field 2.6× (mean within-race grid SD 0.46% → 1.19%), so real teammate gaps
+  got bigger than a converged-era model expects. The skill *ordering* survives; the *magnitudes* are
+  mis-scaled. Read accuracy and correlation, not MAE.
+- Interval coverage stayed **conservative** (50%→63%, 80%→93%, 90%→98%), same direction as the
+  backtest — the model over-states its own uncertainty even across a regulation change.
+- Rookie **Arvid Lindblad** has no pre-2026 estimate, so his pairing is unscoreable.
+
+See [`figures/forecast_scorecard_2026.png`](figures/forecast_scorecard_2026.png).
+
+**2. The reg reset re-stratified the grid, and the car's share jumped.** 2026 spread the field
+wide open — mean quali gap 1.25% (2025) → 2.05%, with Mercedes at 0.22% and Aston Martin/Cadillac
+beyond 4.3%. Re-running the whole pipeline on **2018–2026** (single 42-driver teammate component;
+Cadillac, Audi and Lindblad all chain in cleanly; R-hat 1.000) moves every measure toward the car:
+
+| measure (same code, quali-RW latents) | 2018–2025 | **2018–2026** |
+|---|---|---|
+| interventional car vs driver (positions) | 10.4 vs 7.8 | **11.8 vs 8.9** |
+| but-for a podium: car / driver | 93% / 84% | **92% / 57%** |
+| OLS `finish ~ skill, pace` | 0.41 / 0.38 (skill ahead) | **0.39 / 0.41** (pace ahead) |
+| ICC car / driver, P(car>driver) | 31.9 / 21.4, 73% | **41.9 / 13.5, 100%** |
+
+The driver's *necessity* for a podium falls hardest (84% → 57%): when the machinery is stratified
+this steeply, a front-running car carries a podium largely on its own. This is the era-dependence
+finding sharpened — **half a season** of post-reset racing shifts the split about as far as adding
+twelve earlier years does. It is emphatically **not** evidence that drivers got worse in 2026; it is
+the same drivers measured against a much wider spread of cars.
+
+**Caveat: half a season.** 2026 contributes 11 of 22 rounds, so per-driver 2026 skill cells and the
+new constructors' pace are estimated on partial data with correspondingly wide intervals. The
+2018–2025 artifacts are preserved unchanged as the converged-era baseline; treat 2018–2026 as the
+current-regs view, to be refreshed when the season completes.
 
 **Over-/under-rated drivers** ([`v2/insights.py`](v2/insights.py)) — the fun question the model
 uniquely answers: *is a driver flattered or robbed by their machinery?* For each driver it contrasts
@@ -374,7 +428,7 @@ brew install python@3.12
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-python scripts/download_data.py      # caches f1db SQLite under data/ (pinned: v2026.7.0)
+python scripts/download_data.py      # caches f1db SQLite under data/ (pinned: v2026.11.0)
 python scripts/build_dataset.py      # writes data/f1_results.parquet (+ .csv)
 ```
 
