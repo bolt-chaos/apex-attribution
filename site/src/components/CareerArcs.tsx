@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import type { CoreData } from "../lib/data";
 import { useMediaQuery } from "../lib/useMediaQuery";
 import { Select } from "./shared/Select";
+import { PartialSeasonNote } from "./shared/PartialSeasonNote";
 
 const PALETTE = ["#e10600", "#3a8ee6", "#2ecc71", "#f39c12", "#b07cff", "#1abac6"];
 
@@ -132,6 +133,13 @@ export function CareerArcs({ data }: { data: CoreData }) {
           );
         })}
       </svg>
+
+      <PartialSeasonNote
+        manifest={data.manifest}
+        when={selected.some((id) =>
+          data.drivers[id]?.seasons.includes(data.manifest.partialSeason?.year ?? -1),
+        )}
+      />
 
       <p className="feature__note">
         Skill here is qualifying-pace percentile from the joint model, per season. The band is the 90%

@@ -1,0 +1,141 @@
+======================================================================
+v2 JOINT QUALI+RACE SKILL (two correlated latents) — RESULTS
+======================================================================
+max R-hat = 1.020   sigma_q (quali noise) = 0.31%   sigma_r (race noise) = 0.43%  (race noisier OK)
+rho(quali_skill, racecraft) = +0.91  (90% CrI [+0.79, +0.98])
+
+[CAREER QUALI_SKILL] % quali pace vs grid avg (neg = faster), best first
+    Max Verstappen       -0.49%
+    Charles Leclerc      -0.34%
+    Lando Norris         -0.33%
+    Carlos Sainz Jr.     -0.29%
+    Lewis Hamilton       -0.25%
+    Oscar Piastri        -0.24%
+    George Russell       -0.20%
+    Oliver Bearman       -0.18%
+    Fernando Alonso      -0.17%
+    Alexander Albon      -0.16%
+    Valtteri Bottas      -0.14%
+    Isack Hadjar         -0.14%
+    Sebastian Vettel     -0.12%
+    Pierre Gasly         -0.11%
+    Nico Hülkenberg      -0.10%
+    Sergio Pérez         -0.09%
+    Antonio Giovinazzi   -0.09%
+    Kimi Antonelli       -0.08%
+    Gabriel Bortoleto    -0.08%
+    Daniel Ricciardo     -0.04%
+    Esteban Ocon         -0.01%
+    Arvid Lindblad       -0.01%
+    Yuki Tsunoda         -0.01%
+    Jack Doohan          -0.00%
+    Kimi Räikkönen       -0.00%
+    Brendon Hartley      +0.05%
+    Liam Lawson          +0.06%
+    Daniil Kvyat         +0.07%
+    Romain Grosjean      +0.10%
+    Kevin Magnussen      +0.10%
+    Lance Stroll         +0.11%
+    Guanyu Zhou          +0.11%
+    Marcus Ericsson      +0.13%
+    Stoffel Vandoorne    +0.15%
+    Mick Schumacher      +0.16%
+    Sergey Sirotkin      +0.17%
+    Franco Colapinto     +0.17%
+    Nyck de Vries        +0.25%
+    Logan Sargeant       +0.27%
+    Nicholas Latifi      +0.43%
+    Robert Kubica        +0.60%
+    Nikita Mazepin       +0.71%
+
+[CAREER RACECRAFT] % race pace vs grid avg (neg = faster), best first
+    Max Verstappen       -0.59%
+    Charles Leclerc      -0.29%
+    Lando Norris         -0.29%
+    Lewis Hamilton       -0.25%
+    Carlos Sainz Jr.     -0.24%
+    Oscar Piastri        -0.19%
+    George Russell       -0.15%
+    Sergio Pérez         -0.14%
+    Oliver Bearman       -0.14%
+    Fernando Alonso      -0.14%
+    Kimi Antonelli       -0.10%
+    Isack Hadjar         -0.08%
+    Alexander Albon      -0.08%
+    Pierre Gasly         -0.07%
+    Sebastian Vettel     -0.07%
+    Daniel Ricciardo     -0.05%
+    Valtteri Bottas      -0.05%
+    Antonio Giovinazzi   -0.04%
+    Nico Hülkenberg      -0.02%
+    Kimi Räikkönen       -0.01%
+    Arvid Lindblad       +0.01%
+    Liam Lawson          +0.01%
+    Esteban Ocon         +0.01%
+    Gabriel Bortoleto    +0.02%
+    Daniil Kvyat         +0.05%
+    Jack Doohan          +0.05%
+    Guanyu Zhou          +0.05%
+    Romain Grosjean      +0.06%
+    Lance Stroll         +0.07%
+    Brendon Hartley      +0.08%
+    Kevin Magnussen      +0.08%
+    Franco Colapinto     +0.08%
+    Marcus Ericsson      +0.09%
+    Yuki Tsunoda         +0.11%
+    Stoffel Vandoorne    +0.12%
+    Mick Schumacher      +0.12%
+    Sergey Sirotkin      +0.15%
+    Nyck de Vries        +0.16%
+    Nicholas Latifi      +0.20%
+    Logan Sargeant       +0.26%
+    Robert Kubica        +0.55%
+    Nikita Mazepin       +0.62%
+
+[QUALIFYING-MERCHANT DELTA] racecraft - quali_skill
+  (most NEGATIVE = races much better than they qualify; POSITIVE = quali specialist)
+  CAVEAT: deltas are small vs the signal's noise and are lapped-car SENSITIVE (run --drop-lapped).
+  Trust the mid-grid signal (e.g. Perez races > qualifies; Tsunoda/Bottas quali specialists); the
+  backmarker tail is partly race-gap COMPRESSION (lapped cars can't lose more), not pure racecraft.
+    Nicholas Latifi      -0.23% <- races > qualifies
+    Max Verstappen       -0.10% <- races > qualifies
+    Franco Colapinto     -0.09% <- races > qualifies
+    Nikita Mazepin       -0.09% <- races > qualifies
+    Nyck de Vries        -0.08% <- races > qualifies
+    Guanyu Zhou          -0.06% <- races > qualifies
+    Robert Kubica        -0.05% <- races > qualifies
+    Sergio Pérez         -0.05% <- races > qualifies
+    Liam Lawson          -0.05%
+    Marcus Ericsson      -0.04%
+    Mick Schumacher      -0.04%
+    Lance Stroll         -0.04%
+    Romain Grosjean      -0.04%
+    Stoffel Vandoorne    -0.03%
+    Kimi Antonelli       -0.02%
+    Kevin Magnussen      -0.02%
+    Daniil Kvyat         -0.02%
+    Logan Sargeant       -0.01%
+    Sergey Sirotkin      -0.01%
+    Kimi Räikkönen       -0.01%
+    Daniel Ricciardo     -0.00%
+    Lewis Hamilton       +0.00%
+    Arvid Lindblad       +0.01%
+    Esteban Ocon         +0.02%
+    Brendon Hartley      +0.03%
+    Fernando Alonso      +0.04%
+    Oliver Bearman       +0.04%
+    Pierre Gasly         +0.04%
+    Antonio Giovinazzi   +0.04%
+    Lando Norris         +0.05%
+    Jack Doohan          +0.05%
+    Carlos Sainz Jr.     +0.05%
+    Oscar Piastri        +0.05% <- quali specialist
+    Charles Leclerc      +0.05% <- quali specialist
+    Sebastian Vettel     +0.06% <- quali specialist
+    George Russell       +0.06% <- quali specialist
+    Isack Hadjar         +0.06% <- quali specialist
+    Alexander Albon      +0.08% <- quali specialist
+    Nico Hülkenberg      +0.08% <- quali specialist
+    Gabriel Bortoleto    +0.10% <- quali specialist
+    Valtteri Bottas      +0.10% <- quali specialist
+    Yuki Tsunoda         +0.12% <- quali specialist

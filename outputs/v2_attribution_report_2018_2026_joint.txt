@@ -1,0 +1,53 @@
+====================================================================
+v2 RACE-OUTCOME ATTRIBUTION (continuous skill/pace nodes)
+====================================================================
+classified rows: 3203   graph: driver_skill->car_pace hiring edge (confounder in the graph)
+
+[1] INTERVENTIONAL car-effect vs driver-effect  (do()-sets both roots -> graph-robust)
+    CAR effect    (median driver, sweep car 0.32..2.76%):  11.73 positions
+    DRIVER effect (median car, sweep skill -0.52..+0.62%):  9.39 positions
+    -> car 11.7 vs driver 9.4 positions (car ahead). v1 was car 2.3 << driver 8.4.
+
+[2] NECESSITY — would the result have happened BUT FOR the car / the driver? (rung-3)
+    of 552 podiums (finish <= P3) actually achieved, fraction LOST if we
+    counterfactually downgrade ONE factor (abduct luck, swap factor, replay):
+      BUT FOR the car   (car_pace -> midfield):    91% of podiums lost
+      BUT FOR the driver (driver_skill -> median): 61% of podiums lost
+    -> the CAR is more often necessary for a podium (robust to the confounding-graph choice, unlike ICC).
+    most car-dependent podiums:   kimi-antonelli 100%, kimi-raikkonen 100%, oscar-piastri 100%
+    most driver-dependent podiums: Alonso 100%, Verstappen 100%, charles-leclerc 87%
+
+[3] counterfactual 'put driver in another car' (same driver + same luck)
+    Alonso    : P3 in aston-martin -> P4 if in red-bull (same driver+luck)
+    Albon     : P13 in williams -> P9 if in red-bull (same driver+luck)
+    Sargeant  : P12 in williams -> P8 if in ferrari (same driver+luck)
+
+[4] OLS standardized betas (gcm-independent ground truth)
+    finish ~ skill+pace      : {'driver_skill': 0.33, 'car_pace': 0.49}
+    finish ~ skill+pace+grid : {'driver_skill': 0.19, 'car_pace': 0.27, 'grid': 0.45}
+
+[5] ICC variance share (DESCRIPTIVE ONLY — population/era-dependent, NOT structural)
+    intrinsic_causal_influence assumes INDEPENDENT root noise, but skill<->pace are
+    correlated (corr 0.53; good drivers hired into good cars). So the share is
+    graph-dependent and swings by 27pp on that modelling choice:
+      independent roots:  car 28.6% / driver 13.9%
+      + hiring edge:      car 1.8% / driver 54.0%
+    That swing can flip the car-vs-driver verdict, while [1]/[2] barely move -- which is
+    exactly why ICC is NOT the headline. Full node breakdown (hiring-edge graph):
+      driver_skill     11.356    54.0%
+      finish_pos        7.894    37.5%
+      grid              1.370     6.5%
+      car_pace          0.379     1.8%
+      circuit_type      0.037     0.2%
+====================================================================
+VERDICT (honest) — lead with the graph-robust measures
+====================================================================
+  ROBUST (interventional / counterfactual — invariant to how confounding is modelled):
+    - car effect 11.7 vs driver effect 9.4 positions  (car ahead)
+    - but-for a podium: 91% need the car vs 61% need the driver
+    - OLS finish ~ skill 0.33, pace 0.49
+  DESCRIPTIVE (ICC variance share — do NOT headline): car 2%/driver 54%
+    (hiring edge) vs car 29%/driver 14% (independent roots) --
+    swings 27pp with the graph, so it is not a structural answer.
+  NET: on the wide era, by every graph-robust measure the car at least matches the driver;
+  the old ICC 'car dominates X%' headline was partly an independent-roots artifact.

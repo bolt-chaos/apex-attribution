@@ -10,6 +10,8 @@
   --band: #3a6ea5;
   --band-soft: rgba(58, 110, 165, 0.35);
   --good: #2ecc71;
+  --warn: #e0a33e; /* advisory, not error — used by the in-progress-season note */
+  --warn-soft: rgba(224, 163, 62, 0.1);
   --radius: 12px;
   --maxw: 860px;
   /* spacing scale — consumed by the responsive blocks so mobile tightening is a token swap.
@@ -202,6 +204,22 @@ code {
   margin: 1.2rem 0 0;
   border-top: 1px solid var(--line);
   padding-top: 0.9rem;
+}
+
+/* Shown only when the current selection leans on a season still being raced. Advisory weight:
+   readable and clearly flagged, but it must not out-shout the result it annotates. */
+.partial-note {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0.9rem 0 0;
+  padding: 0.6rem 0.8rem;
+  border-left: 3px solid var(--warn);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--warn-soft);
+}
+.partial-note strong {
+  color: var(--text);
 }
 
 /* --- controls --- */

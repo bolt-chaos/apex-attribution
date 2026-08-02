@@ -103,7 +103,10 @@ def main() -> int:
             check([r["label"] for r in era] == manifest.get("eras"),
                   "manifest.json: eras list disagrees with era.json labels")
 
-    for extra in ("incident_rates_2018_2025", "reliability_rates"):
+    # incident_rates is era-tagged and follows the main model, so glob rather than pin a year.
+    incident = sorted(p.stem for p in DATA.glob("incident_rates_*.json"))
+    check(len(incident) == 1, f"expected exactly one incident_rates_*.json, found {incident}")
+    for extra in (*incident, "reliability_rates"):
         obj = load(extra)
         if obj is not None:
             check(bool(obj), f"{extra}.json: empty")

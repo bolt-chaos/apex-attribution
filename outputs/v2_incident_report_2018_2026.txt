@@ -1,0 +1,31 @@
+==================================================================
+v2 DRIVER INCIDENT-PRONENESS (driver-error-DNF risk) — RESULTS
+==================================================================
+max R-hat = 1.000   base driver-error-DNF rate = 5.8% per start
+circuit hazard (log-odds vs avg): RACE -0.07, ROAD -0.04, STREET +0.12
+sigma_driver = 0.17 (spread of driver proneness)
+
+[MOST INCIDENT-PRONE] shrunk per-race driver-error-DNF prob (>= 20 starts)
+    Romain Grosjean      7.0%  90% CrI [5.1%, 10.7%]  (raw 15.8%, 57 starts)
+    Alexander Albon      6.5%  90% CrI [5.1%, 8.9%]  (raw 9.4%, 138 starts)
+    Nicholas Latifi      6.5%  90% CrI [4.9%, 9.3%]  (raw 11.5%, 61 starts)
+    Lance Stroll         6.2%  90% CrI [4.9%, 8.2%]  (raw 7.8%, 180 starts)
+    Nikita Mazepin       6.2%  90% CrI [4.5%, 8.8%]  (raw 14.3%, 21 starts)
+    Yuki Tsunoda         6.2%  90% CrI [4.8%, 8.4%]  (raw 8.1%, 111 starts)
+    Gabriel Bortoleto    6.2%  90% CrI [4.6%, 8.6%]  (raw 11.8%, 34 starts)
+    Carlos Sainz Jr.     6.1%  90% CrI [4.8%, 8.0%]  (raw 7.2%, 180 starts)
+
+[CLEANEST] least incident-prone
+    Lando Norris         5.1%  90% CrI [3.4%, 6.5%]  (raw 2.5%, 162 starts)
+    Lewis Hamilton       5.2%  90% CrI [3.6%, 6.6%]  (raw 3.3%, 183 starts)
+    Fernando Alonso      5.3%  90% CrI [3.7%, 6.7%]  (raw 3.4%, 146 starts)
+    Valtteri Bottas      5.4%  90% CrI [3.8%, 6.7%]  (raw 3.8%, 160 starts)
+    Max Verstappen       5.5%  90% CrI [3.9%, 6.8%]  (raw 4.3%, 184 starts)
+    Sebastian Vettel     5.5%  90% CrI [3.9%, 7.1%]  (raw 4.0%, 101 starts)
+    Oscar Piastri        5.6%  90% CrI [3.8%, 7.2%]  (raw 3.8%, 79 starts)
+    Kimi Räikkönen       5.6%  90% CrI [3.9%, 7.2%]  (raw 3.8%, 79 starts)
+
+  (shrinkage pulls rare/short-career rates toward the field; note e.g. how far the
+   raw rate moves for low-start drivers. Circuit hazard is controlled.)
+  CAVEAT: attributed to the DRIVER (controlling for circuit only) — a small
+  car-induced-error component may be folded in; see docstring.

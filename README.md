@@ -34,7 +34,11 @@ modern chassis, trace the teammate chain between any two drivers, and compare ca
 The site is **fully static** — no backend. [`scripts/export_site.py`](scripts/export_site.py) bakes
 the model down to ~300 KB of JSON in `site/public/data/` (downsampled posterior draws + a
 precomputed `E[finish]` mesh for in-browser bilinear interpolation); a Vite + React + TypeScript app
-in [`site/`](site/) reads it. Every query is either a lookup into posterior draws or a smooth
+in [`site/`](site/) reads it. It runs on the **joint 2018–2026** model, so the current grid (Cadillac,
+Audi, Hadjar at Red Bull, rookie Lindblad) is selectable; 2018–2025 stays on the era slider for
+comparison. Because 2026 is only half-raced, features whose selection leans on it show an inline
+caveat — driven by a `partialSeason` field the exporter derives from f1db's real round counts, so it
+clears itself when the season ends. Every query is either a lookup into posterior draws or a smooth
 function of `(skill, pace)`, so nothing needs Python at runtime. See
 [`site/DATA.md`](site/DATA.md) for the artifact schema. A GitHub Actions workflow rebuilds and
 deploys to Pages on every change under `site/`; regenerate the data locally with:
@@ -290,6 +294,14 @@ this steeply, a front-running car carries a podium largely on its own. This is t
 finding sharpened — **half a season** of post-reset racing shifts the split about as far as adding
 twelve earlier years does. It is emphatically **not** evidence that drivers got worse in 2026; it is
 the same drivers measured against a much wider spread of cars.
+
+**On the joint (race-pace) model — the one the site runs on** — the same extension is directionally
+identical but *milder* than the quali-RW table above, which is worth stating plainly rather than
+quoting the louder number: R-hat 1.020, `rho` +0.91. Necessity moves **car 82% / driver 68% →
+91% / 61%**; interventional car 10.6 → **11.7** vs driver 10.1 → **9.4**; OLS `pace` 0.47 → **0.49**
+vs `skill` 0.35 → **0.33**. The ICC share barely moves on this scale (car 35.6% → 32.4%, driver
+16.3% → 13.7%) — so **the car's share did not simply jump**; what consistently moves is the *ratio*,
+because the driver's contribution shrinks against a much wider spread of cars.
 
 **Caveat: half a season.** 2026 contributes 11 of 22 rounds, so per-driver 2026 skill cells and the
 new constructors' pace are estimated on partial data with correspondingly wide intervals. The

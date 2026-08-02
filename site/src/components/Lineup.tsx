@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import type { CoreData } from "../lib/data";
 import { pAhead } from "../lib/posterior";
 import { Select, type Option } from "./shared/Select";
+import { PartialSeasonNote } from "./shared/PartialSeasonNote";
 
 export function Lineup({ data }: { data: CoreData }) {
   const options: Option[] = useMemo(
@@ -60,6 +61,12 @@ export function Lineup({ data }: { data: CoreData }) {
         </div>
         {aId === bId && <p className="h2h__same">Pick two different drivers.</p>}
       </div>
+
+      {/* Career-pooled, so the part-season only dominates for a driver who has raced in no other. */}
+      <PartialSeasonNote
+        manifest={data.manifest}
+        when={[a, b].some((d) => d.seasons.every((y) => y === data.manifest.partialSeason?.year))}
+      />
 
       <p className="feature__note">
         A coin-flip (≈50%) means the model genuinely can't separate them. Lopsided numbers reflect both
