@@ -93,6 +93,13 @@ toward the car (necessity: driver 84% → 57%; OLS pace overtakes skill; ICC P(c
 **Caveat: half a season** — refresh when 2026 completes. 2018–2025 artifacts preserved as the
 converged-era baseline.
 
+Site moved to 2018–2026 (PR after #56): joint re-fit `_2018_2026_joint` (R-hat 1.020, rho +0.91)
+now drives car-swap / arcs / H2H, so Cadillac, Audi, Hadjar-at-RBR and Lindblad are selectable;
+2018–2025 kept as an era-slider stop. Masthead necessity hook 82/68 → **91/61**. NOTE the joint-scale
+move is MILDER than the quali-RW headline — ICC car share actually dips slightly (35.6→32.4) while
+driver drops more (16.3→13.7); it's the RATIO that moves, not a car-share jump. `manifest.partialSeason`
+(derived from f1db round counts) drives an inline `PartialSeasonNote` and self-clears when 2026 ends.
+
 Other open threads: (none major outstanding).
 
 ## Workflow

@@ -83,6 +83,8 @@ export interface Manifest {
   mainModel: string;
   crossEraModel: string;
   eras: string[];
+  // Set while the model's newest season is still in progress; null once it completes.
+  partialSeason: { year: number; roundsComplete: number; roundsTotal: number } | null;
   meshRanges: { skill: [number, number]; pace: [number, number] };
 }
 

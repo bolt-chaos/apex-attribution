@@ -6,10 +6,14 @@ over (skill, pace) — `exp_finish` sets both roots and marginalizes circuit_typ
 a mesh here and bilinearly interpolate in the browser. Nothing below needs Python at runtime.
 
 Two scales are involved and MUST NOT be mixed:
-  - the MAIN site (car-swap, career arcs, H2H) lives on the JOINT 2018-2025 model:
+  - the MAIN site (car-swap, career arcs, H2H) lives on the JOINT 2018-2026 model:
     driver_skill = racecraft, car_pace = pace_r  (matches build_scm_data.py --skill-source race).
   - CROSS-ERA ("Senna in a modern Red Bull") lives on the 1988-2025 sess_rw model's single `skill`
     latent, with its own SCM fit on modern rows and its own mesh (cross_era.py's scale).
+
+The main era's final season may be INCOMPLETE (2026 is half a season at the time of writing).
+`partial_season_info()` reads the actual round counts out of f1db and ships them in the manifest so
+the UI can caveat 2026 numbers; it self-corrects once the season finishes — nothing is hardcoded.
 
 Models/data are gitignored (~GBs); this script runs LOCALLY and its small JSON outputs are committed
 to site/public/data/. CI only builds the Vite app. Re-run this whenever a model changes.
@@ -44,6 +48,12 @@ N_DRAWS = 200          # downsampled posterior draws shipped per element
 MESH_N = 21            # grid points per axis for the E[finish] surface
 EXP_N = 2000           # gcm samples per exp_finish evaluation (era spreads)
 MESH_EXP_N = 8000      # more samples per mesh cell -> a smoother surface for the flagship car-swap
+MAIN_START, MAIN_END = 2018, 2026          # the era the main site runs on
+MAIN_TAG = f"{MAIN_START}_{MAIN_END}"
+# The "modern field" reference window for CROSS-ERA only. Deliberately NOT tied to MAIN_END: it
+# indexes the 1988-2025 sess_rw model, which stops at 2025, and it is the yardstick a legend's
+# era-normalized skill is mapped onto — so it must stay a complete-season window even after the
+# main era moves on. Widening it to a half-raced season would skew the modern spread.
 MODERN = range(2018, 2026)
 
 # cross-era legends -> the peak seasons their skill is averaged over (mirrors v2/cross_era.py)
@@ -54,6 +64,7 @@ PEAK = {"ayrton-senna": range(1988, 1995), "alain-prost": range(1988, 1994),
 # era windows for the slider: (label, start, end, scm_parquet). Each uses its own era-specific fit,
 # so skill/pace scales differ across windows — the shares (%) and position spreads stay comparable.
 ERAS = [
+    ("2018-2026", 2018, 2026, "f1_scm_v2_2018_2026_joint.parquet"),
     ("2018-2025", 2018, 2025, "f1_scm_v2_2018_2025_joint.parquet"),
     ("2006-2025", 2006, 2025, "f1_scm_v2_2006_2025_rw.parquet"),
     ("1988-2025", 1988, 2025, "f1_scm_v2_1988_2025_sess_rw.parquet"),
@@ -61,10 +72,30 @@ ERAS = [
 
 # The rung-3 necessity result for the masthead hook ("would this podium have happened BUT FOR the
 # car / the driver?"), read from attribution_v2.py's machine-readable artifact — the same joint
-# 2018-2025 model the main site runs on. Regenerate the artifact with:
-#   python v2/attribution_v2.py --data data/f1_scm_v2_2018_2025_joint.parquet --tag _2018_2025_joint
-ATTRIBUTION_JSON = ROOT / "outputs" / "v2_attribution_2018_2025_joint.json"
-NECESSITY_ERA = "2018–2025"
+# 2018-2026 model the main site runs on. Regenerate the artifact with:
+#   python v2/attribution_v2.py --data data/f1_scm_v2_2018_2026_joint.parquet --tag _2018_2026_joint
+ATTRIBUTION_JSON = ROOT / "outputs" / f"v2_attribution_{MAIN_TAG}_joint.json"
+NECESSITY_ERA = f"{MAIN_START}–{MAIN_END}"
+
+
+def partial_season_info() -> dict | None:
+    """Is the main era's final season still in progress? Reads real round counts from f1db.
+
+    Returns {year, roundsComplete, roundsTotal} when the season is incomplete, else None — so the
+    UI caveat appears automatically while a season is half-run and disappears once it finishes.
+    """
+    try:
+        con = sqlite3.connect(DB)
+        total = con.execute("SELECT COUNT(*) FROM race WHERE year=?", (MAIN_END,)).fetchone()[0]
+        done = con.execute(
+            "SELECT COUNT(*) FROM race r WHERE r.year=? AND EXISTS "
+            "(SELECT 1 FROM race_result rr WHERE rr.race_id=r.id)", (MAIN_END,)).fetchone()[0]
+        con.close()
+    except Exception:
+        return None
+    if not total or done >= total:
+        return None
+    return {"year": MAIN_END, "roundsComplete": int(done), "roundsTotal": int(total)}
 
 
 def export_necessity(names: dict) -> dict:
@@ -123,14 +154,14 @@ def axis(vals: pd.Series, n: int = MESH_N, pad: float = 0.05) -> list:
 # ---------------------------------------------------------------------------------------------------
 
 def export_main(names: dict, rng: np.random.Generator) -> tuple[dict, dict, dict]:
-    """drivers.json, cars.json, finish_mesh.json on the JOINT 2018-2025 (racecraft / pace_r) scale."""
-    post = pickle.load(open(MODELS / "v2_idata_2018_2025_joint.pkl", "rb")).posterior
+    """drivers.json, cars.json, finish_mesh.json on the JOINT main-era (racecraft / pace_r) scale."""
+    post = pickle.load(open(MODELS / f"v2_idata_{MAIN_TAG}_joint.pkl", "rb")).posterior
     racecraft = post["racecraft"]                          # (chain, draw, driver, season)
     pace_r = post["pace_r"]                                # (chain, draw, team_year)
     rc = racecraft.stack(s=("chain", "draw"))              # (driver, season, s)
     pc = pace_r.stack(s=("chain", "draw"))                 # (team_year, s)
 
-    results = pd.read_parquet(DATA / "f1_results_2018_2025.parquet")
+    results = pd.read_parquet(DATA / f"f1_results_{MAIN_TAG}.parquet")
     active = {d: sorted(int(y) for y in g.year.unique())
               for d, g in results.groupby("driver_id")}
     dn = names["drivers"]
@@ -162,7 +193,7 @@ def export_main(names: dict, rng: np.random.Generator) -> tuple[dict, dict, dict
                     **draws_summary(pc.sel(team_year=ty).values, rng)}
 
     # --- finish_mesh.json: E[finish] surface on the joint scale ---
-    df = pd.read_parquet(DATA / "f1_scm_v2_2018_2025_joint.parquet")
+    df = pd.read_parquet(DATA / f"f1_scm_v2_{MAIN_TAG}_joint.parquet")
     df = df[df.classified].copy()
     for c in ["grid", "finish_pos", "driver_skill", "car_pace"]:
         df[c] = df[c].astype(float)
@@ -303,16 +334,22 @@ def main() -> int:
     print("teammates…");   write("teammates", export_teammates(names))
     print("necessity…");   write("necessity", export_necessity(names))
 
-    for src in ["incident_rates_2018_2025.json", "reliability_rates.json"]:
+    for src in [f"incident_rates_{MAIN_TAG}.json", "reliability_rates.json"]:
         shutil.copy(MODELS / src, out / src)
         print(f"  copied {src}")
+
+    partial = partial_season_info()
+    if partial:
+        print(f"  partial season: {partial['year']} is "
+              f"{partial['roundsComplete']}/{partial['roundsTotal']} rounds -> UI caveat ON")
 
     write("manifest", {
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "nDraws": N_DRAWS, "meshN": MESH_N, "expN": EXP_N,
-        "mainModel": "v2_idata_2018_2025_joint (racecraft / pace_r)",
+        "mainModel": f"v2_idata_{MAIN_TAG}_joint (racecraft / pace_r)",
         "crossEraModel": "v2_idata_1988_2025_sess_rw (skill)",
         "eras": [e[0] for e in ERAS],
+        "partialSeason": partial,
         "meshRanges": {"skill": [mesh["skill_axis"][0], mesh["skill_axis"][-1]],
                        "pace": [mesh["pace_axis"][0], mesh["pace_axis"][-1]]},
     })

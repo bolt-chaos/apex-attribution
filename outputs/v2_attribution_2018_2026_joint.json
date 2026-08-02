@@ -1,0 +1,116 @@
+{
+ "tag": "_2018_2026_joint",
+ "data": "f1_scm_v2_2018_2026_joint.parquet",
+ "nRows": 3203,
+ "hiringEdge": true,
+ "interventional": {
+  "carSpread": 11.729,
+  "driverSpread": 9.387,
+  "verdict": "car ahead"
+ },
+ "necessity": {
+  "threshold": 3,
+  "nPodiums": 552,
+  "pnCar": 0.913,
+  "pnDriver": 0.6123,
+  "perDriver": {
+   "carlos-sainz-jr": {
+    "n": 29,
+    "pnCar": 0.6897,
+    "pnDriver": 0.8621
+   },
+   "charles-leclerc": {
+    "n": 54,
+    "pnCar": 0.9074,
+    "pnDriver": 0.8704
+   },
+   "daniel-ricciardo": {
+    "n": 5,
+    "pnCar": 0.8,
+    "pnDriver": 0.4
+   },
+   "fernando-alonso": {
+    "n": 9,
+    "pnCar": 0.8889,
+    "pnDriver": 1.0
+   },
+   "george-russell": {
+    "n": 29,
+    "pnCar": 0.9655,
+    "pnDriver": 0.5862
+   },
+   "kimi-antonelli": {
+    "n": 12,
+    "pnCar": 1.0,
+    "pnDriver": 0.3333
+   },
+   "kimi-raikkonen": {
+    "n": 12,
+    "pnCar": 1.0,
+    "pnDriver": 0.0
+   },
+   "lando-norris": {
+    "n": 47,
+    "pnCar": 0.7872,
+    "pnDriver": 0.7447
+   },
+   "lewis-hamilton": {
+    "n": 90,
+    "pnCar": 0.9889,
+    "pnDriver": 0.4889
+   },
+   "max-verstappen": {
+    "n": 120,
+    "pnCar": 0.9333,
+    "pnDriver": 1.0
+   },
+   "oscar-piastri": {
+    "n": 28,
+    "pnCar": 1.0,
+    "pnDriver": 0.3214
+   },
+   "pierre-gasly": {
+    "n": 6,
+    "pnCar": 0.3333,
+    "pnDriver": 0.3333
+   },
+   "sebastian-vettel": {
+    "n": 23,
+    "pnCar": 0.913,
+    "pnDriver": 0.1304
+   },
+   "sergio-perez": {
+    "n": 32,
+    "pnCar": 0.9688,
+    "pnDriver": 0.3438
+   },
+   "valtteri-bottas": {
+    "n": 45,
+    "pnCar": 1.0,
+    "pnDriver": 0.1556
+   }
+  }
+ },
+ "ols": {
+  "skillPace": {
+   "driver_skill": 0.33,
+   "car_pace": 0.49
+  },
+  "skillPaceGrid": {
+   "driver_skill": 0.19,
+   "car_pace": 0.27,
+   "grid": 0.45
+  }
+ },
+ "icc": {
+  "corrSkillPace": 0.5304,
+  "independentRoots": {
+   "carPct": 28.61,
+   "driverPct": 13.93
+  },
+  "hiringEdge": {
+   "carPct": 1.8,
+   "driverPct": 53.98
+  }
+ }
+}

@@ -12,7 +12,7 @@ CI (`.github/workflows/deploy.yml`) only builds the Vite app; it never runs Pyth
 
 ## Two scales — do not mix
 
-- **Main site** (car-swap, career arcs, H2H) lives on the **joint 2018–2025** model:
+- **Main site** (car-swap, career arcs, H2H) lives on the **joint 2018–2026** model:
   `driver_skill = racecraft`, `car_pace = pace_r` (matches `build_scm_data.py --skill-source race`).
   Lower = faster for both.
 - **Cross-era** ("Senna in a modern Red Bull") lives on the **1988–2025 sess_rw** model's single
@@ -35,8 +35,13 @@ CI (`.github/workflows/deploy.yml`) only builds the Vite app; it never runs Pyth
 ```ts
 { generated: string; nDraws: number; meshN: number; expN: number;
   mainModel: string; crossEraModel: string; eras: string[];
+  partialSeason: { year: number; roundsComplete: number; roundsTotal: number } | null;
   meshRanges: { skill: [number, number]; pace: [number, number] } }
 ```
+`partialSeason` is set while the main era's **final season is still being raced** (2026 is 11 of 22
+rounds as shipped). `export_site.py` derives it from the real round counts in f1db, and the UI shows
+an inline caveat (`PartialSeasonNote`) in the features whose current selection leans on that season.
+It becomes `null` automatically once the season completes — no manual cleanup.
 
 ### `drivers.json` — per-driver skill (joint scale)
 ```ts
@@ -111,10 +116,10 @@ BFS over `edges` gives the shortest shared-teammate path (e.g. Senna → … →
 "Would this podium have happened *but for* the car / the driver?" — abduct luck, swap one factor
 to mid-field, replay. The two percentages deliberately **do not sum to 100** (necessity isn't a
 partition; most podiums needed both). Derived by `export_necessity()` in `export_site.py` from the
-machine-readable `outputs/v2_attribution_2018_2025_joint.json` that `v2/attribution_v2.py` emits
-alongside its text report (same joint 2018–2025 model as the main site) — re-run that script after
+machine-readable `outputs/v2_attribution_2018_2026_joint.json` that `v2/attribution_v2.py` emits
+alongside its text report (same joint 2018–2026 model as the main site) — re-run that script after
 a refit and re-export; no hand-transcription.
 
-### `incident_rates_2018_2025.json`, `reliability_rates.json`
+### `incident_rates_<era>.json`, `reliability_rates.json`
 Copied verbatim from `models/`. `incident_rates`: `Record<driverId, number>` + `_overall`.
 `reliability`: `Record<constructorId, { p_mech_dnf: number; n_started: number }>` + `_overall`.

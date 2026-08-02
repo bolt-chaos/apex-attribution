@@ -5,6 +5,7 @@
 
 import { useState } from "react";
 import type { CoreData, EraRow } from "../lib/data";
+import { PartialSeasonNote } from "./shared/PartialSeasonNote";
 
 const BARW = 520;
 const PAD = 110;
@@ -84,6 +85,11 @@ export function EraSlider({ data }: { data: CoreData }) {
           <strong>{e.driverSpread.toFixed(1)}</strong>.
         </div>
       </div>
+
+      <PartialSeasonNote
+        manifest={data.manifest}
+        when={e.end === data.manifest.partialSeason?.year}
+      />
 
       <p className="feature__note">
         These variance shares (an <em>intrinsic causal influence</em> decomposition) are{" "}

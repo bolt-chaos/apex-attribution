@@ -7,6 +7,7 @@ import { finishBand } from "../lib/mesh";
 import { fmtPos } from "../lib/posterior";
 import { Select, type Option } from "./shared/Select";
 import { CredibleBand } from "./shared/CredibleBand";
+import { PartialSeasonNote } from "./shared/PartialSeasonNote";
 
 function driverOptions(data: CoreData): Option[] {
   return Object.entries(data.drivers)
@@ -38,6 +39,13 @@ export function CarSwap({ data }: { data: CoreData }) {
     [data.mesh, driver, car],
   );
 
+  // Caveat only when THIS pairing leans on the in-progress season: a car from that year, or a
+  // driver who has raced in no other (a rookie whose whole record is the part-season).
+  const partYear = data.manifest.partialSeason?.year;
+  const leansOnPartial =
+    partYear !== undefined &&
+    (car.year === partYear || driver.seasons.every((y) => y === partYear));
+
   return (
     <section className="feature">
       <h2>The car-swap machine</h2>
@@ -62,6 +70,8 @@ export function CarSwap({ data }: { data: CoreData }) {
         </div>
         <CredibleBand lo={band.lo} med={band.med} hi={band.hi} />
       </div>
+
+      <PartialSeasonNote manifest={data.manifest} when={leansOnPartial} />
 
       <p className="feature__note">
         Lower is better (P1 = win). The band is the model's honest uncertainty — it widens for
