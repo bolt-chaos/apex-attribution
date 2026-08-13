@@ -35,19 +35,25 @@ which is exactly why both drafts lead with questions rather than a finished arti
 ## Trade-off between the two
 
 The **short** version is a single-ask message: the failure arc, the gap, the design constraints,
-three questions. It drops the ICC-graph-dependence lesson and the out-of-sample validation, holding
-both for the reply. Better odds of actually being read end-to-end; risks reading as a thinner
-contribution than it is.
+three questions. It keeps **one sentence** of out-of-sample validation — that sentence defuses the
+likeliest expert objection ("you tuned the model until it agreed with folklore"), so it cannot be
+held in reserve — but drops the ICC-graph-dependence lesson for the reply. Better odds of being
+read end-to-end.
 
-The **long** version adds those two sections. It makes the stronger case but asks for meaningfully
-more of a maintainer's attention on first contact.
+The **long** version adds the ICC lesson and the full validation numbers. It makes the stronger
+case but asks for meaningfully more of a maintainer's attention on first contact.
 
-Default recommendation: **send short.** The validation and the ICC lesson are what you say when
-they write back, and having something substantial in reserve is worth more than front-loading it.
+Default recommendation: **send short.** The ICC lesson is what you say when they write back.
+
+One rule both versions follow: **the fix's success is quoted in interventional positions, never in
+ICC points.** The pitch itself teaches that the ICC split swings ~25pp on a graph choice — quoting
+the fix in that currency would invite "how do I know your fix wasn't also a modelling artifact?".
+The graph-robust evidence (interventional spread ~2 → ~10 positions, counterfactuals that move,
+out-of-sample prediction) is what carries the claim.
 
 ---
 
-# Version A — short (~370 words)
+# Version A — short (~450 words)
 
 **Title:** Example notebook proposal: what to do when your SCM is silently non-identified (F1
 driver-vs-car attribution)
@@ -70,10 +76,15 @@ categorical SCM **cannot** separate latent driver skill from latent car pace, an
 car's contribution onto driver identity. Worth noting: DAG falsification does not catch this — the
 graph is fine, it's the *variable encoding* that destroys identifiability.
 
-The fix keeps the same graph and the same API calls: identify skill and pace as continuous latents
-from **teammate contrasts** (teammates share a car, so the car term cancels; drivers switching
-teams chain those comparisons into a connected graph — the trick behind chess Elo), feed those in,
-and ~25 percentage points of attribution move to something that matches known ground truth.
+The fix keeps the same five-node structure, the same causal query and the same API calls, but
+replaces the categorical nodes with continuous latents identified from **teammate contrasts**
+(teammates share a car, so the car term cancels; drivers switching teams chain those comparisons
+into a connected graph — the trick behind chess Elo). Measured in graph-robust terms, the
+interventional car effect goes from ~2 to ~10 finishing positions and counterfactual swaps start
+to move (Albon, Williams → Red Bull: P13 → P7) — a defensible, era-dependent answer instead of a
+backwards one. And the fix is vindicated by prediction, not by agreeing with priors: fit on
+2018–2023, the latents call held-out 2024–2025 teammate qualifying head-to-heads at 80%
+season-long (coin-flip baseline 50%).
 
 So the arc is: **naive spec fails informatively → diagnose why → fix identification → re-run the
 same calls → sane answer, honestly caveated.**
@@ -85,7 +96,8 @@ the hero diagnosing a bad *predictive* model — here the *causal* model is the 
 Design: one self-contained `.ipynb`, fixed seed, reduced ICC sample counts for docs-CI runtime. **No
 PyMC dependency** — the latent model is Bayesian, but the fitted latents ship as a small checked-in
 parquet with a paragraph explaining the teammate trick. Data is [f1db](https://github.com/f1db/f1db),
-CC-BY-4.0.
+CC-BY-4.0. Static checked-in data also means nothing drifts as seasons pass, and I'm happy to own
+maintenance.
 
 Three questions:
 
@@ -98,7 +110,7 @@ Happy to open a draft PR instead if that's easier to evaluate. Full project at `
 
 ---
 
-# Version B — long (~850 words)
+# Version B — long (~950 words)
 
 **Title:** Example notebook proposal: an identification failure you can see, using F1
 driver-vs-car attribution
@@ -128,9 +140,14 @@ The cause is structural, and it's general: each driver is nested in essentially 
 pace, and quietly dumps the car's contribution onto driver identity. The signal was in the data the
 whole time — the fix is to identify skill and pace as continuous latents from *teammate contrasts*
 (teammates share a car, so the car term cancels; drivers switching teams chain those comparisons
-into a connected graph, the same trick behind chess Elo) and feed those into the SCM. Same graph,
-same API calls, ~25 percentage points of attribution moved, and the result finally matches the
-known ground truth.
+into a connected graph, the same trick behind chess Elo) and feed those into the SCM. Same
+five-node structure, same causal query, same API calls — and measured in graph-robust terms the
+answer transforms: the interventional car effect goes from ~2 to ~10 finishing positions,
+counterfactual swaps start to move (Albon, Williams → Red Bull: P13 → P7), and the recovered
+driver rankings are believable. Not a clean victory lap — the split is genuinely era-dependent
+(caveats below) — but a defensible answer instead of a backwards one. (I deliberately don't quote
+the fix's effect in ICC points: as the next section shows, that's the one measure that can't carry
+the claim.)
 
 That's the arc I'd want the notebook to walk: **naive spec fails informatively → diagnose *why* →
 fix identification → re-run the same gcm calls → sane answer, honestly caveated.**
@@ -156,15 +173,15 @@ anything currently covers.
 While validating, I hit something that surprised me and might be worth surfacing in the docs
 generally. `driver_skill` and `car_pace` are correlated (~0.5) because good drivers get hired into
 good cars. Modelling that confounding as an explicit edge rather than independent roots swings the
-ICC split **~25pp — from car 26% / driver 16% to car 1% / driver 58%, flipping the verdict** — while
-the interventional car-vs-driver spread moves **0.0 positions**, because `do()` sets both roots
-regardless.
+ICC split **~25pp — from car 26% / driver 16% to car 1% / driver 58%, flipping the verdict** (2018–
+2025 era, race-pace latents) — while the interventional car-vs-driver spread moves **0.0
+positions**, because `do()` sets both roots regardless.
 
 The practical takeaway — *ICC assumes independent root noise, so lead with interventional and
 counterfactual measures when your roots are confounded* — seems broadly useful, and I'd rather
 demonstrate it than have readers rediscover it. (I'd also show the rung-3 necessity query: "would
-this podium have happened **but for** the car / the driver?" — 82% vs 68%, and unlike ICC it's
-robust to the confounding spec.)
+this podium have happened **but for** the car / the driver?" — on the same 2018–2025 model, 82%
+of podiums needed the car vs 68% the driver, and unlike ICC it's robust to the confounding spec.)
 
 ## Practical design
 
@@ -173,7 +190,9 @@ robust to the confounding spec.)
   as a small checked-in parquet with a paragraph explaining the teammate trick and a link to the
   full repo. Incidentally, "gcm consuming domain-derived latents from an upstream model" may itself
   be a pattern worth showing.
-- **Real, open, permissive data**: [f1db](https://github.com/f1db/f1db), CC-BY-4.0.
+- **Real, open, permissive data**: [f1db](https://github.com/f1db/f1db), CC-BY-4.0. Static
+  checked-in data also means the notebook can't drift as seasons pass, and I'm happy to own
+  maintenance.
 - **Honest caveats in-notebook**, not hidden: the split is era-dependent (there is no single
   "X% driver / Y% car" — it depends on how much car variation your window spans), and the roots
   are correlated.
