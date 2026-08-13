@@ -28,9 +28,25 @@ isn't there is the fastest way to look like we didn't read the docs.
   falsification does **not** catch. The graph is correct; the *variable encoding* is what destroys
   identifiability.
 
-Also note: `CONTRIBUTING.md` lists notebooks as a contribution type but specifies nothing about
-dependencies, CI, notebook runtime, or data size. There is no published bar to design against —
-which is exactly why both drafts lead with questions rather than a finished artifact.
+Also note: `CONTRIBUTING.md` lists notebooks as a contribution type but specifies nothing
+notebook-specific — no runtime, kernel, formatting, or data-size rules. There is no published bar
+to design a notebook against, which is exactly why both drafts lead with questions rather than a
+finished artifact. (There *is* a deeper code-contribution guide with general PR mechanics — see
+below — but it is silent on notebooks too.)
+
+## PR-stage requirements (for the eventual notebook PR, not the issue)
+
+From `docs/source/contributing/contributing-code.rst` in the dowhy repo (checked 2026-08-13) —
+these apply once a notebook PR is opened, and the DCO one is the classic first-PR bounce:
+
+- **DCO sign-off is mandatory.** Every commit needs `git commit --signoff` (`-s`); unsigned
+  commits cannot be merged. Retrofit with `git commit --amend --no-edit --signoff` or
+  `git rebase --signoff`.
+- **Lint/format gate:** `poetry run poe verify` (black + isort + flake8 + tests) must pass.
+- **Do not touch `poetry.lock` without justification** — which independently validates the
+  no-PyMC design: a notebook that added a dependency would trip exactly this rule.
+- Still **zero notebook-specific requirements** (runtime, kernel, data files), so question 3 in
+  both drafts remains a genuine question, not something we should have looked up.
 
 ## Trade-off between the two
 
