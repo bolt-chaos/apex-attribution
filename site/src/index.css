@@ -712,12 +712,26 @@ code {
   border-top: 1px solid var(--line);
   margin-top: 2rem;
 }
-.footer p {
+.footer__inner {
   max-width: var(--maxw);
   margin: 0 auto;
   padding: 1.2rem 1.25rem 2rem;
   color: var(--muted);
   font-size: 0.85rem;
+}
+.footer__inner p {
+  margin: 0;
+}
+/* Data credit gets its own rule-separated line: CC-BY-4.0 asks for visible attribution, and
+   burying the source mid-paragraph reads like a footnote rather than a credit. */
+.footer__data {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+}
+.footer__data strong {
+  color: var(--accent-soft);
+  font-weight: 600;
 }
 
 @media (max-width: 560px) {
