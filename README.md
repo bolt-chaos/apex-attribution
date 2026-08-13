@@ -19,6 +19,7 @@ Built on [DoWhy's `gcm` module](https://github.com/py-why/dowhy) over the
 | The data schema, DNF taxonomy, verified `gcm`-0.14 API notes | [`docs/SCHEMA_NOTES.md`](docs/SCHEMA_NOTES.md) |
 | Running write-up notes: story, results, decisions, bugs, limitations | [`docs/WRITEUP_NOTES.md`](docs/WRITEUP_NOTES.md) |
 | The Pearl-style critique + backlog of ideas | [`docs/IDEAS.md`](docs/IDEAS.md) |
+| The (unsent) pitch to upstream this as a DoWhy example notebook | [`docs/PYWHY_PITCH.md`](docs/PYWHY_PITCH.md) |
 | How the project maps onto *The Book of Why* | [`docs/BOOK_OF_WHY.md`](docs/BOOK_OF_WHY.md) |
 | The site's JSON artifact schema | [`site/DATA.md`](site/DATA.md) |
 

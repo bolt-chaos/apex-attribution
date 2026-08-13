@@ -151,6 +151,12 @@ issue / py-why Discussion first** with a two-paragraph pitch (the F1 question, t
 identification-failure teaching angle, the precomputed-latents design) before polishing.
 Fallback if it stalls: the same distillation is a PyData-style talk or blog post.
 
+→ **The pitch is drafted (short + long) in [`PYWHY_PITCH.md`](PYWHY_PITCH.md) — unsent.** That file
+also corrects one claim above: as of 2026-08-13 the gallery *does* carry a cautionary example
+("When Accuracy Lies", a chest X-ray CNN) and a DAG-falsification example. Neither shows the causal
+model itself failing, so the gap holds — but the pitch positions against them explicitly rather
+than claiming a void.
+
 ---
 
 ## 4. Direction: an interactive site (GitHub Pages / Vercel)
