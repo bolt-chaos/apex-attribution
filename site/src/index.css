@@ -114,6 +114,19 @@ code {
 .masthead__hook-num--drv {
   color: var(--band);
 }
+/* Data provenance, kept up top rather than in the footer: every claim on this site is one
+   dataset's worth of evidence, so who supplied it belongs beside the headline finding. Sized
+   below the hook so it credits without competing with it. */
+.masthead__data {
+  margin: var(--sp-3) auto 0;
+  max-width: 56ch;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.masthead__data strong {
+  color: var(--accent-soft);
+  font-weight: 600;
+}
 .masthead__hook-why {
   background: none;
   border: none;
@@ -721,17 +734,6 @@ code {
 }
 .footer__inner p {
   margin: 0;
-}
-/* Data credit gets its own rule-separated line: CC-BY-4.0 asks for visible attribution, and
-   burying the source mid-paragraph reads like a footnote rather than a credit. */
-.footer__data {
-  margin-top: 0.85rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--line);
-}
-.footer__data strong {
-  color: var(--accent-soft);
-  font-weight: 600;
 }
 
 @media (max-width: 560px) {

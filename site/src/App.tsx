@@ -55,6 +55,13 @@ export default function App() {
               </button>
             </p>
           )}
+          <p className="masthead__data">
+            Every result, lap time and grid slot comes from{" "}
+            <a href="https://github.com/f1db/f1db">
+              <strong>f1db</strong>
+            </a>{" "}
+            — an open, community-maintained F1 dataset, licensed CC&#8209;BY&#8209;4.0.
+          </p>
         </div>
       </header>
 
@@ -94,13 +101,6 @@ export default function App() {
             Built from a Bayesian causal model (DoWhy&nbsp;<code>gcm</code>). Every number carries
             uncertainty on purpose. This is a model of pace, not a prophecy —{" "}
             <a href="https://github.com/bolt-chaos/apex-attribution">read how it works</a>.
-          </p>
-          <p className="footer__data">
-            Every result, lap time and grid slot comes from{" "}
-            <a href="https://github.com/f1db/f1db">
-              <strong>f1db</strong>
-            </a>{" "}
-            — an open, community-maintained F1 dataset, licensed CC&#8209;BY&#8209;4.0.
           </p>
         </div>
       </footer>
