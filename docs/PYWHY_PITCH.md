@@ -4,14 +4,36 @@ Working drafts of the outreach message for [`py-why/dowhy`](https://github.com/p
 proposing this project as a `gcm` example notebook. The direction and its rationale are in
 [`IDEAS.md` §3](IDEAS.md); this file is just the message itself, in two lengths.
 
-**Status: unsent.** Nothing here has been posted. Pick a version, fill the placeholder, send.
+**Status: SENT** — posted 2026-08-13 as [py-why/dowhy#1752](https://github.com/py-why/dowhy/issues/1752)
+(enhancement-request template, Version A refitted to the template's four sections; repo URL filled).
 
-Before sending:
-- [ ] Choose short or long (see the trade-off below)
-- [ ] Replace `<REPO_URL>` with this repo's URL — decide first whether it's ready for traffic
-- [ ] Re-check the gallery hasn't gained an identification-failure example since 2026-08-13
-- [ ] Post as a GitHub issue or a py-why Discussion (CONTRIBUTING says open an issue with
-      questions; it does not specify a Discussions-first process)
+- [x] Choose short or long → short, refitted to the issue template's headings
+- [x] Replace `<REPO_URL>` with this repo's URL
+- [x] Re-check the gallery hasn't gained an identification-failure example (2026-08-13: it hasn't)
+- [x] Post as a GitHub issue (enhancement template)
+
+## Response log
+
+**2026-08-14 — "Repo Assist" bot** (automated agentic workflow, `github-actions`; **not a
+maintainer** — it defers to them on framing itself). No human response yet. Substance:
+
+- *Welcome?* "Yes … a genuine gap" — treat as a soft positive signal, not a commitment.
+- *Framing:* suggests leading with the fix, e.g. a title like "Identifying causal effects when
+  treatment is nearly collinear with a confounder". (Its phrasing is slightly off — ours is
+  collinearity between two *causes* — and renaming is a maintainer call; hold until a human
+  weighs in.)
+- *Concrete constraints for the eventual notebook PR* (working targets; all compatible with —
+  and partly validating — the design already pitched):
+  - runtime **< 60 s** total, single CPU core, fixed seed (docs-CI budget)
+  - checked-in parquet fine, keep it **< 1 MB**
+  - **no new mandatory dependencies**; must work under `poetry install -E plotting`
+  - f1db licence confirmed CC-BY-4.0 ✓; document the download step clearly
+  - a **draft PR** with the self-contained notebook is the fastest path to real review
+
+Next decision: wait a few days for a human maintainer on #1752, and/or start building the
+notebook against these constraints (they are sensible regardless of who stated them). The bot's
+email also bundled unrelated repo housekeeping (#1754, an isort tooling issue) — ignore it, and
+ignore its `gh aw add` self-install suggestion.
 
 ## What the gallery actually contains (checked 2026-08-13)
 
