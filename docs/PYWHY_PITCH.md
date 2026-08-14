@@ -35,6 +35,52 @@ notebook against these constraints (they are sensible regardless of who stated t
 email also bundled unrelated repo housekeeping (#1754, an isort tooling issue) — ignore it, and
 ignore its `gh aw add` self-install suggestion.
 
+## Office-hours prep (PyWhy Discord, Mondays 8am PT / 11am ET)
+
+Plan: attend the PyWhy community meeting and ask for next steps on
+[#1752](https://github.com/py-why/dowhy/issues/1752) directly — a live maintainer answer beats
+waiting on the thread. Logistics per [pywhy.org/community/discord](https://www.pywhy.org/community/discord.html):
+Mondays **8am PT / 11am ET**, **alternating biweekly** between Office Hours and Community
+Discussions — check Discord beforehand to see which format the coming Monday is (both work for
+this question). A day ahead, drop a one-liner in the relevant channel: *"I opened py-why/dowhy#1752
+proposing an example notebook; planning to come Monday to ask about next steps"* — anyone who
+cares can skim before the call. Have the #1752 link ready to paste into the meeting chat.
+
+### The ~30-second verbal pitch (audio; the written pitch doesn't survive being read aloud)
+
+> "I opened issue 1752 — I'd like to contribute an example notebook. It's an F1 driver-versus-car
+> attribution model, but the reason it's interesting for the gallery is that the naive version
+> fails silently: every gcm call succeeds, no warnings, and the answer is confidently backwards,
+> because driver and team are almost perfectly collinear. Falsification doesn't catch it — the
+> graph is fine, the encoding is the problem. The notebook walks the failure, the diagnosis, and
+> the fix, which is validated out-of-sample. It's designed for docs CI: under a minute, one small
+> checked-in parquet, no new dependencies. My question is whether that failure-first framing fits
+> the gallery, and if so whether I should just open a draft PR."
+
+### The three asks (leave with answers to these)
+
+1. **Framing** — is the cautionary "watch it fail" arc welcome, or do they want it fix-led (the
+   bot's suggestion)? This is the one genuine editorial fork.
+2. **Process** — draft PR straight away, or more issue discussion first? And where should it live
+   (`docs/source/example_notebooks/`)?
+3. **Review** — who would review it, so follow-up goes to a name rather than a queue.
+
+### Likely pushback, one-line answers
+
+- *"You tuned it until it matched folklore."* → The fix is validated by prediction: 80% on
+  held-out seasons, and a pre-season 2026 forecast that scored 70% on races that hadn't happened
+  yet.
+- *"Why not synthetic data?"* → The failure is only convincing because it's real — synthetic
+  non-identifiability looks constructed to fail.
+- *"The ICC criticism is pointed."* → Framed as a usage lesson, not an implementation critique:
+  when roots are confounded, lead with interventional measures; ICC stays as a descriptive number.
+
+### After the call
+
+Log what was said in the response log above (who, format, answers to the three asks) and update
+the next-decision line. If the answer is "open the draft PR", the PR-stage requirements section
+above has the mechanics (DCO sign-off, poe verify, no lockfile changes).
+
 ## What the gallery actually contains (checked 2026-08-13)
 
 `IDEAS.md` §3 claimed no gcm example shows the tools failing. That is now *nearly* true, and both
