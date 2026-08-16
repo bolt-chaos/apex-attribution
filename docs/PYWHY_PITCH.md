@@ -35,6 +35,20 @@ notebook against these constraints (they are sensible regardless of who stated t
 email also bundled unrelated repo housekeeping (#1754, an isort tooling issue) — ignore it, and
 ignore its `gh aw add` self-install suggestion.
 
+**2026-08-16 — notebook BUILT and deployed** at
+[bolt-chaos/dowhy-f1-attribution](https://github.com/bolt-chaos/dowhy-f1-attribution) (the
+standalone repo is itself the rehearsal for the dowhy contribution). All stated constraints
+met and *proven in that repo's CI on cold hardware*: executes in **~30 s** (< 60 s budget;
+29.6 s on a GitHub runner), data parquet **28 KB** (< 1 MB), **no deps beyond dowhy's own**
+(+pyarrow/matplotlib), fixed seed, f1db provenance documented. Zero-install via Colab/Binder
+badges. Notable content decision discovered while building: the naive failure only reproduces
+on the **narrow 2022–2025 window** (Cramér's V 0.84; the wide window has enough team-switchers
+that even categoricals partially decouple) — so the notebook frames the narrow window as the
+*methodologically cautious* choice that silently sabotages identification, and demonstrates the
+teammate-graph connectivity check live ([29, 2] islands → [41] connected). On a maintainer yes:
+open the draft PR by porting the notebook into `docs/source/example_notebooks/` per the
+PR-stage requirements above.
+
 ## Office-hours prep (PyWhy Discord, Mondays 8am PT / 11am ET)
 
 Plan: attend the PyWhy community meeting and ask for next steps on
