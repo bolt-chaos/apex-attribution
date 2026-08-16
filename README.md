@@ -19,7 +19,8 @@ Built on [DoWhy's `gcm` module](https://github.com/py-why/dowhy) over the
 | The data schema, DNF taxonomy, verified `gcm`-0.14 API notes | [`docs/SCHEMA_NOTES.md`](docs/SCHEMA_NOTES.md) |
 | Running write-up notes: story, results, decisions, bugs, limitations | [`docs/WRITEUP_NOTES.md`](docs/WRITEUP_NOTES.md) |
 | The Pearl-style critique + backlog of ideas | [`docs/IDEAS.md`](docs/IDEAS.md) |
-| The (unsent) pitch to upstream this as a DoWhy example notebook | [`docs/PYWHY_PITCH.md`](docs/PYWHY_PITCH.md) |
+| The pitch to upstream this as a DoWhy example notebook (sent: py-why/dowhy#1752) | [`docs/PYWHY_PITCH.md`](docs/PYWHY_PITCH.md) |
+| The story as a runnable notebook (zero install) | [`dowhy-f1-attribution`](https://github.com/bolt-chaos/dowhy-f1-attribution) |
 | How the project maps onto *The Book of Why* | [`docs/BOOK_OF_WHY.md`](docs/BOOK_OF_WHY.md) |
 | The site's JSON artifact schema | [`site/DATA.md`](site/DATA.md) |
 
@@ -48,6 +49,18 @@ deploys to Pages on every change under `site/`; regenerate the data locally with
 .venv/bin/python scripts/export_site.py     # refresh site/public/data/*.json when a model changes
 cd site && npm install && npm run dev        # local preview
 ```
+
+## The notebook: the whole story, runnable, zero install
+
+**▶ [bolt-chaos/dowhy-f1-attribution](https://github.com/bolt-chaos/dowhy-f1-attribution)** — the
+project's central lesson distilled into one executed Jupyter notebook: the naive categorical SCM
+fails *silently* (Cramér's V 0.84), the diagnosis, the teammate-identified fix, and the honest
+caveats — in ~30 s with a single 28 KB data file. Run it without installing anything
+([Colab](https://colab.research.google.com/github/bolt-chaos/dowhy-f1-attribution/blob/main/gcm_f1_driver_vs_car.ipynb) /
+[Binder](https://mybinder.org/v2/gh/bolt-chaos/dowhy-f1-attribution/main?labpath=gcm_f1_driver_vs_car.ipynb))
+or just read it rendered on GitHub. The standalone repo doubles as the dress rehearsal for
+upstreaming it as a DoWhy gallery example ([py-why/dowhy#1752](https://github.com/py-why/dowhy/issues/1752));
+its CI executes the notebook on every push and enforces the docs-CI runtime budget.
 
 ## Why this can work
 
