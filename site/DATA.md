@@ -67,8 +67,11 @@ Record<string /* "constructor@year" */, {
 { skill_axis: number[];  // length meshN, ascending
   pace_axis: number[];   // length meshN, ascending
   z: number[][];         // z[i][j] = E[finish] at (skill_axis[i], pace_axis[j])
+  nFits: number;         // seeded SCM fits z is averaged over (MESH_FITS)
   note: string }
 ```
+`z` is averaged over `nFits` seeded SCM fits (the cross-era mesh too). A single fit's surface moves
+by ~1.8 positions on average when the seed changes, for the same auto-assignment reason as `era.json`.
 **Car-swap:** for a driver × car, take the paired `career.draws` × `cars.draws`, bilinearly
 interpolate each pair on `z`, then report 5/50/95 quantiles as the credible band.
 
@@ -76,9 +79,15 @@ interpolate each pair on `z`, then report 5/50/95 quantiles as the credible band
 ```ts
 Array<{ label: string; start: number; end: number;
         carPct: number; driverPct: number;      // ICC variance shares (%), independent-roots graph
-        carSpread: number; driverSpread: number  // interventional E[finish] spread (positions)
+        carSpread: number; driverSpread: number; // interventional E[finish] spread (positions)
+        carPctSd?: number; driverPctSd?: number;  // between-fit SD of the shares (pp)
+        nFits?: number                            // seeded SCM fits averaged (ICC_FITS)
 }>
 ```
+Every value is the **mean over `nFits` independently seeded SCM fits**. A single fit is not stable:
+gcm's auto-assignment scores `finish_pos`'s linear and gradient-boosted mechanisms as a near-tie, so
+the pick flips with the seed and moves the car share by several points. Seeds are derived per era
+(`section_seed`), so an era whose inputs didn't change re-exports identically.
 The slider **snaps to these measured windows** (each an era-specific fit) — it does not interpolate
 causal shares between them.
 

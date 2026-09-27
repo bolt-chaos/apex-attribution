@@ -100,9 +100,15 @@ the honest figure is ~73%. MAE 0.41 still loses to predict-zero (0.38). Lawson d
 R12–14. Quali-RW 2018–2026 (R-hat 1.000 after `--tune 3000 --draws 1500`; the default tune gave
 1.020): necessity car/driver 92/57 → **96/65**, ICC 38.7 [33, 51] / 13.9 [7, 21]. Joint (site)
 R-hat 1.010: masthead hook 91/61 → **84/64**. Incident model re-fit on 2018–2026 (R-hat 1.000).
-KNOWN ISSUE: `export_site.py` era ICC (`era.json`) moves 3–6pp between exports, even for eras whose
-inputs did not change. The cause is a single global seed plus a 150-draw ICC estimate, so do not
-quote era.json deltas. The fix is to re-seed per era and/or raise `rand`.
+FIXED (follow-up PR): `era.json` ICC used to jitter 3–6pp between exports. The dominant cause was
+not ICC sampling (SD ~1pp) but gcm auto-assignment flipping `finish_pos` between LinearRegression
+and HistGradientBoosting by seed. Each era now averages `ICC_FITS=5` seeded fits and ships
+`carPctSd`/`driverPctSd`. `section_seed(key)` gives every export section its own stream, so
+re-exports are byte-identical (only `manifest.generated` changes). The export takes ~4 min (was ~2).
+The same flip moved the car-swap `finish_mesh` by 1.8 positions on average (max 5.6) between seeds.
+Both meshes (main + cross-era) now average `MESH_FITS=10` fits, which are stable to ~0.4 positions,
+with the per-cell sample budget split across fits. Export takes ~7 min (was ~2). NOT changed: the
+ICC in `attribution_v2.py` reports is still a single fit, but ICC is never headlined there.
 
 Site moved to 2018–2026 (PR after #56): joint re-fit `_2018_2026_joint` (R-hat 1.020, rho +0.91)
 now drives car-swap / arcs / H2H, so Cadillac, Audi, Hadjar-at-RBR and Lindblad are selectable;
