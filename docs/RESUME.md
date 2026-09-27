@@ -19,7 +19,7 @@ car variation the window spans):
 | era | car (median, 90% CrI) | driver | P(car>driver) |
 |---|---|---|---|
 | 2018–2025 (4 yr) | 31.9% [23, 42] | 21.4% [13, 29] | 73% (overlapping) |
-| 2018–2026 (+ new regs, half season) | 41.9% [37, 48] | 13.5% [8, 19] | 100% (separated) |
+| 2018–2026 (+ new regs, 15/23 rounds) | 38.7% [33, 51] | 13.9% [7, 21] | 100% (separated) |
 | 2006–2025 (20 yr) | 43.6% [35, 48] | 12.4% [6, 15] | 100% (separated) |
 
 `v1/` (categorical SCM) is the documented baseline that **fails** identification — do not trust v1 numbers.
@@ -92,6 +92,17 @@ survives, magnitudes are mis-scaled. (2) The reset re-stratified the grid, so 20
 toward the car (necessity: driver 84% → 57%; OLS pace overtakes skill; ICC P(car>driver) 73% → 100%).
 **Caveat: half a season** — refresh when 2026 completes. 2018–2025 artifacts preserved as the
 converged-era baseline.
+
+**Refreshed to f1db `v2026.15.1` (2026-09-27): rounds 1–15 of 23** (Bahrain reinstated as R16;
+2018–2025 rows byte-identical). Forecast scorecard: season-long **82% (9/11)**, race 61%, corr 0.59.
+Caveat: Russell/Antonelli now counts as a "hit" on a 0.01% mean gap, but Antonelli leads 10–5, so
+the honest figure is ~73%. MAE 0.41 still loses to predict-zero (0.38). Lawson drove the Red Bull in
+R12–14. Quali-RW 2018–2026 (R-hat 1.000 after `--tune 3000 --draws 1500`; the default tune gave
+1.020): necessity car/driver 92/57 → **96/65**, ICC 38.7 [33, 51] / 13.9 [7, 21]. Joint (site)
+R-hat 1.010: masthead hook 91/61 → **84/64**. Incident model re-fit on 2018–2026 (R-hat 1.000).
+KNOWN ISSUE: `export_site.py` era ICC (`era.json`) moves 3–6pp between exports, even for eras whose
+inputs did not change. The cause is a single global seed plus a 150-draw ICC estimate, so do not
+quote era.json deltas. The fix is to re-seed per era and/or raise `rand`.
 
 Site moved to 2018–2026 (PR after #56): joint re-fit `_2018_2026_joint` (R-hat 1.020, rho +0.91)
 now drives car-swap / arcs / H2H, so Cadillac, Audi, Hadjar-at-RBR and Lindblad are selectable;

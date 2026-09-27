@@ -1,42 +1,44 @@
 ========================================================================
-FORECAST SCORECARD — 2026 (first 11 rounds) vs the pre-season forecast
+FORECAST SCORECARD — 2026 (first 15 rounds) vs the pre-season forecast
 ========================================================================
 forecast model: v2_idata_2018_2025_sess_rw.pkl (trained through 2025; 2026 unseen)
 skills projected forward 1 season(s) under the fitted RW (+0.031% drift SD)
-scored rounds: 1-11   teammate H2H: 107 race-level, 10 season-long pairs
+scored rounds: 1-15   teammate H2H: 145 race-level, 11 season-long pairs
 
   not scoreable (no pre-2026 model estimate): Arvid Lindblad
 
-  HEAD-TO-HEAD ACCURACY (race-level):  57.9%   (coin-flip baseline 50%)
-  HEAD-TO-HEAD ACCURACY (season-long): 70.0%   (7/10 pairs)
-  correlation (predicted vs actual gap): 0.15 race-level, 0.39 season-long
-  mean abs error: 0.42%   vs predict-zero baseline 0.38%
+  HEAD-TO-HEAD ACCURACY (race-level):  61.4%   (coin-flip baseline 50%)
+  HEAD-TO-HEAD ACCURACY (season-long): 81.8%   (9/11 pairs)
+  correlation (predicted vs actual gap): 0.18 race-level, 0.59 season-long
+  mean abs error: 0.41%   vs predict-zero baseline 0.38%
 
   CONFIDENCE CALIBRATION (did stated P(out-qualifies) come true at its claimed rate?):
     stated    realised   pairs  races
-      57%       57%        6     65   [50%-60%]
-      70%       80%        1     10   [60%-70%]
-      74%       53%        3     32   [70%-80%]
+      57%       58%        6     88   [50%-60%]
+      70%       57%        2     28   [60%-70%]
+      76%       73%        2     26   [70%-80%]
+      86%      100%        1      3   [80%-100%]
 
   INTERVAL COVERAGE (does an X% interval contain reality X% of the time?):
-    50% interval -> empirical coverage 63%
-    80% interval -> empirical coverage 93%
-    90% interval -> empirical coverage 98%
+    50% interval -> empirical coverage 65%
+    80% interval -> empirical coverage 92%
+    90% interval -> empirical coverage 97%
 
   CONTEXT — the 2026 regulation reset widened the field: mean within-race
-  grid SD 0.46% (2025) -> 1.19% (2026), a 2.6x jump.
+  grid SD 0.46% (2025) -> 1.15% (2026), a 2.5x jump.
   Teammate gaps therefore got LARGER than the converged-era model expects, which inflates
   the absolute-error metrics (hence MAE losing to the predict-zero baseline) without
   implying the skill ORDERING is wrong — read accuracy and correlation, not MAE.
 
   PER-PAIR SCORECARD (2026 line-ups that actually raced, most-confident first):
-    [OK  ] Max Verstappen     > Isack Hadjar       P=79%  pred 0.53%  actual 0.11%  won 8/10
-    [OK  ] Pierre Gasly       > Franco Colapinto   P=74%  pred 0.37%  actual 0.17%  won 7/11
-    [MISS] George Russell     > Kimi Antonelli     P=70%  pred 0.29%  actual 0.16% (reversed)  won 2/11
-    [OK  ] Fernando Alonso    > Lance Stroll       P=70%  pred 0.30%  actual 0.48%  won 8/10
-    [OK  ] Oliver Bearman     > Esteban Ocon       P=60%  pred 0.14%  actual 0.23%  won 7/11
-    [OK  ] Charles Leclerc    > Lewis Hamilton     P=60%  pred 0.13%  actual 0.03%  won 6/11
-    [OK  ] Lando Norris       > Oscar Piastri      P=57%  pred 0.09%  actual 0.07%  won 6/11
-    [MISS] Valtteri Bottas    > Sergio Pérez       P=56%  pred 0.07%  actual 0.03% (reversed)  won 5/11
-    [OK  ] Carlos Sainz Jr.   > Alexander Albon    P=56%  pred 0.10%  actual 0.29%  won 9/10
-    [MISS] Gabriel Bortoleto  > Nico Hülkenberg    P=51%  pred 0.02%  actual 0.52% (reversed)  won 4/11
+    [OK  ] Max Verstappen     > Liam Lawson        P=86%  pred 0.68%  actual 0.33%  won 3/3
+    [OK  ] Max Verstappen     > Isack Hadjar       P=79%  pred 0.53%  actual 0.11%  won 9/11
+    [OK  ] Pierre Gasly       > Franco Colapinto   P=73%  pred 0.37%  actual 0.15%  won 10/15
+    [OK  ] Fernando Alonso    > Lance Stroll       P=70%  pred 0.30%  actual 0.45%  won 11/13
+    [OK  ] George Russell     > Kimi Antonelli     P=70%  pred 0.29%  actual 0.01%  won 5/15
+    [OK  ] Oliver Bearman     > Esteban Ocon       P=60%  pred 0.14%  actual 0.21%  won 9/14
+    [OK  ] Charles Leclerc    > Lewis Hamilton     P=59%  pred 0.13%  actual 0.02%  won 8/15
+    [OK  ] Lando Norris       > Oscar Piastri      P=58%  pred 0.09%  actual 0.08%  won 8/15
+    [OK  ] Carlos Sainz Jr.   > Alexander Albon    P=57%  pred 0.10%  actual 0.28%  won 11/14
+    [MISS] Valtteri Bottas    > Sergio Pérez       P=55%  pred 0.07%  actual 0.24% (reversed)  won 7/15
+    [MISS] Gabriel Bortoleto  > Nico Hülkenberg    P=51%  pred 0.02%  actual 0.33% (reversed)  won 8/15

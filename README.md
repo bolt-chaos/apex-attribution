@@ -194,7 +194,7 @@ even wider intervals).
   | era | car (median, 90% CrI) | driver | P(car>driver) |
   |---|---|---|---|
   | 2018–2025 (4 yr) | 31.9% [23, 42] | 21.4% [13, 29] | 73% (overlapping) |
-  | 2018–2026 (+ new regs) | 41.9% [37, 48] | 13.5% [8, 19] | **100%** (separated) |
+  | 2018–2026 (+ new regs, 15/23 rounds) | 38.7% [33, 51] | 13.9% [7, 21] | **100%** (separated) |
   | 2006–2025 (20 yr) | 43.6% [35, 48] | 12.4% [6, 15] | **100%** (separated) |
 
   A 20-year window spans huge car variation (multiple reg eras, dominant vs terrible cars), so the
@@ -267,57 +267,66 @@ would require the unbuilt target-season cars, so it is not.
 
 ## The 2026 season: scoring that forecast, and what the reg reset did to the split
 
-f1db `v2026.11.0` brings the first half of 2026 (rounds 1–11, Australia → Hungary, to the summer
-break). Two things fall out — one a validation, one a result.
+f1db `v2026.15.1` brings 2026 through round 15 (Australia → Azerbaijan; 15 of 23 rounds — the
+calendar grew from 22 to 23 when Bahrain was reinstated as round 16). Rounds 12–15 were added on top
+of the original summer-break import (`v2026.11.0`); 2018–2025 rows are byte-identical across the two
+pins. Two things fall out — one a validation, one a result.
 
 **1. The forecast, scored** ([`v2/score_forecast.py`](v2/score_forecast.py)). The 2026 projection above
 was published before a single 2026 lap was run, so scoring it against reality is a *genuinely*
 prospective test — stronger than the backtest, which merely held seasons out. The forecast model
-(`v2_idata_2018_2025_sess_rw.pkl`) is unchanged and nothing was retuned. Against the real first half:
+(`v2_idata_2018_2025_sess_rw.pkl`) is unchanged and nothing was retuned. Against rounds 1–15:
 
-- **Season-long teammate H2H: 70% (7/10 pairs)**; race-level **58%**; correlation **0.39** season-long.
-  Weaker than the backtest's 80%/67% — as it should be, since 2026 is a new car generation.
-- **The confident calls held**: Verstappen > Hadjar (won 8/10), Alonso > Stroll (8/10), Gasly >
-  Colapinto (7/11). The three misses were **Antonelli beating Russell** (the clearest miss — predicted
-  P=70% for Russell, Antonelli took 9/11), plus two near-coin-flips (Pérez > Bottas, Hülkenberg >
-  Bortoleto, both predicted at P≈51–56%).
-- **Honest negative:** mean absolute error **0.42%** *loses* to a predict-zero baseline (0.38%). The
-  reg reset widened the field 2.6× (mean within-race grid SD 0.46% → 1.19%), so real teammate gaps
+- **Season-long teammate H2H: 82% (9/11 pairs)**; race-level **61%**; correlation **0.59** season-long
+  (was 70% / 58% / 0.39 after 11 rounds — the forecast *improved* as more of the season came in).
+  Comparable to the backtest's 80%/67%, despite 2026 being a new car generation.
+- **The confident calls held**: Verstappen > Hadjar (won 9/11), Alonso > Stroll (11/13), Gasly >
+  Colapinto (10/15). A new pair appeared: **Lawson stood in at Red Bull for rounds 12–14** (Tsunoda
+  at Racing Bulls), and Verstappen > Lawson (P=86%) went 3/3.
+- **Read Russell/Antonelli with care.** The scorer rates a pair by the sign of the season-mean gap,
+  and Russell is now ahead on that by just **0.01%**, so it flips from miss to "hit". But
+  **Antonelli leads the count 10–5**. Counted by who out-qualified whom more often, it is still the
+  forecast's clearest miss (predicted P=70% for Russell), and the honest season-long figure is
+  **~73% (8/11)**. The two remaining misses are near-coin-flips (Pérez > Bottas, Hülkenberg >
+  Bortoleto, predicted at P≈51–55%).
+- **Honest negative:** mean absolute error **0.41%** still *loses* to a predict-zero baseline (0.38%). The
+  reg reset widened the field 2.5× (mean within-race grid SD 0.46% → 1.15%), so real teammate gaps
   got bigger than a converged-era model expects. The skill *ordering* survives; the *magnitudes* are
   mis-scaled. Read accuracy and correlation, not MAE.
-- Interval coverage stayed **conservative** (50%→63%, 80%→93%, 90%→98%), same direction as the
+- Interval coverage stayed **conservative** (50%→65%, 80%→92%, 90%→97%), same direction as the
   backtest — the model over-states its own uncertainty even across a regulation change.
 - Rookie **Arvid Lindblad** has no pre-2026 estimate, so his pairing is unscoreable.
 
 See [`figures/forecast_scorecard_2026.png`](figures/forecast_scorecard_2026.png).
 
 **2. The reg reset re-stratified the grid, and the car's share jumped.** 2026 spread the field
-wide open — mean quali gap 1.25% (2025) → 2.05%, with Mercedes at 0.22% and Aston Martin/Cadillac
-beyond 4.3%. Re-running the whole pipeline on **2018–2026** (single 42-driver teammate component;
+wide open — mean quali gap 1.25% (2025) → 2.01%, with Mercedes at ~0.5% and Aston Martin/Cadillac
+beyond 4.2%. Re-running the whole pipeline on **2018–2026** (single 42-driver teammate component;
 Cadillac, Audi and Lindblad all chain in cleanly; R-hat 1.000) moves every measure toward the car:
 
 | measure (same code, quali-RW latents) | 2018–2025 | **2018–2026** |
 |---|---|---|
-| interventional car vs driver (positions) | 10.4 vs 7.8 | **11.8 vs 8.9** |
-| but-for a podium: car / driver | 93% / 84% | **92% / 57%** |
-| OLS `finish ~ skill, pace` | 0.41 / 0.38 (skill ahead) | **0.39 / 0.41** (pace ahead) |
-| ICC car / driver, P(car>driver) | 31.9 / 21.4, 73% | **41.9 / 13.5, 100%** |
+| interventional car vs driver (positions) | 10.4 vs 7.8 | **11.9 vs 9.4** |
+| but-for a podium: car / driver | 93% / 84% | **96% / 65%** |
+| OLS `finish ~ skill, pace` | 0.41 / 0.38 (skill ahead) | **0.39 / 0.42** (pace ahead) |
+| ICC car / driver, P(car>driver) | 31.9 / 21.4, 73% | **38.7 / 13.9, 100%** |
 
-The driver's *necessity* for a podium falls hardest (84% → 57%): when the machinery is stratified
+The driver's *necessity* for a podium falls hardest (84% → 65%): when the machinery is stratified
 this steeply, a front-running car carries a podium largely on its own. This is the era-dependence
-finding sharpened — **half a season** of post-reset racing shifts the split about as far as adding
+finding sharpened — **15 rounds** of post-reset racing shifts the split about as far as adding
 twelve earlier years does. It is emphatically **not** evidence that drivers got worse in 2026; it is
 the same drivers measured against a much wider spread of cars.
 
 **On the joint (race-pace) model — the one the site runs on** — the same extension is directionally
 identical but *milder* than the quali-RW table above, which is worth stating plainly rather than
-quoting the louder number: R-hat 1.020, `rho` +0.91. Necessity moves **car 82% / driver 68% →
-91% / 61%**; interventional car 10.6 → **11.7** vs driver 10.1 → **9.4**; OLS `pace` 0.47 → **0.49**
-vs `skill` 0.35 → **0.33**. The ICC share barely moves on this scale (car 35.6% → 32.4%, driver
-16.3% → 13.7%) — so **the car's share did not simply jump**; what consistently moves is the *ratio*,
-because the driver's contribution shrinks against a much wider spread of cars.
+quoting the louder number: R-hat 1.010, `rho` +0.91. Necessity moves **car 82% / driver 68% →
+84% / 64%**; interventional car 10.6 → **13.3** vs driver 10.1 → **9.5**; OLS `pace` 0.47 → **0.50**
+vs `skill` 0.35 → **0.33**. Do not read the site's per-era ICC shares (`era.json`) as a finding. They
+come from a 150-draw point estimate that moves by 3–6pp from one export to the next: in the 15-round
+re-export, eras whose inputs had not changed at all still shifted by that much. The robust
+statement is the *ratio*: the driver's contribution shrinks against a much wider spread of cars.
 
-**Caveat: half a season.** 2026 contributes 11 of 22 rounds, so per-driver 2026 skill cells and the
+**Caveat: partial season.** 2026 contributes 15 of 23 rounds, so per-driver 2026 skill cells and the
 new constructors' pace are estimated on partial data with correspondingly wide intervals. The
 2018–2025 artifacts are preserved unchanged as the converged-era baseline; treat 2018–2026 as the
 current-regs view, to be refreshed when the season completes.
@@ -454,7 +463,7 @@ brew install python@3.12
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-python scripts/download_data.py      # caches f1db SQLite under data/ (pinned: v2026.11.0)
+python scripts/download_data.py      # caches f1db SQLite under data/ (pinned: v2026.15.1)
 python scripts/build_dataset.py      # writes data/f1_results.parquet (+ .csv)
 ```
 

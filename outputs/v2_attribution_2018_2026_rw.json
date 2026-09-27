@@ -1,88 +1,88 @@
 {
  "tag": "_2018_2026_rw",
  "data": "f1_scm_v2_2018_2026_rw.parquet",
- "nRows": 3203,
+ "nRows": 3273,
  "hiringEdge": true,
  "interventional": {
-  "carSpread": 11.806,
-  "driverSpread": 8.883,
+  "carSpread": 11.949,
+  "driverSpread": 9.4,
   "verdict": "car ahead"
  },
  "necessity": {
   "threshold": 3,
-  "nPodiums": 552,
-  "pnCar": 0.9167,
-  "pnDriver": 0.5652,
+  "nPodiums": 564,
+  "pnCar": 0.961,
+  "pnDriver": 0.6472,
   "perDriver": {
    "carlos-sainz-jr": {
     "n": 29,
-    "pnCar": 0.7931,
-    "pnDriver": 0.7241
+    "pnCar": 0.8621,
+    "pnDriver": 0.8276
    },
    "charles-leclerc": {
     "n": 54,
-    "pnCar": 0.963,
-    "pnDriver": 0.7778
+    "pnCar": 0.9444,
+    "pnDriver": 0.8704
    },
    "daniel-ricciardo": {
     "n": 5,
     "pnCar": 0.8,
-    "pnDriver": 0.6
+    "pnDriver": 0.8
    },
    "fernando-alonso": {
     "n": 9,
     "pnCar": 1.0,
-    "pnDriver": 1.0
+    "pnDriver": 0.8889
    },
    "george-russell": {
-    "n": 29,
-    "pnCar": 0.931,
-    "pnDriver": 0.6897
+    "n": 32,
+    "pnCar": 0.9688,
+    "pnDriver": 0.875
    },
    "kimi-antonelli": {
-    "n": 12,
+    "n": 15,
     "pnCar": 1.0,
-    "pnDriver": 0.0833
+    "pnDriver": 0.2
    },
    "kimi-raikkonen": {
     "n": 12,
     "pnCar": 1.0,
-    "pnDriver": 0.0
+    "pnDriver": 0.1667
    },
    "lando-norris": {
-    "n": 47,
-    "pnCar": 0.8298,
-    "pnDriver": 0.7447
+    "n": 49,
+    "pnCar": 0.8367,
+    "pnDriver": 0.898
    },
    "lewis-hamilton": {
     "n": 90,
     "pnCar": 0.9778,
-    "pnDriver": 0.3667
+    "pnDriver": 0.4556
    },
    "max-verstappen": {
-    "n": 120,
-    "pnCar": 0.85,
-    "pnDriver": 0.9083
+    "n": 123,
+    "pnCar": 0.9837,
+    "pnDriver": 0.9593
    },
    "oscar-piastri": {
     "n": 28,
-    "pnCar": 0.9286,
-    "pnDriver": 0.5357
+    "pnCar": 1.0,
+    "pnDriver": 0.5714
    },
    "pierre-gasly": {
-    "n": 6,
-    "pnCar": 0.8333,
-    "pnDriver": 0.5
+    "n": 5,
+    "pnCar": 0.8,
+    "pnDriver": 0.4
    },
    "sebastian-vettel": {
     "n": 23,
-    "pnCar": 0.913,
-    "pnDriver": 0.1739
+    "pnCar": 1.0,
+    "pnDriver": 0.3043
    },
    "sergio-perez": {
     "n": 32,
     "pnCar": 1.0,
-    "pnDriver": 0.25
+    "pnDriver": 0.3125
    },
    "valtteri-bottas": {
     "n": 45,
@@ -94,23 +94,23 @@
  "ols": {
   "skillPace": {
    "driver_skill": 0.39,
-   "car_pace": 0.41
+   "car_pace": 0.42
   },
   "skillPaceGrid": {
    "driver_skill": 0.21,
-   "car_pace": 0.19,
-   "grid": 0.5
+   "car_pace": 0.2,
+   "grid": 0.49
   }
  },
  "icc": {
-  "corrSkillPace": 0.4603,
+  "corrSkillPace": 0.4609,
   "independentRoots": {
-   "carPct": 36.82,
-   "driverPct": 13.21
+   "carPct": 35.85,
+   "driverPct": 12.19
   },
   "hiringEdge": {
-   "carPct": 1.95,
-   "driverPct": 51.1
+   "carPct": 2.78,
+   "driverPct": 52.75
   }
  }
 }
