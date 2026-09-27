@@ -8,20 +8,20 @@ with --hiring-edge; see attribution_v2's specification check) — a graph uncert
 DWARFS the sampling one below. The graph-robust car-vs-driver answer is the interventional
 / necessity result in attribution_v2, not this variance share.
 
-    car_pace           median  41.9%   90% CrI [ 36.8,  47.8]
-    driver_skill       median  13.5%   90% CrI [  7.7,  19.3]
-    grid               median   9.4%   90% CrI [  7.4,  10.6]
-    finish_pos resid   median  36.1%   90% CrI [ 30.2,  38.4]
+    car_pace           median  38.7%   90% CrI [ 32.8,  50.5]
+    driver_skill       median  13.9%   90% CrI [  6.9,  21.4]
+    grid               median   9.2%   90% CrI [  6.7,  11.9]
+    finish_pos resid   median  36.2%   90% CrI [ 32.1,  41.7]
 
-    driver:car ratio   median  0.3x   90% CrI [0.2, 0.5]
+    driver:car ratio   median  0.4x   90% CrI [0.1, 0.7]
 
     P(car > driver) across draws = 100%   <- is 'car leads' real?
 
-    vs POINT estimate (ICC on posterior mean): car 41.5%, driver 13.7% (ratio 0.3x)
+    vs POINT estimate (ICC on posterior mean): car 39.4%, driver 14.9% (ratio 0.4x)
 
 [INTERPRETATION]
-    Car share:    point 41.5% -> posterior median 41.9% (90% CrI [36.8, 47.8]).
-    Driver share: point 13.7% -> posterior median 13.5% (90% CrI [7.7, 19.3]).
-    Driver:car ratio median 0.3x.   P(car > driver) = 100%.
+    Car share:    point 39.4% -> posterior median 38.7% (90% CrI [32.8, 50.5]).
+    Driver share: point 14.9% -> posterior median 13.9% (90% CrI [6.9, 21.4]).
+    Driver:car ratio median 0.4x.   P(car > driver) = 100%.
     'CAR LEADS' IS ROBUST: car > driver in >=95% of posterior draws, even after
     propagating the full skill/pace uncertainty. The headline holds.

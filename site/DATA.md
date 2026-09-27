@@ -38,7 +38,7 @@ CI (`.github/workflows/deploy.yml`) only builds the Vite app; it never runs Pyth
   partialSeason: { year: number; roundsComplete: number; roundsTotal: number } | null;
   meshRanges: { skill: [number, number]; pace: [number, number] } }
 ```
-`partialSeason` is set while the main era's **final season is still being raced** (2026 is 11 of 22
+`partialSeason` is set while the main era's **final season is still being raced** (2026 is 15 of 23
 rounds as shipped). `export_site.py` derives it from the real round counts in f1db, and the UI shows
 an inline caveat (`PartialSeasonNote`) in the features whose current selection leans on that season.
 It becomes `null` automatically once the season completes — no manual cleanup.
