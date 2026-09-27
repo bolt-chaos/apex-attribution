@@ -72,6 +72,9 @@ def main() -> int:
         keys = {"label", "start", "end", "carPct", "driverPct", "carSpread", "driverSpread"}
         for row in era:
             check(keys <= row.keys(), f"era.json[{row.get('label')}]: missing keys {keys - row.keys()}")
+            if "nFits" in row:
+                check(row["nFits"] >= 2 and row.get("carPctSd", -1) >= 0 and row.get("driverPctSd", -1) >= 0,
+                      f"era.json[{row.get('label')}]: bad nFits/carPctSd/driverPctSd")
 
     xe = load("cross_era")
     if xe is not None:

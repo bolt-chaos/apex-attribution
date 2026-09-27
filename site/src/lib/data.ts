@@ -34,6 +34,7 @@ export interface Mesh {
   skill_axis: number[];
   pace_axis: number[];
   z: number[][];
+  nFits?: number;   // seeded SCM fits the surface is averaged over (MESH_FITS)
   note?: string;
 }
 
@@ -45,6 +46,9 @@ export interface EraRow {
   driverPct: number;
   carSpread: number;
   driverSpread: number;
+  carPctSd?: number;    // between-fit SD of carPct (pp) over nFits seeded SCM fits
+  driverPctSd?: number;
+  nFits?: number;
 }
 
 export interface Legend {

@@ -28,6 +28,7 @@ import pickle
 import shutil
 import sqlite3
 import sys
+import zlib
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -44,6 +45,8 @@ MODELS = ROOT / "models"
 DATA = ROOT / "data"
 OUT = ROOT / "site" / "public" / "data"
 SEED = 20260708
+ICC_FITS = 5           # seeded SCM fits averaged per era for era.json (see export_eras)
+MESH_FITS = 10         # seeded SCM fits averaged per E[finish] mesh (see fit_mesh)
 N_DRAWS = 200          # downsampled posterior draws shipped per element
 MESH_N = 21            # grid points per axis for the E[finish] surface
 EXP_N = 2000           # gcm samples per exp_finish evaluation (era spreads)
@@ -130,6 +133,18 @@ def titlecase(idv: str) -> str:
     return " ".join(w.capitalize() for w in idv.replace("@", " ").split("-"))
 
 
+def section_seed(key: str) -> np.random.Generator:
+    """Re-seed gcm (numpy global state) and return a fresh Generator, both derived from SEED + key.
+
+    Each export section / era fit gets its own stream, so a section's output depends only on its own
+    inputs — adding a season to the main era no longer shifts the random stream that later sections
+    (other eras, cross-era) consume, and an unchanged input re-exports byte-identically.
+    """
+    s = (SEED + zlib.crc32(key.encode())) % 2**32
+    gcm.util.general.set_random_seed(s)
+    return np.random.default_rng(s)
+
+
 def draws_summary(arr: np.ndarray, rng: np.random.Generator) -> dict:
     """5/50/95 quantiles + N_DRAWS downsampled draws, rounded to keep JSON small."""
     arr = np.asarray(arr, float)
@@ -139,10 +154,22 @@ def draws_summary(arr: np.ndarray, rng: np.random.Generator) -> dict:
             "draws": [round(float(v), 4) for v in arr[idx]]}
 
 
-def build_mesh(scm, skill_axis: np.ndarray, pace_axis: np.ndarray) -> list:
-    """E[finish] on the (skill x pace) grid. Rows index skill, cols index pace."""
-    return [[round(exp_finish(scm, float(s), float(p), MESH_EXP_N), 3) for p in pace_axis]
-            for s in skill_axis]
+def fit_mesh(data: pd.DataFrame, key: str, skill_axis: list, pace_axis: list) -> list:
+    """E[finish] on the (skill x pace) grid, averaged over MESH_FITS seeded SCM fits.
+
+    Rows index skill, cols index pace. A single fit is unstable: auto-assignment's choice of the
+    finish_pos mechanism (linear vs gradient-boosted, a near-tie in its CV) flips with the seed and
+    moves cells by ~1.8 positions on average (max ~5.6). Averaging the fits marginalizes over that
+    choice: at 10 fits two independent seed sets agree to ~0.4 positions on average (max ~1.1). The
+    MESH_EXP_N sample budget per cell is split across fits, so only the extra fitting adds runtime.
+    """
+    n = MESH_EXP_N // MESH_FITS
+    z = np.zeros((len(skill_axis), len(pace_axis)))
+    for k in range(MESH_FITS):
+        section_seed(f"mesh:{key}:{k}")
+        scm = build_scm(data)
+        z += [[exp_finish(scm, float(s), float(p), n) for p in pace_axis] for s in skill_axis]
+    return np.round(z / MESH_FITS, 3).tolist()
 
 
 def axis(vals: pd.Series, n: int = MESH_N, pad: float = 0.05) -> list:
@@ -198,17 +225,24 @@ def export_main(names: dict, rng: np.random.Generator) -> tuple[dict, dict, dict
     for c in ["grid", "finish_pos", "driver_skill", "car_pace"]:
         df[c] = df[c].astype(float)
     df["circuit_type"] = df["circuit_type"].astype("object")
-    scm = build_scm(df[NODES].dropna())
     skill_axis, pace_axis = axis(df.driver_skill), axis(df.car_pace)
     mesh = {"skill_axis": skill_axis, "pace_axis": pace_axis,
-            "z": build_mesh(scm, np.array(skill_axis), np.array(pace_axis)),
+            "z": fit_mesh(df[NODES].dropna(), "main", skill_axis, pace_axis),
+            "nFits": MESH_FITS,
             "note": "E[finish] marginalized over circuit_type; lower skill/pace = faster."}
     print(f"  drivers={len(drivers)} cars={len(cars)} mesh={MESH_N}x{MESH_N}")
     return drivers, cars, mesh
 
 
-def export_eras(rng: np.random.Generator) -> list:
-    """era.json: ICC shares + interventional car/driver position spreads per era window."""
+def export_eras() -> list:
+    """era.json: ICC shares + interventional car/driver position spreads per era window.
+
+    The ICC share is fit-sensitive: auto-assignment's cross-validation scores finish_pos's
+    LinearRegression and HistGradientBoosting as a near-tie, so the chosen mechanism flips with the
+    seed and moves the car share by several points (2018-2025: 25-35% over six seeds). A single fit
+    therefore re-rolls that coin on every export. Instead each era averages ICC_FITS independently
+    seeded fits (per-era seeds, so windows don't perturb each other) and ships the between-fit SD.
+    """
     from attribution_v2 import icc_car_driver, sweep_spreads
     rows = []
     for label, start, end, fname in ERAS:
@@ -221,17 +255,23 @@ def export_eras(rng: np.random.Generator) -> list:
             df[c] = df[c].astype(float)
         df["circuit_type"] = df["circuit_type"].astype("object")
         d = df[NODES].dropna()
-        scm = build_scm(d, hiring_edge=False)              # independent roots for the ICC headline
-        car_pct, drv_pct, _, _ = icc_car_driver(scm, rand=150, base=500)
         mid_s, mid_p = float(d.driver_skill.median()), float(d.car_pace.median())
         pace_vals = np.linspace(d.car_pace.min(), d.car_pace.max(), 12)
         skill_vals = np.linspace(d.driver_skill.min(), d.driver_skill.max(), 12)
-        car_spread, drv_spread = sweep_spreads(scm, pace_vals, skill_vals, mid_s, mid_p, EXP_N)
+        fits = []                                          # (car%, driver%, car spread, drv spread)
+        for k in range(ICC_FITS):
+            section_seed(f"era:{label}:{k}")
+            scm = build_scm(d, hiring_edge=False)          # independent roots for the ICC headline
+            car_pct, drv_pct, _, _ = icc_car_driver(scm, rand=150, base=500)
+            fits.append((100 * car_pct, 100 * drv_pct,
+                         *sweep_spreads(scm, pace_vals, skill_vals, mid_s, mid_p, EXP_N)))
+        mean, sd = np.mean(fits, axis=0), np.std(fits, axis=0, ddof=1)
         rows.append({"label": label, "start": start, "end": end,
-                     "carPct": round(100 * car_pct, 1), "driverPct": round(100 * drv_pct, 1),
-                     "carSpread": round(car_spread, 2), "driverSpread": round(drv_spread, 2)})
-        print(f"  era {label}: car {100*car_pct:.1f}% / driver {100*drv_pct:.1f}%  "
-              f"spread car {car_spread:.1f} / drv {drv_spread:.1f}")
+                     "carPct": round(mean[0], 1), "driverPct": round(mean[1], 1),
+                     "carSpread": round(mean[2], 2), "driverSpread": round(mean[3], 2),
+                     "carPctSd": round(sd[0], 1), "driverPctSd": round(sd[1], 1), "nFits": ICC_FITS})
+        print(f"  era {label}: car {mean[0]:.1f}% (sd {sd[0]:.1f}) / driver {mean[1]:.1f}% "
+              f"(sd {sd[1]:.1f}) over {ICC_FITS} fits  spread car {mean[2]:.1f} / drv {mean[3]:.1f}")
     return rows
 
 
@@ -242,10 +282,10 @@ def export_cross_era(names: dict, rng: np.random.Generator) -> dict:
     for c in ["grid", "finish_pos", "driver_skill", "car_pace"]:
         mod[c] = mod[c].astype(float)
     mod["circuit_type"] = mod["circuit_type"].astype("object")
-    scm = build_scm(mod[NODES].dropna())
     skill_axis, pace_axis = axis(mod.driver_skill), axis(mod.car_pace)
     mesh = {"skill_axis": skill_axis, "pace_axis": pace_axis,
-            "z": build_mesh(scm, np.array(skill_axis), np.array(pace_axis))}
+            "z": fit_mesh(mod[NODES].dropna(), "cross_era", skill_axis, pace_axis),
+            "nFits": MESH_FITS}
 
     post = pickle.load(open(MODELS / "v2_idata_1988_2025_sess_rw.pkl", "rb")).posterior
     sd = post["skill"].stack(s=("chain", "draw"))          # (driver, season, s)
@@ -318,8 +358,6 @@ def main() -> int:
     args = ap.parse_args()
     out = Path(args.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
-    gcm.util.general.set_random_seed(SEED)
-    rng = np.random.default_rng(SEED)
 
     def write(name, obj):
         (out / f"{name}.json").write_text(json.dumps(obj, separators=(",", ":")))
@@ -327,10 +365,10 @@ def main() -> int:
         print(f"  wrote {name}.json ({kb:.0f} KB)")
 
     print("names…");       names = load_names();                 write("names", names)
-    print("main model…");  drivers, cars, mesh = export_main(names, rng)
+    print("main model…");  drivers, cars, mesh = export_main(names, section_seed("main"))
     write("drivers", drivers); write("cars", cars); write("finish_mesh", mesh)
-    print("eras…");        write("era", export_eras(rng))
-    print("cross-era…");   write("cross_era", export_cross_era(names, rng))
+    print("eras…");        write("era", export_eras())
+    print("cross-era…");   write("cross_era", export_cross_era(names, section_seed("cross_era")))
     print("teammates…");   write("teammates", export_teammates(names))
     print("necessity…");   write("necessity", export_necessity(names))
 

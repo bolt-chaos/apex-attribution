@@ -321,10 +321,13 @@ the same drivers measured against a much wider spread of cars.
 identical but *milder* than the quali-RW table above, which is worth stating plainly rather than
 quoting the louder number: R-hat 1.010, `rho` +0.91. Necessity moves **car 82% / driver 68% →
 84% / 64%**; interventional car 10.6 → **13.3** vs driver 10.1 → **9.5**; OLS `pace` 0.47 → **0.50**
-vs `skill` 0.35 → **0.33**. Do not read the site's per-era ICC shares (`era.json`) as a finding. They
-come from a 150-draw point estimate that moves by 3–6pp from one export to the next: in the 15-round
-re-export, eras whose inputs had not changed at all still shifted by that much. The robust
-statement is the *ratio*: the driver's contribution shrinks against a much wider spread of cars.
+vs `skill` 0.35 → **0.33**. The site's per-era ICC shares (`era.json`) are now the mean of 5 seeded SCM
+fits, because a single fit is unstable: gcm's auto-assignment flips `finish_pos` between a linear
+and a gradient-boosted mechanism depending on the seed, which alone moves the car share by 2.5–4.5pp
+(between-fit SD, shipped as `carPctSd`). Seeds are per era, so an unchanged era re-exports
+identically. Even averaged, differences of a couple of points between windows are within noise.
+The robust statement is the *ratio*: the driver's contribution shrinks against a much wider spread
+of cars.
 
 **Caveat: partial season.** 2026 contributes 15 of 23 rounds, so per-driver 2026 skill cells and the
 new constructors' pace are estimated on partial data with correspondingly wide intervals. The
